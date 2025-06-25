@@ -35,8 +35,10 @@
 </head>
 
 <body>
-    @include('layouts.header')
-    @include('layouts.sidebar')
+    @auth
+        @include('layouts.header')
+        @include('layouts.sidebar')
+    @endauth
 
     <div id="app">
         @yield('content')

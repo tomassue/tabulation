@@ -25,9 +25,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/poster', [PosterController::class, 'index'])->name('poster');
 
     /* -------------------------------- Reference ------------------------------- */
+    //CRITERIA
     Route::get('/reference/criteria', [CriteriaController::class, 'index'])->name('reference.criteria');
+    Route::post('/reference/save-criteria', [CriteriaController::class, 'saveCriteria'])->name('save-criteria');
+
+    //JUDGES
     Route::get('/reference/judges', [JudgesController::class, 'index'])->name('reference.judges');
+    Route::post('/regerence/save-judges', [JudgesController::class, 'saveJudges'])->name('save-judge');
+    
+    //PARTICIPANT
     Route::get('/reference/participants', [ParticipantsController::class, 'index'])->name('reference.participants');
+    Route::post('/reference/save-participant',[ParticipantsController::class, 'saveParticipant'])->name('save-participant');
+
+    //ROUND
     Route::get('/reference/round', [RoundController::class, 'index'])->name('reference.round');
+    Route::post('/reference/save-round', [RoundController::class, 'saveRound'])->name('save-round');
     /* -------------------------------- Reference ------------------------------- */
 });
