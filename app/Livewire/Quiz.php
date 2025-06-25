@@ -5,10 +5,12 @@ namespace App\Livewire;
 use App\Models\QuizBee;
 use Livewire\Component;
 use App\Models\RefParticipant;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class Quiz extends Component
 {
-    public $search = '';
+    public $search = '', $base64pdf;
     public function render()
     {
         $participants = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->where('category', 'quiz')->get();
@@ -25,7 +27,21 @@ class Quiz extends Component
             $assessment->round_id = $round_id;
             $assessment->question_number = $question_number;
         }
-        $assessment->score = $score ? $score : null;
+        $assessment->score = $score ? $score : 0;
         $assessment->save();
+    }
+    public function generateReport()
+    {
+        $paper = array(0, 0, 1400, 850);
+        $participants = RefParticipant::where('category', 'quiz')
+            ->leftjoin('quiz_bees', 'ref_participants.id', '=', 'quiz_bees.participant_id')
+            ->groupBy('ref_participants.id')
+            ->orderByRaw('SUM(quiz_bees.score) DESC')
+            ->select('ref_participants.*',  DB::raw('SUM(quiz_bees.score) as total_score'))
+            ->get();
+        $quizbees = QuizBee::all();
+        $pdf = Pdf::loadView('generated_pdf.quiz-bee', compact('participants', 'quizbees'))->setPaper($paper);
+        $this->base64pdf = base64_encode($pdf->output());
+        $this->dispatch('openModal');
     }
 }
