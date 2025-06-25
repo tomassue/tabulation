@@ -3,11 +3,30 @@
             <div class="col-lg-12">
                 <div class="col-lg-10 mx-auto">
                     <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="">POSTER SCORE TABLE</h5>
+                                <div>
+                                    <div class="input-group">
+                                        <button class="btn btn-primary" wire:click="generateReport">Export PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
-                            <h5 class="card-title">Score</h5>
+                             <div class="row d-flex justify-content-center my-3">
+                                <div class="col-md-6">
+                                    <input type="search" wire:model.live="search"  list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
+                                    <datalist id="datalistOptions">
+                                        @foreach ($part as $item)
+                                            <option value="{{$item->participant}}">
+                                        @endforeach
+                                    </datalist>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <!-- Table with hoverable rows -->
-                                <table class="table table-hover table-striped">
+                                <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -18,20 +37,25 @@
                                                     <span class="small text-muted">Judge {{$loop->iteration}}</span>
                                                 </th>
                                             @endforeach
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($participants as $item)
+                                        @foreach ($participants as $participant)
                                         <tr>
                                             <th scope="row">{{$loop->iteration}}</th>
-                                            <th scope="row">{{$item->participant}}</th>
-                                           @foreach ($judges as $item)
+                                            <th scope="row">
+                                                <h4>{{$participant->participant_no}}</h4>
+                                                <small>{{$participant->participant}}</small>
+                                            </th>
+                                           @foreach ($judges as $judge)
                                                 <td>
-                                                    @foreach ($criterias as $item)
+                                                    @foreach ($criterias as $criteria)
+                                                    @php
+                                                        $score = \App\Models\Poster::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                    @endphp
                                                     <div class="mb-2">
-                                                        <label for="">{{$item->criteria}}</label>
-                                                         <input type="text" class="form-control" placeholder="Score">
+                                                        <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
+                                                        <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
                                                     </div>
                                                     @endforeach
                                                 </td>
@@ -47,4 +71,34 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div class="modal fade" id="reportModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">
+                            Modal title
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600"  type="application/pdf"  frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
+@script
+<script>
+    window.addEventListener('openModal', event => {
+        var myModal = new bootstrap.Modal(document.getElementById('reportModal'));
+        myModal.show();
+    });
+</script>
+@endscript

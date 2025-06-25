@@ -43,8 +43,21 @@ class RefParticipant extends Model
             return "";
         }
     }
-    public function getCriteriaScore($criteria_id, $judge_id)
+    public function getScore($judge_id)
     {
-        return $this->hasMany(Oral::class, 'participant_id')->where('judge_id', $judge_id)->where('criteria_id', $criteria_id)->sum('score');
+        return $this->hasMany(Oral::class, 'participant_id','id')->where('judge_id', $judge_id)->sum('score');
+    }
+    public function judgeTotalScore(){
+        return $this->hasMany(Oral::class, 'participant_id','id')->sum('score');
+    }
+    public function deductions(){
+        return $this->hasOne(OralDeduction::class, 'participant_id','id');
+    }
+    public function getPosterScore($judge_id)
+    {
+        return $this->hasMany(Poster::class, 'participant_id','id')->where('judge_id', $judge_id)->sum('score');
+    }
+    public function judgePosterTotalScore(){
+        return $this->hasMany(Poster::class, 'participant_id','id')->sum('score');
     }
 }

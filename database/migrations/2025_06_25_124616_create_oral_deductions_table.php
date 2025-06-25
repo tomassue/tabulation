@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ref_participants', function (Blueprint $table) {
+        Schema::create('oral_deductions', function (Blueprint $table) {
             $table->id();
-            $table->string("participant_no")->nullable();
-            $table->string("participant")->nullable();
-            $table->enum('category', ["oral", "poster","quiz"])->nullable();
-            $table->text("school")->nullable();
+            $table->integer("participant_id")->nullable();
+            $table->integer("deduction")->nullable();
+            $table->text("remarks")->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ref_participants');
+        Schema::dropIfExists('oral_deductions');
     }
 };

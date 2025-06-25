@@ -5,15 +5,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <h5 class="">SCORE TABLE</h5>
+                                <h5 class="">ORATORICAL SCORE TABLE</h5>
                                 <div>
                                     <div class="input-group">
-                                        <select name="judge_id" id="judge_id" class="form-select" wire:model="judge_id">
-                                            <option value="">-- SELECT JUDGE--</option>
-                                            @foreach ($judges  as $item)
-                                                <option value="{{$item->id}}">{{$loop->iteration}} - {{$item->judge}}</option>
-                                            @endforeach
-                                        </select>
                                         <button class="btn btn-primary" wire:click="generateReport">Export PDF</button>
                                     </div>
                                 </div>
@@ -32,7 +26,7 @@
                             </div>
                             <div class="table-responsive">
                                 <!-- Table with hoverable rows -->
-                                <table class="table table-hover table-striped">
+                                <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -43,14 +37,23 @@
                                                     <span class="small text-muted">Judge {{$loop->iteration}}</span>
                                                 </th>
                                             @endforeach
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($participants as $participant)
                                         <tr>
                                             <th scope="row">{{$loop->iteration}}</th>
-                                            <th scope="row">{{$participant->participant}}</th>
+                                            <th scope="row">
+                                                <h4>{{$participant->participant_no}}</h4>
+                                                <small>{{$participant->participant}}</small>
+                                                @php
+                                                    $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
+                                                @endphp
+                                                 <div class="my-2">
+                                                    <label class="text-muted small">Deduction</label>
+                                                    <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                                 </div>
+                                            </th>
                                             @foreach ($judges as $judge)
                                                 <td>
                                                     @foreach ($criterias as $criteria)
@@ -58,8 +61,8 @@
                                                         $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
                                                     @endphp
                                                     <div class="mb-2">
-                                                        <label for="">{{$criteria->criteria}}</label>
-                                                        <input type="text" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
+                                                        <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
+                                                        <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
                                                     </div>
                                                     @endforeach
                                                 </td>

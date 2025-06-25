@@ -40,7 +40,7 @@
                                 <tbody>
                                      @foreach ($participants as $item)
                                     <tr>
-                                        <td scope="row">{{$item->participant}}</td>
+                                        <td scope="row">{{$item->school}}</td>
                                         @for ($i = 1; $i <= 10; $i++)
                                             @php
                                                 $score = \App\Models\QuizBee::where('participant_id', $item->id)->where('round_id', '1')->where('question_number', $i)->first();
