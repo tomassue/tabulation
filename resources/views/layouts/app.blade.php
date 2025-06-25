@@ -8,11 +8,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Tabulation System</title>
 
     <!-- Favicons -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon">
-    <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('img/cdo-seal.png') }}" rel="icon">
+    <link href="{{ asset('img/cdo-seal.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -20,15 +20,19 @@
 
     <!-- Vendor CSS Files -->
     <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/quill/quill.snow.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/quill/quill.bubble.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/simple-datatables/style.css') }}" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"> -->
 
     <!-- Scripts -->
     <!-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) -->
@@ -36,8 +40,8 @@
 
 <body>
     @auth
-        @include('layouts.header')
-        @include('layouts.sidebar')
+    @include('layouts.header')
+    @include('layouts.sidebar')
     @endauth
 
     <div id="app">

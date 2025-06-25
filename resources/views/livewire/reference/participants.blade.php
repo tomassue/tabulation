@@ -7,7 +7,14 @@
                             <h5 class="card-title">Add Participants</h5>
                             <div class="toolbar mb-3 d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary" wire:click="addParticipant">
-                                    Add
+                                    <div wire:loading.remove wire:target="addParticipant">
+                                        Add
+                                    </div>
+                                    <div wire:loading wire:target="addParticipant">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
                                 </button>
                             </div>
                             <div class="table-responsive">
@@ -30,17 +37,26 @@
                                             <td scope="row">
                                                 {{$item->participant}}
                                             </td>
-                                                <td scope="row">
+                                            <td scope="row" class="text-capitalize">
                                                 {{$item->category}}
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})" >
-                                                    Edit
+                                                <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})">
+                                                    <div wire:loading.remove wire:target="editParticipant({{$item->id}})">
+                                                        Edit
+                                                    </div>
+                                                    <div wire:loading wire:target="editParticipant({{$item->id}})">
+                                                        <div class="spinner-border spinner-border-sm" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    </div>
                                                 </button>
                                             </td>
                                         </tr>
                                         @empty
-                                            <tr><td colspan="2"></td></tr>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                        </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -78,23 +94,31 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">
+                                <div wire:loading.remove wire:target="saveParticipant">
+                                    Save changes
+                                </div>
+                                <div wire:loading wire:target="saveParticipant">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-@script
-<script>
-    
-    window.addEventListener('openModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
-        myModal.show();
-    });
-     window.addEventListener('hideModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
-        myModal.show();
-    });
-</script>
-@endscript
+    @script
+    <script>
+        window.addEventListener('openModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
+            myModal.show();
+        });
+        window.addEventListener('hideModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
+            myModal.show();
+        });
+    </script>
+    @endscript

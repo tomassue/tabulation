@@ -1,4 +1,3 @@
-
 <section class="section judges">
     <div class="row">
         <div class="col-lg-12">
@@ -11,7 +10,14 @@
                                     <h5 class="card-title">Add Judges</h5>
                                     <div class="toolbar mb-3 d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" wire:click="addJudge">
-                                            Add
+                                            <div wire:loading.remove wire:target="addJudge">
+                                                Add
+                                            </div>
+                                            <div wire:loading wire:target="addJudge">
+                                                <div class="spinner-border spinner-border-sm" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
                                         </button>
                                     </div>
                                     <div class="table-responsive">
@@ -27,25 +33,32 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($judges as $item)
-                                                    <tr>
-                                                        <th scope="row">
-                                                            {{$loop->iteration}}
-                                                        </th>
-                                                        <th scope="row">
-                                                            {{$item->judge}}
-                                                            <span class="badge text-bg-secondary">{{$item->nickname}}</span>
-                                                        </th>
-                                                        <th scope="row">
-                                                            {{$item->category}}
-                                                        </th>
-                                                        <td>
-                                                            <button class="btn btn-sm btn-primary" wire:click="editJudge({{$item->id}})">
+                                                <tr>
+                                                    <th scope="row">
+                                                        {{$loop->iteration}}
+                                                    </th>
+                                                    <th scope="row">
+                                                        {{$item->judge}}
+                                                        <span class="badge text-bg-secondary">{{$item->nickname}}</span>
+                                                    </th>
+                                                    <th scope="row" class="text-capitalize">
+                                                        {{$item->category}}
+                                                    </th>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" wire:click="editJudge({{$item->id}})">
+                                                            <div wire:loading.remove wire:target="editJudge({{$item->id}})">
                                                                 Edit
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+                                                            </div>
+                                                            <div wire:loading wire:target="editJudge({{$item->id}})">
+                                                                <div class="spinner-border spinner-border-sm" role="status">
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </td>
+                                                </tr>
                                                 @endforeach
-                                                
+
                                             </tbody>
                                         </table>
                                         <!-- End Table with hoverable rows -->
@@ -57,7 +70,7 @@
                 </div>
             </section>
         </div>
-    </div> 
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="judgeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
@@ -88,22 +101,29 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    
+                        <button type="submit" class="btn btn-primary">
+                            <div wire:loading.remove wire:target="saveJudge">
+                                Save changes
+                            </div>
+                            <div wire:loading wire:target="saveJudge">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </button>
                     </div>
-                 </form>
+                </form>
             </div>
         </div>
     </div>
 </section>
 @script
 <script>
-
     window.addEventListener('openModal', event => {
         var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
         myModal.show();
     });
-     window.addEventListener('hideModal', event => {
+    window.addEventListener('hideModal', event => {
         var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
         myModal.show();
     });
