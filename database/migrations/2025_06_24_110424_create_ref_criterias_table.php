@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("criteria")->nullale();
             $table->integer("perfect_score")->nullable();
+            $table->enum('category', ["oral", "poster"])->nullable();
             $table->timestamps();
         });
     }
