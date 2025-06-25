@@ -7,7 +7,7 @@
                             <h5 class="card-title">Scores</h5>
                             <div class="table-responsive">
                                 <!-- Table with hoverable rows -->
-                                <table class="table table-hover">
+                                <table class="table table-hover table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -28,7 +28,12 @@
                                             <th scope="row">{{$item->participant}}</th>
                                             @foreach ($judges as $item)
                                                 <td>
-                                                    <input type="text" class="form-control" placeholder="Score">
+                                                    @foreach ($criterias as $item)
+                                                    <div class="mb-2">
+                                                        <label for="">{{$item->criteria}}</label>
+                                                         <input type="text" class="form-control" placeholder="Score">
+                                                    </div>
+                                                    @endforeach
                                                 </td>
                                             @endforeach
                                         </tr>

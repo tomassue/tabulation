@@ -20,6 +20,7 @@
                                                     <tr>
                                                         <th scope="col">#</th>
                                                         <th scope="col">Name</th>
+                                                        <th scope="col">Category</th>
                                                         <th scope="col">Perfect Score</th>
                                                         <th scope="col">Actions</th>
                                                     </tr>
@@ -32,6 +33,9 @@
                                                             </th>
                                                             <th scope="row">
                                                                 {{$item->criteria}}
+                                                            </th>
+                                                            <th scope="row">
+                                                                {{$item->category}}
                                                             </th>
                                                             <td>
                                                                 {{$item->perfect_score}}
@@ -70,6 +74,14 @@
                             <div class="mb-3">
                                 <label for="criteria" class="form-label">Criteria Name</label>
                                 <input type="text" class="form-control" wire:model="criteria" id="criteria" placeholder="Enter criteria name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="category">Category</label>
+                                <select wire:model="category" id="category" class="form-select">
+                                    <option value="">--- SELECT ---</option>
+                                    <option value="oral">Oral</option>
+                                    <option value="poster">Poster</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="perfect_score" class="form-label">Perfect Score</label>
