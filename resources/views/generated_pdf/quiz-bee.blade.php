@@ -60,7 +60,7 @@
             <td class="text-center">
                 <div style="font-size: 13pt;">Republic of the Philippines</div>
                 <div style="font-size: 13pt;">City of Cagayan de Oro</div>
-                <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL OFFICE</div>
+                <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL AFFAIRS OFFICE</div>
             </td>
             <td class="text-end" width="30%">
                 <img src="{{ $participants->first()->convert(public_path()."/img/goldencdo_email.png") }}"  width="120">
@@ -104,7 +104,7 @@
         </thead>
         @foreach ($participants as $item)
             <tr>
-                <td class="text-start" style="padding:5px;font-size:12pt;">{{$item->participant}}</td>
+                <td class="text-start" style="padding:5px;font-size:12pt;">{{$item->school}}</td>
                  @for ($i = 1; $i <= 10; $i++)
                     @php
                         $score = \App\Models\QuizBee::where('participant_id', $item->id)->where('round_id', '1')->where('question_number', $i)->first();

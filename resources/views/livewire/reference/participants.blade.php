@@ -23,7 +23,9 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th scope="col">Participant's No.</th>
                                             <th scope="col">Name</th>
+                                            <th scope="col">School</th>
                                             <th scope="col">Category</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -35,7 +37,13 @@
                                                 {{$loop->iteration}}
                                             </td>
                                             <td scope="row">
+                                                {{$item->participant_no}}
+                                            </td>
+                                            <td scope="row">
                                                 {{$item->participant}}
+                                            </td>
+                                            <td scope="row">
+                                                {{$item->school}}
                                             </td>
                                             <td scope="row" class="text-capitalize">
                                                 {{$item->category}}
@@ -55,7 +63,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="4"></td>
+                                            <td colspan="6">-- NO DATA --</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -79,8 +87,16 @@
                         <div class="modal-body">
                             @include('layouts.message')
                             <div class="mb-3">
+                                <label for="participant_no" class="form-label">Participant's No.</label>
+                                <input type="text" class="form-control" id="participant_no" wire:model="participant_no" placeholder="Enter participant's number">
+                            </div>
+                            <div class="mb-3">
                                 <label for="participantsName" class="form-label">Participant's Name</label>
                                 <input type="text" class="form-control" id="participantsName" wire:model="participant" placeholder="Enter participant's name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="school" class="form-label">Participant's School</label>
+                                <input type="text" class="form-control" id="school" wire:model="school" placeholder="Enter participant's school">
                             </div>
                             <div class="mb-3">
                                 <label for="category">Category</label>

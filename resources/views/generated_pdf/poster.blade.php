@@ -69,7 +69,7 @@
         <tr>
             <td colspan="3" class="text-center">
                 
-                <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;">ORATORICAL SCORE REPORT</div>
+                <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;">POSTER SCORE REPORT</div>
             </td>
         </tr>
     </table>
@@ -78,13 +78,12 @@
             <tr>
                 <th class="text-center p-2 bold">RANK</th>
                 <th class="text-center p-2 bold" style="font-size:10pt;">CONTESTANT #</th>
-                <th class="text-center  p-2 bold" style="font-size:10pt;">CONTESTANT</th>
+                <th class="text-center  p-2 bold"style="font-size:10pt;">CONTESTANT</th>
                 @foreach ($judges as $judge)
                 <th class="text-center  p-2 bold"style="font-size:10pt;">
                     {{$judge->judge}}
                 </th>
                 @endforeach
-                <th class="text-center  p-2 bold"style="font-size:10pt;">DEDUCTION</th>
                 <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL</th>
             </tr>
         </thead>
@@ -94,10 +93,9 @@
                 <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->participant_no}}</td>
                 <td class="text-start" style="padding:5px;font-size:12pt;">{{$item->participant}}</td>
                 @foreach ($judges as $judge)
-                <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->getScore($judge->id)}}</td>
+                <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->getPosterScore($judge->id)}}</td>
                 @endforeach
-                <td class="text-center">{{$item->deduction}}</td>
-                <td class="text-center">{{$item->final_score}}</td>
+                <td class="text-center">{{$item->judgePosterTotalScore()}}</td>
             </tr>
         @endforeach
     </table>

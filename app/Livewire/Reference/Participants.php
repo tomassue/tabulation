@@ -7,7 +7,7 @@ use App\Models\RefParticipant;
 
 class Participants extends Component
 {
-    public $id, $participant, $category;
+    public $id, $participant, $category, $school, $participant_no;
     public function render()
     {
         $participants = RefParticipant::all();
@@ -16,12 +16,16 @@ class Participants extends Component
     
     public function saveParticipant(){
         $this->validate([
+            'participant_no' => 'required',
             'participant' => 'required',
             'category' => 'required',
+            'school' => 'required'
         ]);
         $participant = $this->id ? RefParticipant::find($this->id) : new RefParticipant();
         $participant->participant = $this->participant;
         $participant->category = $this->category;
+        $participant->participant_no = $this->participant_no;
+        $participant->school = $this->school;
         $participant->save();
 
         $this->id = null;
@@ -36,6 +40,8 @@ class Participants extends Component
         $participant =  RefParticipant::find($id);
         $this->participant = $participant->participant;
         $this->category = $participant->category;
+        $this->participant_no = $participant->participant_no;
+        $this->school = $participant->school;
         $this->id = $id;
         $this->dispatch('openModal');
     }
