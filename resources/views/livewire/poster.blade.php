@@ -19,7 +19,7 @@
                                     <input type="search" wire:model.live="search"  list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                     <datalist id="datalistOptions">
                                         @foreach ($part as $item)
-                                            <option value="{{$item->participant}}">
+                                            <option value="{{$item->participant_no}}">
                                         @endforeach
                                     </datalist>
                                 </div>
@@ -35,6 +35,10 @@
                                                 <th scope="col">
                                                     <div>{{$item->judge}}</div>
                                                     <span class="small text-muted">Judge {{$loop->iteration}}</span>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-success" style="width: {{$item->getPercent()}}%"></div>
+                                                    </div>
+                                                    <small> {{$item->getPercent()}}%</small>
                                                 </th>
                                             @endforeach
                                         </tr>

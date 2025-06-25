@@ -6,5 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class RefJudge extends Model
 {
-    //
+    public function getPercent()
+    {   
+        $criterias = RefCriteria::where('category', 'poster')->count();
+        $participant = RefParticipant::where('category', 'poster')->count();
+        $total = $participant * $criterias;
+        return $this->hasMany(Poster::class, 'judge_id')->whereNotNull('score')->count() / $total * 100;
+    }
+    public function getOralPercent()
+    {   
+        $criterias = RefCriteria::where('category', 'oral')->count();
+        $participant = RefParticipant::where('category', 'oral')->count();
+        $total = $participant * $criterias;
+        return $this->hasMany(Oral::class, 'judge_id')->whereNotNull('score')->count() / $total * 100;
+    }
 }

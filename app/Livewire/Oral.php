@@ -16,7 +16,7 @@ class Oral extends Component
     public $search = '', $base64pdf;    
     public function render()
     {
-        $participants = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->where('category', 'oral')->get();
+        $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'oral')->get();
         $judges = RefJudge::where('category', 'oral')->get();
         $criterias = RefCriteria::where('category', 'oral')->get();
         $part = RefParticipant::where('category', 'oral')->get();

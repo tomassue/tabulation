@@ -15,7 +15,7 @@ class Poster extends Component
     public $search = '', $base64pdf; 
     public function render()
     {
-        $participants = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->where('category', 'poster')->get();
+        $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'poster')->get();
         $judges = RefJudge::where('category', 'poster')->get();
         $criterias = RefCriteria::where('category', 'poster')->get();
         $part = RefParticipant::where('category', 'poster')->get();
