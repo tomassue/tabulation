@@ -43,4 +43,8 @@ class RefParticipant extends Model
             return "";
         }
     }
+    public function getCriteriaScore($criteria_id, $judge_id)
+    {
+        return $this->hasMany(Oral::class, 'participant_id')->where('judge_id', $judge_id)->where('criteria_id', $criteria_id)->sum('score');
+    }
 }
