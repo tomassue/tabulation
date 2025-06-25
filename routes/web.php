@@ -42,3 +42,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/reference/save-round', [RoundController::class, 'saveRound'])->name('save-round');
     /* -------------------------------- Reference ------------------------------- */
 });
+
+
+// -----------------------------------LED WALL DISPLAY-----------------------------------
+
+//ORAL
+    Route::get('/display_oral', [App\Http\Controllers\DisplayController::class, 'oral'])->name('display_oral');
+
