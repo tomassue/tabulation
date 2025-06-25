@@ -5,6 +5,16 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Scores</h5>
+                            <div class="row d-flex justify-content-center mb-3">
+                                <div class="col-md-6">
+                                    <input type="search" wire:model.live="search"  list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
+                                    <datalist id="datalistOptions">
+                                        @foreach ($part as $item)
+                                            <option value="{{$item->participant}}">
+                                        @endforeach
+                                    </datalist>
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <!-- Table with hoverable rows -->
                                 <table class="table table-hover table-striped">
@@ -22,16 +32,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($participants as $item)
+                                        @foreach ($participants as $participant)
                                         <tr>
                                             <th scope="row">{{$loop->iteration}}</th>
-                                            <th scope="row">{{$item->participant}}</th>
-                                            @foreach ($judges as $item)
+                                            <th scope="row">{{$participant->participant}}</th>
+                                            @foreach ($judges as $judge)
                                                 <td>
-                                                    @foreach ($criterias as $item)
+                                                    @foreach ($criterias as $criteria)
+                                                    @php
+                                                        $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                    @endphp
                                                     <div class="mb-2">
-                                                        <label for="">{{$item->criteria}}</label>
-                                                         <input type="text" class="form-control" placeholder="Score">
+                                                        <label for="">{{$criteria->criteria}}</label>
+                                                        <input type="text" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
                                                     </div>
                                                     @endforeach
                                                 </td>

@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h5 class="">SCORE TABLE</h5>
-                            <button class="btn btn-primary">Export PDF</button>
+                            <button class="btn btn-primary" wire:click="generateReport">Export PDF</button>
                         </div>
                     </div>
                     <div class="card-body p-3">
@@ -31,6 +31,8 @@
                                         <th class="text-center bg-warning text-white">SUB TOTAL</th>
                                         <th colspan="5" class="text-center bg-danger text-white">ROUND 3</th>
                                         <th class="text-center bg-danger text-white">SUB TOTAL</th>
+                                        <th colspan="5" class="text-center bg-dark text-white">CLINCHER</th>
+                                        <th class="text-center bg-dark text-white">SUB TOTAL</th>
                                         <th class="bg-success text-white text-center">GRAND TOTAL</th>
                                         <th class="bg-info text-white text-center">COMPLETE %</th>
                                     </tr>
@@ -46,7 +48,7 @@
                                             <td>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-primary text-white">Q{{$i}}</span>
-                                                    <input type="number" wire:change="saveScore({{$item->id}}, '1', {{$i}}, $event.target.value)" class="form-control" value="{{ $score ? $score->score : '' }}" placeholder="Enter score"/>
+                                                    <input type="number" max="1" wire:change="saveScore({{$item->id}}, '1', {{$i}}, $event.target.value)" class="form-control" value="{{ $score ? $score->score : '' }}" placeholder="Enter score"/>
                                                 </div>
                                             </td>
                                         @endfor
@@ -75,6 +77,18 @@
                                             </td>
                                          @endfor
                                         <td class="text-end">{{$item->sumRound3()}}</td>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                             @php
+                                                $score = \App\Models\QuizBee::where('participant_id', $item->id)->where('round_id', '4')->where('question_number', $i)->first();
+                                            @endphp
+                                            <td>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-dark text-white">C{{$i}}</span>
+                                                    <input type="number"  wire:change="saveScore({{$item->id}}, '4', {{$i}}, $event.target.value)" class="form-control" value="{{ $score ? $score->score : '' }}"  placeholder="Enter score"/>
+                                                </div>
+                                            </td>
+                                         @endfor
+                                        <td class="text-end">{{$item->sumRound4()}}</td>
                                         <td class="text-end">{{$item->sumAll()}}</td>
                                         <td>
                                             <div class="progress">
@@ -87,6 +101,29 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Body -->
+        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+        <div class="modal fade" id="reportModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleId">
+                            Modal title
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600"  type="application/pdf"  frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -246,3 +283,11 @@
         }
     </style>
 @endassets
+@script
+<script>
+    window.addEventListener('openModal', event => {
+        var myModal = new bootstrap.Modal(document.getElementById('reportModal'));
+        myModal.show();
+    });
+</script>
+@endscript

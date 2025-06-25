@@ -20,12 +20,27 @@ class RefParticipant extends Model
     {
         return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', 3)->sum('score');
     }
+    public function sumRound4()
+    {
+        return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', 4)->sum('score');
+    }
+
     public function sumAll()
     {
         return $this->hasMany(QuizBee::class, 'participant_id')->sum('score');
     }
     public function getPercent()
     {
-        return $this->hasMany(QuizBee::class, 'participant_id')->whereNotNull('score')->count() / 25 * 100;
+        return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', '!=', 4)->whereNotNull('score')->count() / 25 * 100;
+    }
+    public function convert($path): String
+    {
+        if ($path) {
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $image = base64_encode(file_get_contents($path));
+            return "data:image/" . $ext . ";base64," . $image;
+        } else {
+            return "";
+        }
     }
 }
