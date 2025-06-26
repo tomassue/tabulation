@@ -67,4 +67,13 @@ class RefParticipant extends Model
     {
         return $this->hasOne(PosterOutput::class, 'participant_id', 'id');
     }
+    public function averagePoster()
+    {
+        return $this->hasMany(Poster::class, 'participant_id', 'id')->sum('score') / 3;
+    }
+    public function averageOral()
+    {
+        $dedecution = $this->deductions?->deduction;
+        return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') - $dedecution)  / 3;
+    }
 }
