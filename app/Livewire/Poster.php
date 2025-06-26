@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Log;
 use App\Models\RefCriteria;
 use Livewire\Component;
 use App\Models\RefParticipant;
 use App\Models\RefJudge;
 use App\Models\Poster as PosterModel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Poster extends Component
@@ -31,6 +33,10 @@ class Poster extends Component
             $poster->criteria_id = $criteria_id;
             $poster->judge_id = $judge_id;
         }
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'activity' => 'Poster id ' . $poster->id . ' Score has been updated from ' . $poster->score . ' to ' . $score,
+        ]);
         $poster->score = $score;
         $poster->save();
     }
