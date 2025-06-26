@@ -20,7 +20,7 @@
         <li class="nav-item">
             <a class="nav-link {{ Route::currentRouteName() == 'oral' ? '' : 'collapsed' }}" href="{{ route('oral') }}">
                 <i class="bi bi-mic"></i>
-                <span>Oral</span>
+                <span>Oratorical</span>
             </a>
         </li>
 

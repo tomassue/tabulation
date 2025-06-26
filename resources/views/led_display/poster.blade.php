@@ -74,7 +74,7 @@
                 '#5d412d',
             ];
             $font = [
-                '90px',
+                '80px',
                 '70px',
                 '60px',
             ]
@@ -84,15 +84,27 @@
             <div class="col-md-2 d-flex align-items-center justify-content-center">
                 <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
             </div>
+            {{-- ==== --}}
             <div class="col-md-10 d-flex align-items-center">
-                <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                <div class="col-md-1 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
                     #{{$item->participant_no}} 
-                    <button type="button" class="btn show-poster fw-bold"
+                </div>
+                <div class="col-md-8 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                     <button type="button" class="btn show-poster fw-bold"
                             data-bs-toggle="modal"
                             data-bs-target="#fullscreenModal{{ $item->id }}"
                             style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
                         <i>{{ $item->participant }}</i>
                     </button>
+                </div>
+                <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                   90
+                </div>
+             
+                <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                    
+                   
+                 
                     <div class="modal fade" id="fullscreenModal{{ $item->id }}" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-fullscreen">
                             <div class="modal-content bg-dark p-0 border-0"> <!-- Optional: dark background -->
@@ -109,6 +121,7 @@
                     <a href="{{ route('display_poster_output', $item->id) }}"  target="_blank">  </a> 
                 </div>
             </div>
+            {{-- ===== --}}
         </div>
         @endforeach
     </div>

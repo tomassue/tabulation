@@ -72,10 +72,20 @@
                 </div>
                 
                 <div class="col-md-10 d-flex align-items-center">
-                    <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                        #{{$item->participant_no}}  
-                        <i>{{$item->participant}}</i>
-                    </div>
+                    <div class="col-md-1 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                    #{{$item->participant_no}} 
+                </div>
+                <div class="col-md-9 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                     <button type="button" class="btn show-poster fw-bold"
+                            data-bs-toggle="modal"
+                            data-bs-target="#fullscreenModal{{ $item->id }}"
+                            style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
+                        <i>{{ $item->participant }}</i>
+                    </button>
+                </div>
+                <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                   90
+                </div>
                 </div>
             </div>
             @endforeach
