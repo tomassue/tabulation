@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class Poster extends Component
 {
-    public $search = '', $base64pdf, $judge_id;
+    public $search = '', $base64pdf = '', $judge_id;
     public function render()
     {
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'poster')->get();

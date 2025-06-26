@@ -73,7 +73,7 @@ class RefParticipant extends Model
     }
     public function averageOral()
     {
-        $dedecution = $this->deductions?->deduction;
-        return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') - $dedecution)  / 3;
+        $deduction = $this->deductions?->deduction;
+        return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') / 3) - $deduction;
     }
 }

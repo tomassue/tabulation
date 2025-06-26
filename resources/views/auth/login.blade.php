@@ -2,6 +2,7 @@
 
 @section('content')
 
+@guest
 <!-- Login Container -->
 <div class="min-vh-100 d-flex align-items-center justify-content-center position-relative">
     <div class="container py-5">
@@ -79,4 +80,6 @@
         </div>
     </div>
 </div>
+@endguest
+
 @endsection

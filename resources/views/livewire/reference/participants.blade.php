@@ -149,11 +149,6 @@
                     <form wire:submit.prevent="uploadOutput">
                         <div class="modal-body">
                             @include('layouts.message')
-                            @if ($poster_file)
-                            <div class="mb-3">
-                                <img src="{{ $poster_file->temporaryUrl() }}" alt="" class="img-fluid" id="poster_preview">
-                            </div>
-                            @endif
                             <div class="mb-3">
                                 <label for="poster_file" class="form-label">
                                     Poster
@@ -163,7 +158,10 @@
                                         </div>
                                     </div>
                                 </label>
-                                <input type="file" class="form-control" id="poster_file" wire:model="poster_file" accept="image/*">
+                                <!-- <input type="file" class="form-control" id="poster_file" wire:model="poster_file" accept="image/*"> -->
+                                <div wire:ignore>
+                                    <input type="file" class="form-control upload_poster_file" accept="image/*">
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -186,6 +184,39 @@
     </section>
     @script
     <script>
+        // Register the plugin 
+        FilePond.registerPlugin(FilePondPluginFileValidateType); // for file type validation
+        FilePond.registerPlugin(FilePondPluginFileValidateSize); // for file size validation
+        FilePond.registerPlugin(FilePondPluginImagePreview); // for image preview
+
+        // Turn input element into a pond with configuration options
+        $('.upload_poster_file').filepond({
+            // required: true,
+            allowFileTypeValidation: true,
+            acceptedFileTypes: ['image/jpeg', 'image/png'],
+            labelFileTypeNotAllowed: 'File of invalid type',
+            allowFileSizeValidation: true,
+            maxFileSize: '50MB',
+            labelMaxFileSizeExceeded: 'File is too large',
+            server: {
+                // This will assign the data to the files[] property.
+                process: (fieldName, file, metadata, load, error, progress, abort) => {
+                    @this.upload('poster_file', file, load, error, progress);
+                },
+                revert: (uniqueFileId, load, error) => {
+                    @this.removeUpload('poster_file', uniqueFileId, load, error);
+                }
+            }
+        });
+
+        $wire.on('reset-poster-files', () => {
+            $('.upload_poster_file').each(function() {
+                $(this).filepond('removeFiles');
+            });
+        });
+
+        /* -------------------------------------------------------------------------- */
+
         window.addEventListener('openModal', event => {
             var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
             myModal.show();
@@ -198,5 +229,7 @@
             var myModal = new bootstrap.Modal(document.getElementById('uploadPosterModal'));
             myModal.show();
         });
+
+        /* -------------------------------------------------------------------------- */
     </script>
     @endscript
