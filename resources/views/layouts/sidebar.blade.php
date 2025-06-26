@@ -4,6 +4,13 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
+                <i class="bi bi-card-heading"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link {{ Route::currentRouteName() == 'quiz' ? '' : 'collapsed' }}" href="{{ route('quiz') }}">
                 <i class="bi bi-question-lg"></i>
                 <span>Quiz</span>
