@@ -2,9 +2,6 @@
 
 @section('content')
 
-<!-- Animated Particles Background -->
-<div id="particles-js" class="position-fixed top-0 start-0 w-100 h-100 bg-white" style="z-index: -1;"></div>
-
 <!-- Login Container -->
 <div class="min-vh-100 d-flex align-items-center justify-content-center position-relative">
     <div class="container py-5">
@@ -82,65 +79,4 @@
         </div>
     </div>
 </div>
-
-<!-- Particle JS Script -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<script>
-    particlesJS("particles-js", {
-        "particles": {
-            "number": {
-                "value": 65,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#0d6efd"
-            },
-            "shape": {
-                "type": "circle"
-            },
-            "opacity": {
-                "value": 0.3,
-                "random": true
-            },
-            "size": {
-                "value": 3,
-                "random": true
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#6c757d",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 2,
-                "direction": "none",
-                "out_mode": "bounce"
-            }
-        },
-        "interactivity": {
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "grab"
-                }
-            },
-            "modes": {
-                "grab": {
-                    "distance": 200,
-                    "line_linked": {
-                        "opacity": 0.5
-                    }
-                }
-            }
-        },
-        "retina_detect": true
-    });
-</script>
-
 @endsection

@@ -11,16 +11,16 @@ class Participants extends Component
 {
     use WithFileUploads;
 
-    public $file;
+    public $poster_file;
     public $id, $participant, $category, $school, $participant_no, $participant_id;
 
     protected $rules = [
-        'file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
+        'poster_file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
     ];
 
     protected $messages = [
-        'file.required' => 'Please select a file to upload',
-        'file.max' => 'File size must be less than 50MB',
+        'poster_file.required' => 'Please select a file to upload',
+        'poster_file.max' => 'File size must be less than 50MB',
         'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG',
     ];
 
@@ -72,16 +72,16 @@ class Participants extends Component
             $output = new PosterOutput();
             $output->participant_id = $this->participant_id;
         }
-        $path = $this->file->store('uploads', 'public');
+        $path = $this->poster_file->store('uploads', 'public');
         $output->output_file = $path;
         $output->save();
-
+        $this->reset('poster_file');
         return session()->flash("status", 'File uploaded successfully! Path: ' . $path);
-        $this->reset('file');
     }
     public function addPoster($id)
     {
         $this->participant_id = $id;
+        $this->reset('poster_file');
         $this->dispatch('openPosterModal');
     }
 }

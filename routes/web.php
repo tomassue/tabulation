@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\OralController;
 use App\Http\Controllers\PosterController;
 use App\Http\Controllers\QuizController;
@@ -44,6 +45,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/reference/round', [RoundController::class, 'index'])->name('reference.round');
     Route::post('/reference/save-round', [RoundController::class, 'saveRound'])->name('save-round');
     /* -------------------------------- Reference ------------------------------- */
+
+    Route::get('/logs', [LogsController::class, 'index'])->name('logs');
 });
 
 
