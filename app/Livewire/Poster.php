@@ -12,14 +12,15 @@ use Illuminate\Support\Facades\DB;
 
 class Poster extends Component
 {
-    public $search = '', $base64pdf; 
+    public $search = '', $base64pdf, $judge_id;
     public function render()
     {
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'poster')->get();
-        $judges = RefJudge::where('category', 'poster')->get();
+        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->where('category', 'poster')->get();
         $criterias = RefCriteria::where('category', 'poster')->get();
         $part = RefParticipant::where('category', 'poster')->get();
-        return view('livewire.poster', compact('participants', 'judges', 'criterias','part'));
+        $jud  = RefJudge::where('category', 'poster')->get();
+        return view('livewire.poster', compact('participants', 'judges', 'criterias', 'part', 'jud'));
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)
     {
@@ -45,7 +46,7 @@ class Poster extends Component
             ->get();
         $poster = PosterModel::all();
         $criterias = RefCriteria::where('category', 'poster')->get();
-        $pdf = Pdf::loadView('generated_pdf.poster', compact('participants', 'poster', 'criterias', 'judges'))->setPaper('letter', 'landscape');
+        $pdf = Pdf::loadView('generated_pdf.poster', compact('participants', 'poster', 'criterias', 'judges'))->setPaper('letter', 'portrait');
         $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }

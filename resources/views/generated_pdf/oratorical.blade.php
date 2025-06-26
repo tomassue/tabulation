@@ -54,8 +54,8 @@
     <table class="table">
         <tr>
             <td class="text-start" width="30%">
-                <img src="{{ $participants->first()->convert(public_path()."/img/cdo_email.png") }}" width="90" >
-                <img src="{{ $participants->first()->convert(public_path()."/img/tourism_email.png") }}" width="95" >
+                <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="90" >
+                <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="95" >
             </td>
             <td class="text-center">
                 <div style="font-size: 13pt;">Republic of the Philippines</div>
@@ -63,7 +63,7 @@
                 <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL AFFAIRS OFFICE</div>
             </td>
             <td class="text-end" width="30%">
-                <img src="{{ $participants->first()->convert(public_path()."/img/goldencdo_email.png") }}"  width="120">
+                <img src="{{ convert_image(public_path()."/img/goldencdo_email.png") }}"  width="120">
             </td>
         </tr>
         <tr>
@@ -85,7 +85,7 @@
                 </th>
                 @endforeach
                 <th class="text-center  p-2 bold"style="font-size:10pt;">DEDUCTION</th>
-                <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL</th>
+                <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL SCORE</th>
             </tr>
         </thead>
         @foreach ($participants as $item)
@@ -97,7 +97,7 @@
                 <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->getScore($judge->id)}}</td>
                 @endforeach
                 <td class="text-center">{{$item->deduction}}</td>
-                <td class="text-center">{{$item->final_score}}</td>
+                <td class="text-center" style="font-weight: bold">{{number_format(($item->final_score / 3), 2)}}</td>
             </tr>
         @endforeach
     </table>

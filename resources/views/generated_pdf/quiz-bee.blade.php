@@ -54,8 +54,8 @@
     <table class="table">
         <tr>
             <td class="text-start" width="30%">
-                <img src="{{ $participants->first()->convert(public_path()."/img/cdo_email.png") }}" width="90" >
-                <img src="{{ $participants->first()->convert(public_path()."/img/tourism_email.png") }}" width="95" >
+                <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="90" >
+                <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="95" >
             </td>
             <td class="text-center">
                 <div style="font-size: 13pt;">Republic of the Philippines</div>
@@ -63,7 +63,7 @@
                 <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL AFFAIRS OFFICE</div>
             </td>
             <td class="text-end" width="30%">
-                <img src="{{ $participants->first()->convert(public_path()."/img/goldencdo_email.png") }}"  width="120">
+                <img src="{{ convert_image(public_path()."/img/goldencdo_email.png") }}"  width="120">
             </td>
         </tr>
         <tr>
