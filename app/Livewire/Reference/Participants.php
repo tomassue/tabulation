@@ -4,17 +4,20 @@ namespace App\Livewire\Reference;
 
 use Livewire\Component;
 use App\Models\RefParticipant;
+use Livewire\WithFileUploads;
 
 class Participants extends Component
 {
-    public $id, $participant, $category, $school, $participant_no;
+    use WithFileUploads;
+    public $id, $participant, $category, $school, $participant_no, $poster_file;
     public function render()
     {
-        $participants = RefParticipant::all();
+        $participants = RefParticipant::orderBy('category', 'asc')->get();
         return view('livewire.reference.participants', compact('participants'));
     }
-    
-    public function saveParticipant(){
+
+    public function saveParticipant()
+    {
         $this->validate([
             'participant_no' => 'required',
             'participant' => 'required',
@@ -32,11 +35,13 @@ class Participants extends Component
 
         return session()->flash("status", "Successfully saved");
     }
-    public function addParticipant(){
+    public function addParticipant()
+    {
         $this->reset();
         $this->dispatch('openModal');
     }
-    public function editParticipant($id){
+    public function editParticipant($id)
+    {
         $participant =  RefParticipant::find($id);
         $this->participant = $participant->participant;
         $this->category = $participant->category;
@@ -44,5 +49,9 @@ class Participants extends Component
         $this->school = $participant->school;
         $this->id = $id;
         $this->dispatch('openModal');
+    }
+    public function addPoster($id)
+    {
+        $this->dispatch('openPosterModal');
     }
 }
