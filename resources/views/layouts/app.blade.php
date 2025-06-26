@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/jquery-filepond-master/filepond-plugin-image-preview.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
@@ -69,6 +70,7 @@
     <script src="{{ asset('vendor/jquery-filepond-master/filepond-plugin-file-validate-size.js') }}"></script>
     <script src="{{ asset('vendor/jquery-filepond-master/filepond-plugin-image-preview.js') }}"></script>
     <script src="{{ asset('vendor/jquery-filepond-master/filepond.jquery.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
     <!-- Template Main JS File -->
     <script src="{{ asset('js/main.js') }}"></script>

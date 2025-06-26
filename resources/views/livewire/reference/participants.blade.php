@@ -163,6 +163,24 @@
                                     <input type="file" class="form-control upload_poster_file" accept="image/*">
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <!-- begin::Files -->
+                                <div class="col-12 mb-3" style="display: {{ $poster_photos ? '' : 'none' }};">
+                                    <table class="table table-row-dashed table-row-gray-300 gy-7">
+                                        <thead>
+                                            <tr class="fw-bolder fs-6 text-gray-800">
+                                                <th width="80%">File</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <td>
+                                                <img src="{{ $poster_photos }}" alt="image" class="img-fluid" style="max-width: 100%; max-height: 200px;">
+                                            </td>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end::Files -->
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
