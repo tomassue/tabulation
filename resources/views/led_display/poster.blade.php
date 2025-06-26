@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORATORICAL WINNERS</title>
+    <title>POSTER MAKING WINNERS</title>
 
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -40,10 +40,10 @@
            
         ">
 
-   <div class="container mt-3">
+   <div class="container mt-5">
     <div class="row mb-4">
         <div class="col text-center">
-            <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
+            <img src="{{ asset('img/poster.png') }}" class="img-fluid" alt="Logo">
         </div>
     </div>
     <div class="">

@@ -49,3 +49,9 @@ Route::group(['middleware' => ['auth']], function () {
 //ORAL
     Route::get('/display_oral', [App\Http\Controllers\DisplayController::class, 'oral'])->name('display_oral');
 
+//QUIZ
+    Route::get('/display_quiz', [App\Http\Controllers\DisplayQuizController::class, 'quiz'])->name('display_quiz');
+
+//POSTER
+    Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
+
