@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OralController;
 use App\Http\Controllers\PosterController;
 use App\Http\Controllers\QuizController;
@@ -17,6 +18,8 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
     Route::get('/quiz/view-details', [QuizController::class, 'viewDetails'])->name('quiz.view-details');
@@ -47,12 +50,4 @@ Route::group(['middleware' => ['auth']], function () {
 // -----------------------------------LED WALL DISPLAY-----------------------------------
 
 //ORAL
-    Route::get('/display_oral', [App\Http\Controllers\DisplayController::class, 'oral'])->name('display_oral');
-
-//QUIZ
-    Route::get('/display_quiz', [App\Http\Controllers\DisplayQuizController::class, 'quiz'])->name('display_quiz');
-
-//POSTER
-    Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
-    Route::get('/display_poster_output', [App\Http\Controllers\DisplayPosterController::class, 'output'])->name('display_poster_output');
-
+Route::get('/display_oral', [App\Http\Controllers\DisplayController::class, 'oral'])->name('display_oral');

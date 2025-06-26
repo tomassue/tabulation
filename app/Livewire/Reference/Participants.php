@@ -5,7 +5,6 @@ namespace App\Livewire\Reference;
 use App\Models\PosterOutput;
 use Livewire\Component;
 use App\Models\RefParticipant;
-use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 
 class Participants extends Component
@@ -25,10 +24,9 @@ class Participants extends Component
         'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG',
     ];
 
-
     public function render()
     {
-        $participants = RefParticipant::all();
+        $participants = RefParticipant::orderBy('category', 'asc')->get();
         return view('livewire.reference.participants', compact('participants'));
     }
 
@@ -78,5 +76,9 @@ class Participants extends Component
 
         $this->successMessage = 'File uploaded successfully! Path: ' . $path;
         $this->reset('file');
+    }
+    public function addPoster($id)
+    {
+        $this->dispatch('openPosterModal');
     }
 }
