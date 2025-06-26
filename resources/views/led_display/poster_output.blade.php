@@ -12,7 +12,7 @@
         }
 
         .fullscreen-img {
-            background-image: url('{{ asset('img/news-5.jpg') }}'); /* Replace with your image path */
+            background-image: url('{{ asset('storage/'.$file) }}'); /* Replace with your image path */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reference;
 
+use App\Models\PosterOutput;
 use Livewire\Component;
 use App\Models\RefParticipant;
 use Livewire\WithFileUploads;
@@ -9,7 +10,20 @@ use Livewire\WithFileUploads;
 class Participants extends Component
 {
     use WithFileUploads;
-    public $id, $participant, $category, $school, $participant_no, $poster_file;
+
+    public $file;
+    public $id, $participant, $category, $school, $participant_no, $participant_id;
+
+    protected $rules = [
+        'file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
+    ];
+
+    protected $messages = [
+        'file.required' => 'Please select a file to upload',
+        'file.max' => 'File size must be less than 50MB',
+        'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG',
+    ];
+
     public function render()
     {
         $participants = RefParticipant::orderBy('category', 'asc')->get();
@@ -50,8 +64,24 @@ class Participants extends Component
         $this->id = $id;
         $this->dispatch('openModal');
     }
+    public function uploadOutput()
+    {
+        $this->validate();
+        $output =  PosterOutput::where('participant_id', $this->participant_id)->first();
+        if (!$output) {
+            $output = new PosterOutput();
+            $output->participant_id = $this->participant_id;
+        }
+        $path = $this->file->store('uploads', 'public');
+        $output->output_file = $path;
+        $output->save();
+
+        return session()->flash("status", 'File uploaded successfully! Path: ' . $path);
+        $this->reset('file');
+    }
     public function addPoster($id)
     {
+        $this->participant_id = $id;
         $this->dispatch('openPosterModal');
     }
 }

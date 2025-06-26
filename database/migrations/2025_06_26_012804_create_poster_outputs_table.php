@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('poster_outputs', function (Blueprint $table) {
             $table->id();
-            $table->text("activity")->nullable();
-            $table->integer("user_id")->nullable();
-            $table->integer("source_id")->nullable();
-            $table->enum("category", ["oral", "poster", "quiz"])->nullable();
+            $table->integer("participant_id")->nullable();
+            $table->string("output_file")->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('poster_outputs');
     }
 };

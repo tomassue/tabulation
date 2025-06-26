@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Log;
 use App\Models\RefCriteria;
 use Livewire\Component;
 use App\Models\RefParticipant;
@@ -9,6 +10,7 @@ use App\Models\RefJudge;
 use App\Models\Oral as OralModel;
 use App\Models\OralDeduction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Oral extends Component
@@ -32,6 +34,10 @@ class Oral extends Component
             $oral->criteria_id = $criteria_id;
             $oral->judge_id = $judge_id;
         }
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'activity' => 'Oral id ' . $oral->id . ' Score has been updated from ' . $oral->score . ' to ' . $score,
+        ]);
         $oral->score = $score ? $score : 0;
         $oral->save();
     }

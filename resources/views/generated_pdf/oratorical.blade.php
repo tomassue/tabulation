@@ -54,13 +54,14 @@
     <table class="table">
         <tr>
             <td class="text-start" width="30%">
-                <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="90" >
-                <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="95" >
+                <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="70" >
+                <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="75" >
             </td>
             <td class="text-center">
-                <div style="font-size: 13pt;">Republic of the Philippines</div>
-                <div style="font-size: 13pt;">City of Cagayan de Oro</div>
-                <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL AFFAIRS OFFICE</div>
+                <div style="font-size: 12pt;font-weight:bold;">1st Mayor Rolando <i><span style="color: green;">“Klarex”</span></i> Uy </div>
+                <div style="font-size: 13pt;font-weight:bold;">KINAADMAN SA KASAYSAYAN</div>
+                <div style="font-size: 12pt;"> A Literary and Speech Contest</div>
+                <div style="font-size: 9pt;">June 27, 2025, 1:00 PM | 5F SM CDO Downtown</div>
             </td>
             <td class="text-end" width="30%">
                 <img src="{{ convert_image(public_path()."/img/goldencdo_email.png") }}"  width="120">
@@ -69,15 +70,15 @@
         <tr>
             <td colspan="3" class="text-center">
                 
-                <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;">ORATORICAL SCORE REPORT</div>
+                <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 20px;">ORATORICAL SCORE REPORT</div>
             </td>
         </tr>
     </table>
-    <table class="table bordered" style="padding-top: 10px;" >
+    <table class="table bordered" style="padding-top: 20px;" >
         <thead>
             <tr>
-                <th class="text-center p-2 bold">RANK</th>
-                <th class="text-center p-2 bold" style="font-size:10pt;">CONTESTANT #</th>
+                <th class="text-center p-2 bold"  style="font-size:10pt;">RANK</th>
+                <th class="text-center p-2 bold" style="font-size:10pt;">NUMBER</th>
                 <th class="text-center  p-2 bold" style="font-size:10pt;">CONTESTANT</th>
                 @foreach ($judges as $judge)
                 <th class="text-center  p-2 bold"style="font-size:10pt;">

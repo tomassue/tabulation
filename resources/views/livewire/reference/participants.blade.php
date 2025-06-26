@@ -146,7 +146,7 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Upload File</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form wire:submit.prevent="saveParticipant">
+                    <form wire:submit.prevent="uploadOutput">
                         <div class="modal-body">
                             @include('layouts.message')
                             <div class="mb-3">
@@ -158,16 +158,16 @@
                                         </div>
                                     </div>
                                 </label>
-                                <input type="file" class="form-control" id="poster_file" wire:model="poster_file" accept="image/*">
+                                <input type="file" class="form-control" id="poster_file" wire:model="file" accept="image/*">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">
-                                <div wire:loading.remove wire:target="saveParticipant">
+                                <div wire:loading.remove wire:target="uploadOutput">
                                     Upload
                                 </div>
-                                <div wire:loading wire:target="saveParticipant">
+                                <div wire:loading wire:target="uploadOutput">
                                     <div class="spinner-border spinner-border-sm" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>

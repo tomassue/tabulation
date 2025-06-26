@@ -53,16 +53,16 @@
 <body>
     <table class="table">
         <tr>
-            <td class="text-start" width="30%">
+            <td class="text-start" width="20%">
                 <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="90" >
                 <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="95" >
             </td>
             <td class="text-center">
-                <div style="font-size: 13pt;">Republic of the Philippines</div>
-                <div style="font-size: 13pt;">City of Cagayan de Oro</div>
-                <div style="font-size: 12pt;font-weight:bold;">CITY TOURISM AND CULTURAL AFFAIRS OFFICE</div>
+                <div style="font-size: 15pt;font-weight:bold;">1st Mayor Rolando <i><span style="color: green;">“Klarex”</span></i> Uy </div>
+                <div style="font-size: 20pt;font-weight:bold;">KINAADMAN SA KASAYSAYAN: A Literary and Speech Contest</div>
+                <div>June 27, 2025, 1:00 PM | 5F SM CDO Downtown</div>
             </td>
-            <td class="text-end" width="30%">
+            <td class="text-end" width="20%">
                 <img src="{{ convert_image(public_path()."/img/goldencdo_email.png") }}"  width="120">
             </td>
         </tr>
