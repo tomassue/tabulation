@@ -54,10 +54,11 @@
            
         ">
 
-   <div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col text-center">
-            <img src="{{ asset('img/poster.png') }}" class="img-fluid" alt="Logo">
+    <div class="container mt-5">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <img src="{{ asset('img/poster.png') }}" class="img-fluid" alt="Logo">
+            </div>
         </div>
     </div>
     <div class="">
@@ -75,7 +76,7 @@
             $font = [
                 '90px',
                 '70px',
-                '50px',
+                '60px',
             ]
         @endphp
         @foreach ($participants as $index => $item)
@@ -87,13 +88,27 @@
             <div class="col-md-10 d-flex align-items-center">
                 <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
                     #{{$item->participant_no}} 
-                    <a href="{{ route('display_poster_output', $item->id) }}" style="color: {{$color[$index]}};text-decoration: none;" target="_blank"> <i>{{$item->participant}}</i> </a> 
+
+                   
+
+                    <button type="button" class="btn show-poster fw-bold"
+                            data-bs-toggle="modal"
+                            data-bs-target="#fullscreenModal"
+                            data-image="{{ asset('storage/posters/' . $item->output_file) }}"
+                            style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
+                        <i>{{ $item->participant }}</i>
+                    </button>
+
+
+
+
+                    <a href="{{ route('display_poster_output', $item->id) }}"  target="_blank">  </a> 
                 </div>
             </div>
         </div>
         @endforeach
     </div>
-</div>
+
 <div class="row my-5 px-5">
     <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
         <img src="{{ asset('img/cdo-seal.png') }}" alt="Logo 1" class="img-fluid" style="max-height: 150px;">
@@ -117,4 +132,54 @@
     <!-- Bootstrap Bundle JS (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+
+
+
+
+
+
+{{-- modal --}}
+
+
+
+<div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark p-0 border-0"> <!-- Optional: dark background -->
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-white" id="fullscreenModalLabel">Joseph Paulo Miguel Suero</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+        {{-- <img src="{{ asset('img/sample2.jfif') }}" alt="Logo" class="w-100 h-100 object-fit-contain"> --}}
+
+
+        <img id="poster-image" src="" alt="Poster Output" class="img-fluid w-100 h-100 object-fit-contain">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('fullscreenModal');
+        const image = document.getElementById('poster-image');
+
+        document.querySelectorAll('.show-poster').forEach(button => {
+            button.addEventListener('click', () => {
+                const imageUrl = button.getAttribute('data-image');
+                image.src = imageUrl;
+            });
+        });
+    });
+</script>
+
+
+
+
 </html>
