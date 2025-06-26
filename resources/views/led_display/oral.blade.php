@@ -41,53 +41,44 @@
         ">
 
    <div class="container mt-3">
-    <div class="row mb-4">
-        <div class="col text-center">
-            <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
-        </div>
-    </div>
-    <div class="">
-        <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/1st.png') }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
-        </div>
-        
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 90px; color:#ebba64;">
-                #5 
-                <i>Jevonie Villarin</i>
+        <div class="row mb-4">
+            <div class="col text-center">
+                <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
             </div>
         </div>
-    </div>
-
-    <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/2nd.png') }}" class="img-fluid" style="max-height: 120px;" alt="2nd Place">
-        </div>
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 70px; color:#aaaaaa;">
-                #3
-                <i>Rustom Abella</i>
+        <div class="">
+            @php
+                $image = [
+                    'img/1st.png',
+                    'img/2nd.png',
+                    'img/3rd.png',
+                ];
+                $color = [
+                    '#ebba64',
+                    '#aaaaaa',
+                    '#5d412d',
+                ];
+                $font = [
+                    '90px',
+                    '70px',
+                    '50px',
+                ]
+            @endphp
+            @foreach ($participants as $index => $item)
+            <div class="row mb-3 justify-content-center align-items-center">
+                <div class="col-md-2 d-flex align-items-center justify-content-center">
+                    <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
+                </div>
+                
+                <div class="col-md-10 d-flex align-items-center">
+                    <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                        #{{$item->participant_no}}  
+                        <i>{{$item->participant}}</i>
+                    </div>
+                </div>
             </div>
-        </div>
+            @endforeach
     </div>
-
-    <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/3rd.png') }}" class="img-fluid" style="max-height: 120px;" alt="3rd Place">
-        </div>
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 60px; color:#5d412d;">
-                #8
-                <i>Mike Jun R. Zaballero</i>
-            </div>
-        </div>
-    </div>
-    </div>
-    
-
-    
-
 </div>
 
 <div class="row my-5 px-5">

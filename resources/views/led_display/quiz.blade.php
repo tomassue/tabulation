@@ -39,7 +39,6 @@
             background-size: 1000px;
            
         ">
-
    <div class="container mt-5">
     <div class="row mb-4">
         <div class="col text-center">
@@ -50,48 +49,38 @@
    </div>
    {{-- end of container --}}
     <div class="">
-        <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/1st.png') }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
-        </div>
-        
-        <div class="col-12 col-md-10 d-flex align-items-center">
-    <div class="fw-bold" style=" color: #ebba64; font-size: 80px;">
-        #5 <i>Cagayan de Oro National High School - Junior High</i>
-    </div>
-</div>
-    </div>
-
-    <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/2nd.png') }}" class="img-fluid" style="max-height: 120px;" alt="2nd Place">
-        </div>
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 60px; color:#aaaaaa;">
-                #3
-                <i>Cagayan de Oro National High School - Junior High</i>
+        @php
+            $image = [
+                'img/1st.png',
+                'img/2nd.png',
+                'img/3rd.png',
+            ];
+            $color = [
+                '#ebba64',
+                '#aaaaaa',
+                '#5d412d',
+            ];
+            $font = [
+                '90px',
+                '70px',
+                '50px',
+            ]
+        @endphp
+        @foreach ($participants as $index => $item)
+            <div class="row mb-3 justify-content-center align-items-center">
+                <div class="col-md-2 d-flex align-items-center justify-content-center">
+                    <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
+                </div>
+                
+                <div class="col-12 col-md-10 d-flex align-items-center">
+                    <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
+                        #{{$item->participant_no}}  <i>{{$item->school}} </i>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row mb-3 justify-content-center align-items-center">
-        <div class="col-md-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('img/3rd.png') }}" class="img-fluid" style="max-height: 120px;" alt="3rd Place">
-        </div>
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 50px; color:#5d412d;">
-                #8
-                <i>Cagayan de Oro National High School - Junior High</i>
-            </div>
-        </div>
-    </div>
+        @endforeach
     </div>
     
-
-    
-
-
-
 <div class="row my-5 px-5">
     <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
         <img src="{{ asset('img/cdo-seal.png') }}" alt="Logo 1" class="img-fluid" style="max-height: 150px;">
