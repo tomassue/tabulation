@@ -2,19 +2,38 @@
 
 namespace App\Livewire\Reference;
 
+use App\Models\PosterOutput;
 use Livewire\Component;
 use App\Models\RefParticipant;
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads;
 
 class Participants extends Component
 {
+    use WithFileUploads;
+
+    public $file, $successMessage;
     public $id, $participant, $category, $school, $participant_no;
+
+    protected $rules = [
+        'file' => 'required|file|max:2048|mimes:jpg,png,pdf',
+    ];
+
+    protected $messages = [
+        'file.required' => 'Please select a file to upload',
+        'file.max' => 'File size must be less than 2MB',
+        'mimes' => 'Invalid file type. Allowed: JPG, PNG, PDF, DOCX'
+    ];
+
+
     public function render()
     {
         $participants = RefParticipant::all();
         return view('livewire.reference.participants', compact('participants'));
     }
-    
-    public function saveParticipant(){
+
+    public function saveParticipant()
+    {
         $this->validate([
             'participant_no' => 'required',
             'participant' => 'required',
@@ -32,11 +51,13 @@ class Participants extends Component
 
         return session()->flash("status", "Successfully saved");
     }
-    public function addParticipant(){
+    public function addParticipant()
+    {
         $this->reset();
         $this->dispatch('openModal');
     }
-    public function editParticipant($id){
+    public function editParticipant($id)
+    {
         $participant =  RefParticipant::find($id);
         $this->participant = $participant->participant;
         $this->category = $participant->category;
@@ -44,5 +65,18 @@ class Participants extends Component
         $this->school = $participant->school;
         $this->id = $id;
         $this->dispatch('openModal');
+    }
+    public function uploadOutput($participant_id)
+    {
+        $this->validate();
+        $path = $this->file->store('uploads', 'public');
+
+        PosterOutput::create([
+            'output_file' => $path,
+            'participant_id' => $participant_id
+        ]);
+
+        $this->successMessage = 'File uploaded successfully! Path: ' . $path;
+        $this->reset('file');
     }
 }
