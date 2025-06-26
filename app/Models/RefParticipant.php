@@ -63,4 +63,8 @@ class RefParticipant extends Model
     {
         return $this->hasMany(Poster::class, 'participant_id', 'id')->sum('score');
     }
+    public function posterOutput()
+    {
+        return $this->hasOne(PosterOutput::class, 'participant_id', 'id');
+    }
 }
