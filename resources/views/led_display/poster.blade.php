@@ -141,22 +141,45 @@
 
 {{-- modal --}}
 
+
+
 <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="fullscreenModalLabel">Fullscreen Modal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content bg-dark p-0 border-0"> <!-- Optional: dark background -->
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-white" id="fullscreenModalLabel">Joseph Paulo Miguel Suero</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+        {{-- <img src="{{ asset('img/sample2.jfif') }}" alt="Logo" class="w-100 h-100 object-fit-contain"> --}}
+
+
         <img id="poster-image" src="" alt="Poster Output" class="img-fluid w-100 h-100 object-fit-contain">
-
-
       </div>
     </div>
   </div>
 </div>
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('fullscreenModal');
+        const image = document.getElementById('poster-image');
+
+        document.querySelectorAll('.show-poster').forEach(button => {
+            button.addEventListener('click', () => {
+                const imageUrl = button.getAttribute('data-image');
+                image.src = imageUrl;
+            });
+        });
+    });
+</script>
+
+
 
 
 </html>
