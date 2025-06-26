@@ -49,16 +49,28 @@
                                                 {{$item->category}}
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})">
-                                                    <div wire:loading.remove wire:target="editParticipant({{$item->id}})">
-                                                        Edit
-                                                    </div>
-                                                    <div wire:loading wire:target="editParticipant({{$item->id}})">
-                                                        <div class="spinner-border spinner-border-sm" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})">
+                                                        <div wire:loading.remove wire:target="editParticipant({{$item->id}})">
+                                                            Edit
                                                         </div>
-                                                    </div>
-                                                </button>
+                                                        <div wire:loading wire:target="editParticipant({{$item->id}})">
+                                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-warning" wire:click="addPoster({{$item->id}})" style="display: {{ $item->category == 'poster' ? '' : 'none' }};">
+                                                        <div wire:loading.remove wire:target="addPoster({{$item->id}})">
+                                                            Upload
+                                                        </div>
+                                                        <div wire:loading wire:target="addPoster({{$item->id}})">
+                                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                         @empty
@@ -125,6 +137,47 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="uploadPosterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Upload File</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form wire:submit.prevent="uploadOutput">
+                        <div class="modal-body">
+                            @include('layouts.message')
+                            <div class="mb-3">
+                                <label for="poster_file" class="form-label">
+                                    Poster
+                                    <div wire:loading>
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <input type="file" class="form-control" id="poster_file" wire:model="file" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">
+                                <div wire:loading.remove wire:target="uploadOutput">
+                                    Upload
+                                </div>
+                                <div wire:loading wire:target="uploadOutput">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </section>
     @script
     <script>
@@ -134,6 +187,10 @@
         });
         window.addEventListener('hideModal', event => {
             var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
+            myModal.show();
+        });
+        window.addEventListener('openPosterModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('uploadPosterModal'));
             myModal.show();
         });
     </script>
