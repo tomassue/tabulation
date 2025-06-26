@@ -22,7 +22,8 @@
                     </div>
                     <div class="card-body">
                         <div class="row d-flex justify-content-center my-3">
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
+                                 <label for="">PARTICIPANT</label>
                                 <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                 <datalist id="datalistOptions">
                                     @foreach ($part as $item)
@@ -30,7 +31,8 @@
                                         @endforeach
                                 </datalist>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mb-3">
+                                <label for="">JUDGES</label>
                                 <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
                                     <option value="">ALL</option>
                                     @foreach ($jud as $item)

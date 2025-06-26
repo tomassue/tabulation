@@ -19,6 +19,7 @@
                     <div class="card-body p-3">
                         <div class="row d-flex justify-content-center mb-3">
                             <div class="col-md-6">
+                                <label for="search">PARTICIPANT</label>
                                 <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                 <datalist id="datalistOptions">
                                     @foreach ($part as $item)

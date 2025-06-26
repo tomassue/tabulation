@@ -98,7 +98,7 @@
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{bong_format($item->total_score / 3)}}
+                   {{bong_format($item->averagePoster())}}
                 </div>
                 <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
                     <div class="modal fade" id="fullscreenModal{{ $item->id }}" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
