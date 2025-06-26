@@ -12,4 +12,8 @@ class Log extends Model
         'activity',
         'user_id',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
