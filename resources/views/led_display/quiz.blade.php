@@ -86,7 +86,7 @@
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{$item->total_score}}
+                   {{bong_format($item->total_score)}}
                 </div>
                 </div>
             </div>
