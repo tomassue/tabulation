@@ -65,6 +65,7 @@
                                         <th scope="row">
                                             <h4>{{$participant->participant_no}}</h4>
                                             <small>{{$participant->participant}}</small>
+                                            <div class="text-success fw-bold">{{bong_format($participant->averagePoster())}}</div>
                                         </th>
                                         @foreach ($judges as $judge)
                                         <td>
