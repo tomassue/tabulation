@@ -149,6 +149,11 @@
                     <form wire:submit.prevent="uploadOutput">
                         <div class="modal-body">
                             @include('layouts.message')
+                            @if ($poster_file)
+                            <div class="mb-3">
+                                <img src="{{ $poster_file->temporaryUrl() }}" alt="" class="img-fluid" id="poster_preview">
+                            </div>
+                            @endif
                             <div class="mb-3">
                                 <label for="poster_file" class="form-label">
                                     Poster
@@ -158,7 +163,7 @@
                                         </div>
                                     </div>
                                 </label>
-                                <input type="file" class="form-control" id="poster_file" wire:model="file" accept="image/*">
+                                <input type="file" class="form-control" id="poster_file" wire:model="poster_file" accept="image/*">
                             </div>
                         </div>
                         <div class="modal-footer">
