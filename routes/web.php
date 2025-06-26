@@ -57,4 +57,4 @@ Route::get('/display_quiz', [App\Http\Controllers\DisplayQuizController::class, 
 
 //POSTER
 Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
-Route::get('/display_poster_output', [App\Http\Controllers\DisplayPosterController::class, 'output'])->name('display_poster_output');
+Route::get('/display_poster_output/{id}', [App\Http\Controllers\DisplayPosterController::class, 'output'])->name('display_poster_output');
