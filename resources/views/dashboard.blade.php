@@ -48,7 +48,18 @@
                     </div>
                 </div>
             </div>
-
+            @php
+                $color = [
+                    '#ebba64',
+                    '#aaaaaa',
+                    '#5d412d',
+                ];
+                $font = [
+                    '90px',
+                    '70px',
+                    '50px',
+                ]
+            @endphp
             <div class="row mt-4">
                 <div class="col-12">
                     <h5 class="fw-bold text-primary mb-3">Top Scores</h5>
@@ -59,58 +70,33 @@
                         <div class="card-body">
                             <h5 class="card-title text-primary fw-bold mb-3">Quiz <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">1</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Bong</div>
-                                        <div class="text-muted small">98 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-secondary rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">2</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Mike</div>
-                                        <div class="text-muted small">95 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="background-color: #cd7f32 !important;">3</span>
-                                    <div>
-                                        <div class="fw-semibold">Ma'am Willou</div>
-                                        <div class="text-muted small">93 pts</div>
-                                    </div>
-                                </li>
+                                @foreach ($topQuiz as $index => $item)
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <span class="badge text-dark rounded-circle me-3" style="background-color: {{$color[$index]}}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">{{$loop->iteration}}</span>
+                                        <div>
+                                            <div class="fw-semibold">{{$item->school}}</div>
+                                            <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
+                                        </div>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xxl-4 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
                             <h5 class="card-title text-success fw-bold mb-3">Oratorical <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">1</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Bong</div>
-                                        <div class="text-muted small">98 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-secondary rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">2</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Mike</div>
-                                        <div class="text-muted small">95 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="background-color: #cd7f32 !important;">3</span>
-                                    <div>
-                                        <div class="fw-semibold">Ma'am Willou</div>
-                                        <div class="text-muted small">93 pts</div>
-                                    </div>
-                                </li>
+                                @foreach ($topOral as $index => $item)
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <span class="badge text-dark rounded-circle me-3" style="background-color: {{$color[$index]}}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">{{$loop->iteration}}</span>
+                                        <div>
+                                            <div class="fw-semibold">{{$item->participant}}</div>
+                                            <div class="text-muted small">{{$item->final_score ?? 0}} pts</div>
+                                        </div>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -121,27 +107,15 @@
                         <div class="card-body">
                             <h5 class="card-title text-danger fw-bold mb-3">Poster <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">1</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Bong</div>
-                                        <div class="text-muted small">98 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-secondary rounded-circle me-3" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">2</span>
-                                    <div>
-                                        <div class="fw-semibold">Sir Mike</div>
-                                        <div class="text-muted small">95 pts</div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item d-flex align-items-center">
-                                    <span class="badge bg-warning text-dark rounded-circle me-3" style="background-color: #cd7f32 !important;">3</span>
-                                    <div>
-                                        <div class="fw-semibold">Ma'am Willou</div>
-                                        <div class="text-muted small">93 pts</div>
-                                    </div>
-                                </li>
+                                @foreach ($topPoster as $index => $item)
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <span class="badge text-dark rounded-circle me-3" style="background-color: {{$color[$index]}}; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">{{$loop->iteration}}</span>
+                                        <div>
+                                            <div class="fw-semibold">{{$item->participant}}</div>
+                                            <div class="text-muted small">{{$item->final_score ?? 0}} pts</div>
+                                        </div>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -246,8 +220,8 @@
             });
         };
 
-        makeDonut("quizChart", 90);
-        makeDonut("oratoricalChart", 100);
-        makeDonut("posterChart", 99);
+        makeDonut("quizChart",  {{$quizProgress}});
+        makeDonut("oratoricalChart", {{$oralProgress}});
+        makeDonut("posterChart", {{$posterProgress}});
     });
 </script>
