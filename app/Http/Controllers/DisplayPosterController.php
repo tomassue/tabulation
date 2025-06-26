@@ -17,6 +17,7 @@ class DisplayPosterController extends Controller
             ->orderByRaw('SUM(posters.score) DESC')
             ->select('ref_participants.*',  DB::raw('SUM(posters.score) as total_score'))
             ->limit(3)->get();
+            
 
         return view('led_display.poster', compact('participants'));
     }

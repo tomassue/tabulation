@@ -63,7 +63,7 @@
             $font = [
                 '90px',
                 '70px',
-                '50px',
+                '60px',
             ]
         @endphp
         @foreach ($participants as $index => $item)

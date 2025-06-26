@@ -46,6 +46,7 @@
                 <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
             </div>
         </div>
+    </div>
         <div class="">
             @php
                 $image = [
@@ -61,7 +62,7 @@
                 $font = [
                     '90px',
                     '70px',
-                    '50px',
+                    '60px',
                 ]
             @endphp
             @foreach ($participants as $index => $item)
@@ -79,7 +80,7 @@
             </div>
             @endforeach
     </div>
-</div>
+
 
 <div class="row my-5 px-5">
     <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
