@@ -62,6 +62,15 @@
         </li>
         <!-- End Components Nav -->
 
+        <hr>
+
+        <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'logs' ? '' : 'collapsed' }}" href="{{ route('logs') }}">
+                <i class="bi bi-activity"></i>
+                <span>Logs</span>
+            </a>
+        </li>
+
     </ul>
 
 </aside><!-- End Sidebar-->
