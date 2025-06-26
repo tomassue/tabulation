@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('poster_outputs', function (Blueprint $table) {
             $table->id();
+            $table->integer("participant_id")->nullable();
+            $table->string("output_file")->nullable();
             $table->timestamps();
         });
     }

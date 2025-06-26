@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->text("activity")->nullable();
             $table->integer("user_id")->nullable();
+            $table->integer("source_id")->nullable();
+            $table->enum("category", ["oral", "poster", "quiz"])->nullable();
             $table->timestamps();
         });
     }
