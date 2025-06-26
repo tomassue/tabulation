@@ -57,6 +57,7 @@ Route::get('/display_oral', [App\Http\Controllers\DisplayController::class, 'ora
 
 //QUIZ
 Route::get('/display_quiz', [App\Http\Controllers\DisplayQuizController::class, 'quiz'])->name('display_quiz');
+Route::get('/display_quiz_score', [App\Http\Controllers\DisplayQuizController::class, 'quiz_score'])->name('display_quiz_score');
 
 //POSTER
 Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
