@@ -22,13 +22,21 @@
                         </div>
                         <div class="card-body">
                             <div class="row d-flex justify-content-center my-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                     <datalist id="datalistOptions">
                                         @foreach ($part as $item)
                                         <option value="{{$item->participant_no}}">
                                             @endforeach
                                     </datalist>
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
+                                        <option value="">ALL</option>
+                                        @foreach ($jud as $item)
+                                        <option value="{{$item->id}}">{{$item->judge}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="table-responsive">

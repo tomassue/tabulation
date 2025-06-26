@@ -13,14 +13,15 @@ use Illuminate\Support\Facades\DB;
 
 class Oral extends Component
 {
-    public $search = '', $base64pdf;    
+    public $search = '', $base64pdf, $judge_id;
     public function render()
     {
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'oral')->get();
-        $judges = RefJudge::where('category', 'oral')->get();
+        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->where('category', 'oral')->get();
         $criterias = RefCriteria::where('category', 'oral')->get();
         $part = RefParticipant::where('category', 'oral')->get();
-        return view('livewire.oral', compact('participants', 'judges', 'criterias', 'part'));
+        $jud  = RefJudge::where('category', 'oral')->get();
+        return view('livewire.oral', compact('participants', 'judges', 'criterias', 'part', 'jud'));
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)
     {
@@ -34,9 +35,10 @@ class Oral extends Component
         $oral->score = $score;
         $oral->save();
     }
-    public function saveDeduction($participant_id, $score){
+    public function saveDeduction($participant_id, $score)
+    {
         $deduction = OralDeduction::where('participant_id', $participant_id)->first();
-        if(!$deduction){
+        if (!$deduction) {
             $deduction = new OralDeduction();
             $deduction->participant_id = $participant_id;
         }
@@ -56,17 +58,18 @@ class Oral extends Component
                 'ref_participants.participant',
                 'deduction'
             ])
-            ->select('ref_participants.*', 
+            ->select(
+                'ref_participants.*',
                 DB::raw('SUM(orals.score) as total_score'),
                 DB::raw('COALESCE(oral_deductions.deduction, 0) as deduction'),
                 DB::raw('(SUM(orals.score) - COALESCE(oral_deductions.deduction, 0)) as final_score')
             )
-            ->orderBy('final_score','DESC')
+            ->orderBy('final_score', 'DESC')
             ->get();
 
         $oral = OralModel::all();
         $criterias = RefCriteria::where('category', 'oral')->get();
-        $pdf = Pdf::loadView('generated_pdf.oratorical', compact('participants', 'oral', 'criterias', 'judges'))->setPaper('letter', 'landscape');
+        $pdf = Pdf::loadView('generated_pdf.oratorical', compact('participants', 'oral', 'criterias', 'judges'))->setPaper('letter', 'portrait');
         $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }
