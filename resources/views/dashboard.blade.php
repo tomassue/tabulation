@@ -73,7 +73,7 @@
                                 @foreach ($topQuiz as $index => $item)
                                     <li class="list-group-item d-flex align-items-center gap-3">
                                         <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: 1.25rem;">
+                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
                                             <strong>{{$loop->iteration}}</strong>
                                         </div>
                                         <div>
@@ -94,7 +94,7 @@
                                 @foreach ($topOral as $index => $item)
                                   <li class="list-group-item d-flex align-items-center gap-3">
                                         <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: 1.25rem;">
+                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
                                             <strong>{{$loop->iteration}}</strong>
                                         </div>
                                         <div>
@@ -116,7 +116,7 @@
                                 @foreach ($topPoster as $index => $item)
                                       <li class="list-group-item d-flex align-items-center gap-3">
                                         <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: 1.25rem;">
+                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
                                             <strong>{{$loop->iteration}}</strong>
                                         </div>
                                         <div>
