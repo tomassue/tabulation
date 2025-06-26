@@ -138,52 +138,50 @@
 
             <div class="row mt-4">
                 <div class="col-12">
-                    <h5 class="fw-bold text-primary mb-3">Judges Completion Rate</h5>
+                    <h5 class="fw-bold text-primary mb-3">Oratorical Judges Completion Rate</h5>
                 </div>
-
+                @php    
+                    $oralJudges = $judges->where('category', 'oral');
+                @endphp
+                @foreach ($oralJudges as $item)
                 <div class="col-md-4 mb-3">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h6 class="card-title text-secondary mb-2">Quiz</h6>
+                            <h6 class="card-title text-secondary mb-2">{{$item->judge}}</h6>
                             <div class="progress mb-2" style="height: 20px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
-                                    80%
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{$item->getOralPercent()}}%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                    {{$item->getOralPercent()}}%
                                 </div>
                             </div>
-                            <div class="text-muted small">1 of 3 judges completed</div>
+                            <div class="text-muted small">{{$item->getOralPercent()}}% completed</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="card-title text-secondary mb-2">Oratorical</h6>
-                            <div class="progress mb-2" style="height: 20px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                    100%
-                                </div>
-                            </div>
-                            <div class="text-muted small">1 of 3 judges completed</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="card-title text-secondary mb-2">Poster</h6>
-                            <div class="progress mb-2" style="height: 20px;">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                    60%
-                                </div>
-                            </div>
-                            <div class="text-muted small">1 of 3 judges completed</div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
-
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h5 class="fw-bold text-primary mb-3">Poster Judges Completion Rate</h5>
+                </div>
+                @php    
+                    $posterJudges = $judges->where('category', 'poster');
+                @endphp
+                @foreach ($posterJudges as $item)
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h6 class="card-title text-secondary mb-2">{{$item->judge}}</h6>
+                            <div class="progress mb-2" style="height: 20px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{$item->getPercent()}}%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                     {{$item->getPercent()}}%
+                                </div>
+                            </div>
+                            <div class="text-muted small">{{$item->getPercent()}}% completed</div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </div>
     </section>
 </main>
@@ -234,20 +232,8 @@
             });
         };
 
-        makeDonut("quizChart", {
-            {
-                $quizProgress
-            }
-        });
-        makeDonut("oratoricalChart", {
-            {
-                $oralProgress
-            }
-        });
-        makeDonut("posterChart", {
-            {
-                $posterProgress
-            }
-        });
+        makeDonut("quizChart",  {{bong_format($quizProgress)}});
+        makeDonut("oratoricalChart", {{bong_format($oralProgress)}});
+        makeDonut("posterChart", {{bong_format($posterProgress)}});
     });
 </script>

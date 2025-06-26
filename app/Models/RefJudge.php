@@ -14,7 +14,7 @@ class RefJudge extends Model
         if ($total == 0) {
             return 0;
         }
-        return $this->hasMany(Poster::class, 'judge_id')->whereNotNull('score')->count() / $total * 100;
+        return bong_format($this->hasMany(Poster::class, 'judge_id')->whereNotNull('score')->count() / $total * 100);
     }
     public function getOralPercent()
     {
@@ -24,6 +24,6 @@ class RefJudge extends Model
         if ($total == 0) {
             return 0;
         }
-        return $this->hasMany(Oral::class, 'judge_id')->whereNotNull('score')->count() / $total * 100;
+        return bong_format($this->hasMany(Oral::class, 'judge_id')->whereNotNull('score')->count() / $total * 100);
     }
 }

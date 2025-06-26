@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Oral;
 use App\Models\RefCriteria;
+use App\Models\RefJudge;
 use App\Models\RefParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,19 +14,26 @@ class DashboardController extends Controller
     public function index()
     {
         //PROGRESS RATE
+        $participant = RefParticipant::all();
         $quizProgress = RefParticipant::leftjoin('quiz_bees', 'quiz_bees.participant_id', 'ref_participants.id')
             ->where('ref_participants.category', 'quiz')
             ->whereNotNull('quiz_bees.score')->count() / 25 * 100;
 
         $criOral = RefCriteria::where('category', 'oral')->count();
+        $posterOral = $participant->where('category', 'oral')->count();
+
         $oralProgress = $criOral != 0 ? RefParticipant::leftjoin('orals', 'orals.participant_id', 'ref_participants.id')
             ->where('ref_participants.category', 'oral')
-            ->whereNotNull('orals.score')->count() / $criOral * 100 : 0;
+            ->whereNotNull('orals.score')->count() / ($posterOral  * $criOral) * 100 : 0;
+        $oralProgress = $oralProgress / 3;
 
         $critPoster = RefCriteria::where('category', 'poster')->count();
+        $posterPart = $participant->where('category', 'poster')->count();
+
         $posterProgress = $critPoster != 0 ? RefParticipant::leftjoin('posters', 'posters.participant_id', 'ref_participants.id')
             ->where('ref_participants.category', 'poster')
-            ->whereNotNull('posters.score')->count() / $critPoster * 100 : 0;
+            ->whereNotNull('posters.score')->count() /  ($posterPart * $critPoster) * 100 : 0;
+        $posterProgress = $posterProgress / 3;
 
         //TOP SCORES
         $topPoster = RefParticipant::where('category', 'poster')
@@ -60,7 +69,9 @@ class DashboardController extends Controller
             ->orderBy('final_score', 'DESC')
             ->limit(3)
             ->get();
-        //COMPLETION RATE
-        return view('dashboard', compact('quizProgress', 'oralProgress', 'posterProgress', 'topPoster', 'topQuiz', 'topOral'));
+        //COMPLETION 
+        $judges = RefJudge::all();
+
+        return view('dashboard', compact('quizProgress', 'oralProgress', 'posterProgress', 'judges', 'topPoster', 'topQuiz', 'topOral'));
     }
 }
