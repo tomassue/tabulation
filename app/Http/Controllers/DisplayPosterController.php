@@ -10,4 +10,9 @@ class DisplayPosterController extends Controller
     {
         return view('led_display.poster');
     }
+
+    public function output()
+    {
+        return view('led_display.poster_output');
+    }
 }

@@ -54,4 +54,5 @@ Route::group(['middleware' => ['auth']], function () {
 
 //POSTER
     Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
+    Route::get('/display_poster_output', [App\Http\Controllers\DisplayPosterController::class, 'output'])->name('display_poster_output');
 
