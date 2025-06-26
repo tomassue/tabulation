@@ -19,111 +19,111 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center my-3">
-                                <div class="col-md-4">
-                                    <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
-                                    <datalist id="datalistOptions">
-                                        @foreach ($part as $item)
-                                        <option value="{{$item->participant_no}}">
-                                            @endforeach
-                                    </datalist>
-                                </div>
-                                <div class="col-md-4">
-                                    <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
-                                        <option value="">ALL</option>
-                                        @foreach ($jud as $item)
-                                        <option value="{{$item->id}}">{{$item->judge}}</option>
+                    </div>
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-center my-3">
+                            <div class="col-md-4">
+                                <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
+                                <datalist id="datalistOptions">
+                                    @foreach ($part as $item)
+                                    <option value="{{$item->participant_no}}">
                                         @endforeach
-                                    </select>
-                                </div>
+                                </datalist>
                             </div>
-                            <div class="table-responsive">
-                                <!-- Table with hoverable rows -->
-                                <table class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Participant</th>
-                                            @foreach ($judges as $item)
-                                            <th scope="col">
-                                                <div>{{$item->judge}}</div>
-                                                <span class="small text-muted">Judge {{$loop->iteration}}</span>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-success" style="width: {{$item->getOralPercent()}}%"></div>
-                                                </div>
-                                                <small> {{$item->getOralPercent()}}%</small>
-                                            </th>
+                            <div class="col-md-4">
+                                <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
+                                    <option value="">ALL</option>
+                                    @foreach ($jud as $item)
+                                    <option value="{{$item->id}}">{{$item->judge}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
+                            <!-- Table with hoverable rows -->
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Participant</th>
+                                        @foreach ($judges as $item)
+                                        <th scope="col">
+                                            <div>{{$item->judge}}</div>
+                                            <span class="small text-muted">Judge {{$loop->iteration}}</span>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: {{$item->getOralPercent()}}%"></div>
+                                            </div>
+                                            <small> {{$item->getOralPercent()}}%</small>
+                                        </th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($participants as $participant)
+                                    <tr>
+                                        <th scope="row">{{$loop->iteration}}</th>
+                                        <th scope="row">
+                                            <h4>{{$participant->participant_no}}</h4>
+                                            <small>{{$participant->participant}}</small>
+                                            <div class="small text-muted fw-lighter">{{$participant->school}}</div>
+                                            @php
+                                            $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
+                                            @endphp
+                                            <div class="my-2">
+                                                <label class="text-danger small">Deduction</label>
+                                                <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                            </div>
+                                        </th>
+                                        @foreach ($judges as $judge)
+                                        <td>
+                                            @foreach ($criterias as $criteria)
+                                            @php
+                                            $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                            @endphp
+                                            <div class="mb-2">
+                                                <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
+                                                <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
+                                            </div>
                                             @endforeach
-                                        </tr>
+                                        </td>
+                                        @endforeach
+                                    </tr>
+                                    @endforeach
+                                    </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($participants as $participant)
-                                        <tr>
-                                            <th scope="row">{{$loop->iteration}}</th>
-                                            <th scope="row">
-                                                <h4>{{$participant->participant_no}}</h4>
-                                                <small>{{$participant->participant}}</small>
-                                                <div class="small text-muted fw-lighter">{{$participant->school}}</div>
-                                                @php
-                                                $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
-                                                @endphp
-                                                <div class="my-2">
-                                                    <label class="text-danger small">Deduction</label>
-                                                    <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                                </div>
-                                            </th>
-                                            @foreach ($judges as $judge)
-                                            <td>
-                                                @foreach ($criterias as $criteria)
-                                                @php
-                                                $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                @endphp
-                                                <div class="mb-2">
-                                                    <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
-                                                    <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
-                                                </div>
-                                                @endforeach
-                                            </td>
+                                <tbody>
+                                    @foreach ($participants as $participant)
+                                    <tr>
+                                        <th scope="row">{{$loop->iteration}}</th>
+                                        <th scope="row">
+                                            <h4>{{$participant->participant_no}}</h4>
+                                            <small>{{$participant->participant}}</small>
+                                            @php
+                                            $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
+                                            @endphp
+                                            <div class="my-2">
+                                                <label class="text-muted small">Deduction</label>
+                                                <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                            </div>
+                                        </th>
+                                        @foreach ($judges as $judge)
+                                        <td>
+                                            @foreach ($criterias as $criteria)
+                                            @php
+                                            $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                            @endphp
+                                            <div class="mb-2">
+                                                <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
+                                                <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
+                                            </div>
                                             @endforeach
-                                        </tr>
+                                        </td>
                                         @endforeach
-                                        </tr>
-                                        </thead>
-                                    <tbody>
-                                        @foreach ($participants as $participant)
-                                        <tr>
-                                            <th scope="row">{{$loop->iteration}}</th>
-                                            <th scope="row">
-                                                <h4>{{$participant->participant_no}}</h4>
-                                                <small>{{$participant->participant}}</small>
-                                                @php
-                                                $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
-                                                @endphp
-                                                <div class="my-2">
-                                                    <label class="text-muted small">Deduction</label>
-                                                    <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                                </div>
-                                            </th>
-                                            @foreach ($judges as $judge)
-                                            <td>
-                                                @foreach ($criterias as $criteria)
-                                                @php
-                                                $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                @endphp
-                                                <div class="mb-2">
-                                                    <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
-                                                    <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
-                                                </div>
-                                                @endforeach
-                                            </td>
-                                            @endforeach
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <!-- End Table with hoverable rows -->
-                            </div>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <!-- End Table with hoverable rows -->
                         </div>
                     </div>
                 </div>
@@ -152,6 +152,22 @@
             </div>
         </div>
 </section>
+<style>
+    .table-wrapper {
+        max-height: 600px;
+        /* or whatever fits your layout */
+        overflow-y: auto;
+    }
+
+    /* Make header sticky */
+    .table-wrapper thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+</style>
 @script
 <script>
     window.addEventListener('openModal', event => {
