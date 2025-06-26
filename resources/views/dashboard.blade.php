@@ -49,16 +49,21 @@
                 </div>
             </div>
             @php
-                $color = [
-                    '#ebba64',
-                    '#aaaaaa',
-                    '#5d412d',
-                ];
-                $font = [
-                    '1.25rem',
-                    '1rem',
-                    '0.9rem',
-                ]
+            $color = [
+            '#ebba64',
+            '#aaaaaa',
+            '#5d412d',
+            ];
+            $width = [
+            'width: 48px; height: 48px;',
+            'width: 40px; height: 40px;',
+            'width: 36px; height: 36px;',
+            ];
+            $font = [
+            '1.25rem',
+            '1rem',
+            '0.9rem',
+            ]
             @endphp
             <div class="row mt-4">
                 <div class="col-12">
@@ -71,16 +76,16 @@
                             <h5 class="card-title text-primary fw-bold mb-3">Quiz <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
                                 @foreach ($topQuiz as $index => $item)
-                                    <li class="list-group-item d-flex align-items-center gap-3">
-                                        <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
-                                            <strong>{{$loop->iteration}}</strong>
-                                        </div>
-                                        <div>
-                                            <div class="fw-semibold">{{$item->school}}</div>
-                                            <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
-                                        </div>
-                                    </li>
+                                <li class="list-group-item d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                        style="background-color: {{$color[$index]}}; {{ $width[$index] }} font-size: {{$font[$index]}};">
+                                        <strong>{{$loop->iteration}}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{$item->school}}</div>
+                                        <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
+                                    </div>
+                                </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -92,16 +97,16 @@
                             <h5 class="card-title text-primary fw-bold mb-3">Oratorical <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
                                 @foreach ($topOral as $index => $item)
-                                  <li class="list-group-item d-flex align-items-center gap-3">
-                                        <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
-                                            <strong>{{$loop->iteration}}</strong>
-                                        </div>
-                                        <div>
-                                            <div class="fw-semibold">{{$item->participant}}</div>
-                                            <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
-                                        </div>
-                                    </li>
+                                <li class="list-group-item d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                        style="background-color: {{$color[$index]}}; {{ $width[$index] }} font-size: {{$font[$index]}};">
+                                        <strong>{{$loop->iteration}}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{$item->participant}}</div>
+                                        <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
+                                    </div>
+                                </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -114,16 +119,16 @@
                             <h5 class="card-title text-primary fw-bold mb-3">Poster <span class="text-muted fs-6">| Top 3</span></h5>
                             <ul class="list-group list-group-flush">
                                 @foreach ($topPoster as $index => $item)
-                                      <li class="list-group-item d-flex align-items-center gap-3">
-                                        <div class="d-flex align-items-center justify-content-center rounded-circle"
-                                            style="background-color: {{$color[$index]}}; width: 48px; height: 48px; font-size: {{$font[$index]}};">
-                                            <strong>{{$loop->iteration}}</strong>
-                                        </div>
-                                        <div>
-                                            <div class="fw-semibold">{{$item->participant}}</div>
-                                            <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
-                                        </div>
-                                    </li>
+                                <li class="list-group-item d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle"
+                                        style="background-color: {{$color[$index]}}; {{ $width[$index] }} font-size: {{$font[$index]}};">
+                                        <strong>{{$loop->iteration}}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{$item->participant}}</div>
+                                        <div class="text-muted small">{{$item->total_score ?? 0}} pts</div>
+                                    </div>
+                                </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -229,8 +234,20 @@
             });
         };
 
-        makeDonut("quizChart",  {{$quizProgress}});
-        makeDonut("oratoricalChart", {{$oralProgress}});
-        makeDonut("posterChart", {{$posterProgress}});
+        makeDonut("quizChart", {
+            {
+                $quizProgress
+            }
+        });
+        makeDonut("oratoricalChart", {
+            {
+                $oralProgress
+            }
+        });
+        makeDonut("posterChart", {
+            {
+                $posterProgress
+            }
+        });
     });
 </script>
