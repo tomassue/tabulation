@@ -65,39 +65,6 @@
                                         <th scope="row">
                                             <h4>{{$participant->participant_no}}</h4>
                                             <small>{{$participant->participant}}</small>
-                                            <div class="small text-muted fw-lighter">{{$participant->school}}</div>
-                                            @php
-                                            $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
-                                            @endphp
-                                            <div class="my-2">
-                                                <label class="text-danger small">Deduction</label>
-                                                <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                            </div>
-                                        </th>
-                                        @foreach ($judges as $judge)
-                                        <td>
-                                            @foreach ($criterias as $criteria)
-                                            @php
-                                            $score = \App\Models\Oral::where('participant_id', $participant->id)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                            @endphp
-                                            <div class="mb-2">
-                                                <label for="" class="text-muted small">{{$criteria->criteria}} ({{$criteria->perfect_score}} points)</label>
-                                                <input type="number" class="form-control" wire:change="saveScore({{$participant->id}},{{$criteria->id}},{{$judge->id}},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
-                                            </div>
-                                            @endforeach
-                                        </td>
-                                        @endforeach
-                                    </tr>
-                                    @endforeach
-                                    </tr>
-                                    </thead>
-                                <tbody>
-                                    @foreach ($participants as $participant)
-                                    <tr>
-                                        <th scope="row">{{$loop->iteration}}</th>
-                                        <th scope="row">
-                                            <h4>{{$participant->participant_no}}</h4>
-                                            <small>{{$participant->participant}}</small>
                                             @php
                                             $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
                                             @endphp
