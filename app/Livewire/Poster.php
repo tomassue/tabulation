@@ -31,7 +31,7 @@ class Poster extends Component
             $poster->criteria_id = $criteria_id;
             $poster->judge_id = $judge_id;
         }
-        $poster->score = $score;
+        $poster->score = $score ? $score : 0;
         $poster->save();
     }
     public function generateReport()
