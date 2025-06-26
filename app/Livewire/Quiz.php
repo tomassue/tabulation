@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\Log;
 use App\Models\QuizBee;
 use Livewire\Component;
 use App\Models\RefParticipant;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Quiz extends Component
@@ -27,6 +29,10 @@ class Quiz extends Component
             $assessment->round_id = $round_id;
             $assessment->question_number = $question_number;
         }
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'activity' => 'Quiz id ' . $assessment->id . ' Score has been updated from ' . $assessment->score . ' to ' . $score,
+        ]);
         $assessment->score = $score ? $score : 0;
         $assessment->save();
     }
