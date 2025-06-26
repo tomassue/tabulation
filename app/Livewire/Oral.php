@@ -32,7 +32,7 @@ class Oral extends Component
             $oral->criteria_id = $criteria_id;
             $oral->judge_id = $judge_id;
         }
-        $oral->score = $score;
+        $oral->score = $score ? $score : 0;
         $oral->save();
     }
     public function saveDeduction($participant_id, $score)
