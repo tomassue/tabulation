@@ -16,13 +16,13 @@ class Participants extends Component
     public $id, $participant, $category, $school, $participant_no;
 
     protected $rules = [
-        'file' => 'required|file|max:2048|mimes:jpg,png,pdf',
+        'file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
     ];
 
     protected $messages = [
         'file.required' => 'Please select a file to upload',
-        'file.max' => 'File size must be less than 2MB',
-        'mimes' => 'Invalid file type. Allowed: JPG, PNG, PDF, DOCX'
+        'file.max' => 'File size must be less than 50MB',
+        'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG',
     ];
 
 
