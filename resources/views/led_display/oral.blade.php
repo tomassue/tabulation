@@ -84,7 +84,7 @@
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{bong_format($item->final_score  / 3)}}
+                   {{bong_format($item->averageOral())}}
                 </div>
                 </div>
             </div>
