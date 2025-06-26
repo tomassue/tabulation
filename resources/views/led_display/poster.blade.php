@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORATORICAL WINNERS</title>
+    <title>POSTER MAKING WINNERS</title>
 
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,6 +25,20 @@
         background-color: transparent;
         border: solid;
     }
+    .first{
+        text-decoration: none;
+        color: #ebba64;
+    }
+
+    .second{
+        text-decoration: none;
+        color:#aaaaaa;
+    }
+
+    .third{
+        text-decoration: none;
+        color:#5d412d;
+    }
 
 </style>
 
@@ -40,10 +54,10 @@
            
         ">
 
-   <div class="container mt-3">
+   <div class="container mt-5">
     <div class="row mb-4">
         <div class="col text-center">
-            <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
+            <img src="{{ asset('img/poster.png') }}" class="img-fluid" alt="Logo">
         </div>
     </div>
     <div class="">
@@ -55,7 +69,7 @@
         <div class="col-md-10 d-flex align-items-center">
             <div class="fw-bold" style="font-size: 90px; color:#ebba64;">
                 #5 
-                <i>Jevonie Villarin</i>
+                <a href="{{ route('display_poster_output') }}" class="first" target="_blank"> <i>Jevonie Villarin</i> </a> 
             </div>
         </div>
     </div>
@@ -67,7 +81,7 @@
         <div class="col-md-10 d-flex align-items-center">
             <div class="fw-bold" style="font-size: 70px; color:#aaaaaa;">
                 #3
-                <i>Rustom Abella</i>
+               <a href="" class="second" target="_blank"> <i>Rustom Abella</i> </a>
             </div>
         </div>
     </div>
@@ -79,7 +93,7 @@
         <div class="col-md-10 d-flex align-items-center">
             <div class="fw-bold" style="font-size: 60px; color:#5d412d;">
                 #8
-                <i>Mike Jun R. Zaballero</i>
+              <a href="" class="third" target="_blank">  <i>Mike Jun R. Zaballero</i> </a>
             </div>
         </div>
     </div>

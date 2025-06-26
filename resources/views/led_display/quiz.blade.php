@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORATORICAL WINNERS</title>
+    <title>QUIZ BOWL WINNERS</title>
 
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -40,24 +40,26 @@
            
         ">
 
-   <div class="container mt-3">
+   <div class="container mt-5">
     <div class="row mb-4">
         <div class="col text-center">
-            <img src="{{ asset('img/oral.png') }}" class="img-fluid" alt="Logo">
+            <img src="{{ asset('img/text.png') }}" class="img-fluid" alt="Logo">
         </div>
     </div>
+
+   </div>
+   {{-- end of container --}}
     <div class="">
         <div class="row mb-3 justify-content-center align-items-center">
         <div class="col-md-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('img/1st.png') }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
         </div>
         
-        <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 90px; color:#ebba64;">
-                #5 
-                <i>Jevonie Villarin</i>
-            </div>
-        </div>
+        <div class="col-12 col-md-10 d-flex align-items-center">
+    <div class="fw-bold" style=" color: #ebba64; font-size: 80px;">
+        #5 <i>Cagayan de Oro National High School - Junior High</i>
+    </div>
+</div>
     </div>
 
     <div class="row mb-3 justify-content-center align-items-center">
@@ -65,9 +67,9 @@
             <img src="{{ asset('img/2nd.png') }}" class="img-fluid" style="max-height: 120px;" alt="2nd Place">
         </div>
         <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 70px; color:#aaaaaa;">
+            <div class="fw-bold" style="font-size: 60px; color:#aaaaaa;">
                 #3
-                <i>Rustom Abella</i>
+                <i>Cagayan de Oro National High School - Junior High</i>
             </div>
         </div>
     </div>
@@ -77,9 +79,9 @@
             <img src="{{ asset('img/3rd.png') }}" class="img-fluid" style="max-height: 120px;" alt="3rd Place">
         </div>
         <div class="col-md-10 d-flex align-items-center">
-            <div class="fw-bold" style="font-size: 60px; color:#5d412d;">
+            <div class="fw-bold" style="font-size: 50px; color:#5d412d;">
                 #8
-                <i>Mike Jun R. Zaballero</i>
+                <i>Cagayan de Oro National High School - Junior High</i>
             </div>
         </div>
     </div>
@@ -88,7 +90,7 @@
 
     
 
-</div>
+
 
 <div class="row my-5 px-5">
     <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
