@@ -98,13 +98,9 @@
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   90
+                   {{bong_format($item->total_score / 3)}}
                 </div>
-             
                 <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                    
-                   
-                 
                     <div class="modal fade" id="fullscreenModal{{ $item->id }}" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-fullscreen">
                             <div class="modal-content bg-dark p-0 border-0"> <!-- Optional: dark background -->

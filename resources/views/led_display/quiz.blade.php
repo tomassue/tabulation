@@ -82,11 +82,11 @@
                             data-bs-toggle="modal"
                             data-bs-target="#fullscreenModal{{ $item->id }}"
                             style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
-                        <i>{{ $item->participant }}</i>
+                        <i>{{ $item->school }}</i>
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   90
+                   {{bong_format($item->total_score)}}
                 </div>
                 </div>
             </div>

@@ -72,6 +72,7 @@
                                                 <label class="text-muted small">Deduction</label>
                                                 <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
                                             </div>
+                                            <div class="text-success fw-bold">{{bong_format($participant->averageOral())}}</div>
                                         </th>
                                         @foreach ($judges as $judge)
                                         <td>
