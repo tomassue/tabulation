@@ -29,6 +29,7 @@
     th{
         font-size: 40px;
         style="background-color: #f6f6e9;"
+        text-align: center;
     }
 
     td{
@@ -79,9 +80,9 @@
     <div class="row">
         @foreach ($chunks as $table)
             <div class="col-md-6">
-                <table class="table text-center">
+                <table class="table">
                     <thead>
-                        <tr>
+                        <tr style="text-align: center;">
                             <th style="background-color: #f6f6e9;">Participants</th>
                             <th style="background-color: #f6f6e9;">Score</th>
                         </tr>
@@ -89,8 +90,8 @@
                     <tbody>
                         @foreach ($table as $participant)
                             <tr>
-                                <td class="fw-bold" style="background-color: #f6f6e9;">#{{$participant->participant_no}}  {{ $participant->school }}</td>
-                                <td class="fw-bold" style="background-color: #f6f6e9;">{{ $participant->total_score ?? 0}}</td>
+                                <td class="fw-bold px-4" style="background-color: #f6f6e9;">#{{$participant->participant_no}}  {{ $participant->school }}</td>
+                                <td class="fw-bold" style="background-color: #f6f6e9; text-align: center;">{{ $participant->total_score ?? 0}}</td>
                             </tr>
                         @endforeach
                     </tbody>
