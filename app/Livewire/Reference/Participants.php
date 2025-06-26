@@ -76,6 +76,7 @@ class Participants extends Component
         $output->output_file = $path;
         $output->save();
         $this->reset('poster_file');
+        $this->dispatch('reset-poster-files');
         return session()->flash("status", 'File uploaded successfully! Path: ' . $path);
     }
     public function addPoster($id)
