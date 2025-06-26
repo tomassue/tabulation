@@ -10,7 +10,7 @@ use App\Http\Controllers\Reference\RoundController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -32,10 +32,10 @@ Route::group(['middleware' => ['auth']], function () {
     //JUDGES
     Route::get('/reference/judges', [JudgesController::class, 'index'])->name('reference.judges');
     Route::post('/regerence/save-judges', [JudgesController::class, 'saveJudges'])->name('save-judge');
-    
+
     //PARTICIPANT
     Route::get('/reference/participants', [ParticipantsController::class, 'index'])->name('reference.participants');
-    Route::post('/reference/save-participant',[ParticipantsController::class, 'saveParticipant'])->name('save-participant');
+    Route::post('/reference/save-participant', [ParticipantsController::class, 'saveParticipant'])->name('save-participant');
 
     //ROUND
     Route::get('/reference/round', [RoundController::class, 'index'])->name('reference.round');

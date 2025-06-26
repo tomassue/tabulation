@@ -7,7 +7,14 @@
                             <h5 class="card-title">Add Participants</h5>
                             <div class="toolbar mb-3 d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary" wire:click="addParticipant">
-                                    Add
+                                    <div wire:loading.remove wire:target="addParticipant">
+                                        Add
+                                    </div>
+                                    <div wire:loading wire:target="addParticipant">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
                                 </button>
                             </div>
                             <div class="table-responsive">
@@ -16,7 +23,9 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th scope="col">Participant's No.</th>
                                             <th scope="col">Name</th>
+                                            <th scope="col">School</th>
                                             <th scope="col">Category</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -28,19 +37,34 @@
                                                 {{$loop->iteration}}
                                             </td>
                                             <td scope="row">
+                                                {{$item->participant_no}}
+                                            </td>
+                                            <td scope="row">
                                                 {{$item->participant}}
                                             </td>
-                                                <td scope="row">
+                                            <td scope="row">
+                                                {{$item->school}}
+                                            </td>
+                                            <td scope="row" class="text-capitalize">
                                                 {{$item->category}}
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})" >
-                                                    Edit
+                                                <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})">
+                                                    <div wire:loading.remove wire:target="editParticipant({{$item->id}})">
+                                                        Edit
+                                                    </div>
+                                                    <div wire:loading wire:target="editParticipant({{$item->id}})">
+                                                        <div class="spinner-border spinner-border-sm" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    </div>
                                                 </button>
                                             </td>
                                         </tr>
                                         @empty
-                                            <tr><td colspan="2"></td></tr>
+                                        <tr>
+                                            <td colspan="6">-- NO DATA --</td>
+                                        </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -63,8 +87,16 @@
                         <div class="modal-body">
                             @include('layouts.message')
                             <div class="mb-3">
+                                <label for="participant_no" class="form-label">Participant's No.</label>
+                                <input type="text" class="form-control" id="participant_no" wire:model="participant_no" placeholder="Enter participant's number">
+                            </div>
+                            <div class="mb-3">
                                 <label for="participantsName" class="form-label">Participant's Name</label>
                                 <input type="text" class="form-control" id="participantsName" wire:model="participant" placeholder="Enter participant's name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="school" class="form-label">Participant's School</label>
+                                <input type="text" class="form-control" id="school" wire:model="school" placeholder="Enter participant's school">
                             </div>
                             <div class="mb-3">
                                 <label for="category">Category</label>
@@ -78,23 +110,31 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            <button type="submit" class="btn btn-primary">
+                                <div wire:loading.remove wire:target="saveParticipant">
+                                    Save changes
+                                </div>
+                                <div wire:loading wire:target="saveParticipant">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-@script
-<script>
-    
-    window.addEventListener('openModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
-        myModal.show();
-    });
-     window.addEventListener('hideModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
-        myModal.show();
-    });
-</script>
-@endscript
+    @script
+    <script>
+        window.addEventListener('openModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
+            myModal.show();
+        });
+        window.addEventListener('hideModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('participantModal'));
+            myModal.show();
+        });
+    </script>
+    @endscript

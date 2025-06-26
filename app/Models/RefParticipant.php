@@ -20,12 +20,44 @@ class RefParticipant extends Model
     {
         return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', 3)->sum('score');
     }
+    public function sumRound4()
+    {
+        return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', 4)->sum('score');
+    }
+
     public function sumAll()
     {
         return $this->hasMany(QuizBee::class, 'participant_id')->sum('score');
     }
     public function getPercent()
     {
-        return $this->hasMany(QuizBee::class, 'participant_id')->whereNotNull('score')->count() / 25 * 100;
+        return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', '!=', 4)->whereNotNull('score')->count() / 25 * 100;
+    }
+    public function convert($path): String
+    {
+        if ($path) {
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $image = base64_encode(file_get_contents($path));
+            return "data:image/" . $ext . ";base64," . $image;
+        } else {
+            return "";
+        }
+    }
+    public function getScore($judge_id)
+    {
+        return $this->hasMany(Oral::class, 'participant_id','id')->where('judge_id', $judge_id)->sum('score');
+    }
+    public function judgeTotalScore(){
+        return $this->hasMany(Oral::class, 'participant_id','id')->sum('score');
+    }
+    public function deductions(){
+        return $this->hasOne(OralDeduction::class, 'participant_id','id');
+    }
+    public function getPosterScore($judge_id)
+    {
+        return $this->hasMany(Poster::class, 'participant_id','id')->where('judge_id', $judge_id)->sum('score');
+    }
+    public function judgePosterTotalScore(){
+        return $this->hasMany(Poster::class, 'participant_id','id')->sum('score');
     }
 }
