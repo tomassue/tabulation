@@ -98,7 +98,7 @@
                 <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->getScore($judge->id)}}</td>
                 @endforeach
                 <td class="text-center">{{$item->deduction}}</td>
-                <td class="text-center" style="font-weight: bold">{{number_format(($item->final_score / 3), 2)}}</td>
+                <td class="text-center" style="font-weight: bold">{{bong_format($item->averageOral() )}}</td>
             </tr>
         @endforeach
     </table>

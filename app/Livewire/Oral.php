@@ -48,7 +48,7 @@ class Oral extends Component
             $deduction = new OralDeduction();
             $deduction->participant_id = $participant_id;
         }
-        $deduction->deduction = $score;
+        $deduction->deduction = $score && $score != null ? $score : 0;
         $deduction->save();
     }
     public function generateReport()
