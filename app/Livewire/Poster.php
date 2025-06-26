@@ -37,7 +37,7 @@ class Poster extends Component
             'user_id' => Auth::user()->id,
             'activity' => 'Poster id ' . $poster->id . ' Score has been updated from ' . $poster->score . ' to ' . $score,
         ]);
-        $poster->score = $score;
+        $poster->score = $score ? $score : 0;
         $poster->save();
     }
     public function generateReport()

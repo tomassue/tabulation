@@ -38,7 +38,7 @@ class Oral extends Component
             'user_id' => Auth::user()->id,
             'activity' => 'Oral id ' . $oral->id . ' Score has been updated from ' . $oral->score . ' to ' . $score,
         ]);
-        $oral->score = $score;
+        $oral->score = $score ? $score : 0;
         $oral->save();
     }
     public function saveDeduction($participant_id, $score)
