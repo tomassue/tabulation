@@ -21,19 +21,27 @@ class DashboardController extends Controller
 
         $criOral = RefCriteria::where('category', 'oral')->count();
         $posterOral = $participant->where('category', 'oral')->count();
-
-        $oralProgress = $criOral != 0 ? RefParticipant::leftjoin('orals', 'orals.participant_id', 'ref_participants.id')
-            ->where('ref_participants.category', 'oral')
-            ->whereNotNull('orals.score')->count() / ($posterOral  * $criOral) * 100 : 0;
-        $oralProgress = $oralProgress / 3;
+        if ($criOral != 0 && $posterOral != 0) {
+            $oralProgress = $criOral != 0 ? RefParticipant::leftjoin('orals', 'orals.participant_id', 'ref_participants.id')
+                ->where('ref_participants.category', 'oral')
+                ->whereNotNull('orals.score')->count() / ($posterOral  * $criOral) * 100 : 0;
+            $oralProgress = $oralProgress / 3;
+        } else {
+            $oralProgress = 0;
+        }
 
         $critPoster = RefCriteria::where('category', 'poster')->count();
         $posterPart = $participant->where('category', 'poster')->count();
 
-        $posterProgress = $critPoster != 0 ? RefParticipant::leftjoin('posters', 'posters.participant_id', 'ref_participants.id')
-            ->where('ref_participants.category', 'poster')
-            ->whereNotNull('posters.score')->count() /  ($posterPart * $critPoster) * 100 : 0;
-        $posterProgress = $posterProgress / 3;
+        if ($critPoster != 0 && $posterPart != 0) {
+            $posterProgress = $critPoster != 0 ? RefParticipant::leftjoin('posters', 'posters.participant_id', 'ref_participants.id')
+                ->where('ref_participants.category', 'poster')
+                ->whereNotNull('posters.score')->count() /  ($posterPart * $critPoster) * 100 : 0;
+            $posterProgress = $posterProgress / 3;
+        } else {
+            $posterProgress = 0;
+        }
+
 
         //TOP SCORES
         $topPoster = RefParticipant::where('category', 'poster')
