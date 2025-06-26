@@ -96,7 +96,7 @@
                 @foreach ($judges as $judge)
                 <td class="text-center" style="padding:5px;font-size:12pt;">{{$item->getPosterScore($judge->id)}}</td>
                 @endforeach
-                <td class="text-center"  style="font-weight: bold">{{number_format($item->judgePosterTotalScore()/ 3, 2)}}</td>
+                <td class="text-center"  style="font-weight: bold">{{bong_format($item->averagePoster())}}</td>
             </tr>
         @endforeach
     </table>
