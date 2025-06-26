@@ -26,19 +26,19 @@
         border: solid;
     }
 
+    th{
+        font-size: 30px;
+    }
+
+    td{
+        font-size: 18px;
+    }
+
 </style>
 
 
 <body>
-    <div class="card" 
-         style="
-            background-color: transparent;
-            background-image: url('{{ asset('img/bg.png') }}');
-            background-repeat: no-repeat;
-            background-position: top right;
-            background-size: 1000px;
-           
-        ">
+   
    <div class="container mt-5">
     <div class="row mb-4">
         <div class="col text-center">
@@ -66,32 +66,33 @@
                 '60px',
             ]
         @endphp
-        @foreach ($participants as $index => $item)
-            <div class="row mb-3 justify-content-center align-items-center">
-                <div class="col-md-2 d-flex align-items-center justify-content-center">
-                    <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
-                </div>
-                
-                <div class="col-12 col-md-10 d-flex align-items-center">
-                    <div class="col-md-10 d-flex align-items-center">
-                    <div class="col-md-1 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                    #{{$item->participant_no}} 
-                </div>
-                <div class="col-md-10 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                     <button type="button" class="btn show-poster fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#fullscreenModal{{ $item->id }}"
-                            style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
-                        <i>{{ $item->school }}</i>
-                    </button>
-                </div>
-                <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{bong_format($item->total_score)}}
-                </div>
-                </div>
+        @php
+    $chunks = $participants->chunk(ceil($participants->count() / 2));
+    @endphp
+
+    <div class="row">
+        @foreach ($chunks as $table)
+            <div class="col-md-6">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Participants</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($table as $participant)
+                            <tr>
+                                <td class="fw-bold">{{ $participant->school }}</td>
+                                <td class="fw-bold">{{ $participant->total_score ?? 0}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         @endforeach
     </div>
+    
     
 <div class="row my-5 px-5">
     <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">

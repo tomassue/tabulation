@@ -20,4 +20,18 @@ class DisplayQuizController extends Controller
 
         return view('led_display.quiz', compact('participants'));
     }
+
+
+    public function quiz_score()
+    {
+        $participants = RefParticipant::where('category', 'quiz')
+            ->leftjoin('quiz_bees', 'ref_participants.id', '=', 'quiz_bees.participant_id')
+            ->groupBy('ref_participants.id')
+            
+            ->select('ref_participants.*',  DB::raw('SUM(quiz_bees.score) as total_score'))
+            
+            ->get();
+
+        return view('led_display.quiz_bowl_score', compact('participants'));
+    }
 }
