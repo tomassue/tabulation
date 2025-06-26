@@ -15,13 +15,21 @@
                         </div>
                         <div class="card-body">
                             <div class="row d-flex justify-content-center my-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input type="search" wire:model.live="search"  list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                     <datalist id="datalistOptions">
                                         @foreach ($part as $item)
                                             <option value="{{$item->participant_no}}">
                                         @endforeach
                                     </datalist>
+                                </div>
+                                <div class="col-md-4">
+                                    <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
+                                        <option value="">ALL</option>
+                                        @foreach ($jud  as $item)
+                                            <option value="{{$item->id}}">{{$item->judge}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -50,11 +58,12 @@
                                             <th scope="row">
                                                 <h4>{{$participant->participant_no}}</h4>
                                                 <small>{{$participant->participant}}</small>
+                                                <div class="small text-muted fw-lighter">{{$participant->school}}</div>
                                                 @php
                                                     $deduction = \App\Models\OralDeduction::where('participant_id', $participant->id)->first();
                                                 @endphp
                                                  <div class="my-2">
-                                                    <label class="text-muted small">Deduction</label>
+                                                    <label class="text-danger small">Deduction</label>
                                                     <input type="number" wire:change="saveDeduction({{$participant->id}},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
                                                  </div>
                                             </th>
