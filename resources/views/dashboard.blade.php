@@ -104,7 +104,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-semibold">{{$item->participant}}</div>
-                                        <div class="text-muted small">{{$item->averageOral()}} pts</div>
+                                        <div class="text-muted small">{{bong_format($item->averageOral())}} pts</div>
                                     </div>
                                 </li>
                                 @endforeach

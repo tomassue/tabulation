@@ -23,7 +23,7 @@ class DisplayController extends Controller
                 'ref_participants.*',
                 DB::raw('SUM(orals.score) as total_score'),
                 DB::raw('COALESCE(oral_deductions.deduction, 0) as deduction'),
-                DB::raw('(SUM(orals.score) - COALESCE(oral_deductions.deduction, 0)) as final_score')
+                DB::raw('(SUM(orals.score) / 3 - COALESCE(oral_deductions.deduction, 0)) as final_score')
             )
             ->orderBy('final_score', 'DESC')
             ->limit(3)
