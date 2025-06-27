@@ -100,11 +100,16 @@ class Participants extends Component
         return null;
     }
     public function deleteParticipant($id){
-        $participant = RefParticipant::find($id);
+        $this->id = $id;
+        $this->dispatch('openDeleteModal');
+    }   
+    public function executeDeleteParticipant(){
+        $participant = RefParticipant::find($this->id);
         if($participant){
             $participant->delete();
              return session()->flash("status", "Sucessfully deleted!");
         }
         return session()->flash("error", "Failed to delete");
+        $this->dispatch('hideDeleteModal');
     }   
 }
