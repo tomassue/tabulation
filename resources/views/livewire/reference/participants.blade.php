@@ -70,6 +70,9 @@
                                                             </div>
                                                         </div>
                                                     </button>
+                                                    <button wire:click="deleteParticipant({{$item->id}})" class="btn btn-danger">
+                                                        DELETE
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
