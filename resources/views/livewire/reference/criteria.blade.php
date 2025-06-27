@@ -11,7 +11,7 @@
                                     <div class="toolbar mb-3 d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" wire:click="addCriteria">
                                             <div wire:loading.remove wire:target="addCriteria">
-                                                Add
+                                                <i class="bi bi-plus-circle"></i>
                                             </div>
                                             <div wire:loading wire:target="addCriteria">
                                                 <div class="spinner-border spinner-border-sm" role="status">
@@ -50,7 +50,7 @@
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" wire:click="editCriteria({{$item->id}})">
                                                             <div wire:loading.remove wire:target="editCriteria({{$item->id}})">
-                                                                Edit
+                                                                <i class="bi bi-pencil-square"></i>
                                                             </div>
                                                             <div wire:loading wire:target="editCriteria({{$item->id}})">
                                                                 <div class="spinner-border spinner-border-sm" role="status">

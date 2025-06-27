@@ -27,11 +27,18 @@
     }
 
     th{
-        font-size: 30px;
+        font-size: 40px;
+        style="background-color: #f6f6e9;"
+        text-align: center;
     }
 
     td{
-        font-size: 18px;
+        font-size: 25px;
+        style="background-color: #f6f6e9;"
+    }
+
+    .table{
+        font-family: Georgia, serif;
     }
 
 </style>
@@ -73,18 +80,18 @@
     <div class="row">
         @foreach ($chunks as $table)
             <div class="col-md-6">
-                <table class="table table-bordered text-center">
+                <table class="table">
                     <thead>
-                        <tr>
-                            <th>Participants</th>
-                            <th>Score</th>
+                        <tr style="text-align: center;">
+                            <th style="background-color: #f6f6e9;">Participants</th>
+                            <th style="background-color: #f6f6e9;">Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($table as $participant)
                             <tr>
-                                <td class="fw-bold">{{ $participant->school }}</td>
-                                <td class="fw-bold">{{ $participant->total_score ?? 0}}</td>
+                                <td class="fw-bold px-4" style="background-color: #f6f6e9;">#{{$participant->participant_no}}  {{ $participant->school }}</td>
+                                <td class="fw-bold" style="background-color: #f6f6e9; text-align: center;">{{ $participant->total_score ?? 0}}</td>
                             </tr>
                         @endforeach
                     </tbody>

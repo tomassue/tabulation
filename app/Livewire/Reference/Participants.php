@@ -13,6 +13,7 @@ class Participants extends Component
 
     public $poster_file;
     public $id, $participant, $category, $school, $participant_no, $participant_id;
+    public $poster_photos;
 
     protected $rules = [
         'poster_file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
@@ -83,6 +84,19 @@ class Participants extends Component
     {
         $this->participant_id = $id;
         $this->reset('poster_file');
+        $this->reset('poster_photos');
+        $this->getPosterFile($id);
         $this->dispatch('openPosterModal');
+    }
+    public function getPosterFile($id)
+    {
+        $output = PosterOutput::where('participant_id', $id)->first();
+        // Loop
+
+        if ($output) {
+            $this->poster_photos = $output->output_file ? asset('storage/' . $output->output_file) : null;
+        }
+
+        return null;
     }
 }

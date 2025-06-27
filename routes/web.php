@@ -47,6 +47,9 @@ Route::group(['middleware' => ['auth']], function () {
     /* -------------------------------- Reference ------------------------------- */
 
     Route::get('/logs', [LogsController::class, 'index'])->name('logs');
+
+    //LED MANAGEMENT
+    Route::view('/display-management', 'display-management')->name('display-management');
 });
 
 
@@ -62,6 +65,9 @@ Route::get('/display_quiz_score', [App\Http\Controllers\DisplayQuizController::c
 //POSTER
 Route::get('/display_poster', [App\Http\Controllers\DisplayPosterController::class, 'poster'])->name('display_poster');
 Route::get('/display_poster_output/{id}', [App\Http\Controllers\DisplayPosterController::class, 'output'])->name('display_poster_output');
+
+//LED WALL DISPLAY
+Route::view('/display_led', 'led_display.dynamic_led')->name('display_led');
 
 /* ----------------------------- Livewire Route ----------------------------- */
 
