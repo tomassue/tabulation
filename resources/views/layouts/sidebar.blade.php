@@ -69,6 +69,10 @@
                 <i class="bi bi-activity"></i>
                 <span>Logs</span>
             </a>
+            <a class="nav-link {{ Route::currentRouteName() == 'display-management' ? '' : 'collapsed' }}" href="{{ route('display-management') }}">
+                <i class="bi bi-activity"></i>
+                <span>LED Management</span>
+            </a>
         </li>
 
     </ul>

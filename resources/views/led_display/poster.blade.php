@@ -79,6 +79,14 @@
                 '60px',
             ]
         @endphp
+         @if (isset($position) && $position  && $position != null)
+            @php
+                $position = $position - 1;
+                $image = [$image[$position]];
+                $font = [$font[$position]];
+                $color = [$color[$position]];
+            @endphp
+        @endif
         @foreach ($participants as $index => $item)
         <div class="row mb-3 justify-content-center align-items-center">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
