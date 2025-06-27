@@ -79,6 +79,14 @@
                 '60px',
             ]
         @endphp
+         @if (isset($position) && $position  && $position != null)
+            @php
+                $position = $position - 1;
+                $image = [$image[$position]];
+                $font = [$font[$position]];
+                $color = [$color[$position]];
+            @endphp
+        @endif
         @foreach ($participants as $index => $item)
         <div class="row mb-3 justify-content-center align-items-center">
             <div class="col-md-2 d-flex align-items-center justify-content-center">
@@ -98,7 +106,7 @@
                     </button>
                 </div>
                 <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{bong_format($item->total_score / 3)}}
+                   {{bong_format($item->averagePoster())}}
                 </div>
                 <div class="fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
                     <div class="modal fade" id="fullscreenModal{{ $item->id }}" tabindex="-1" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
