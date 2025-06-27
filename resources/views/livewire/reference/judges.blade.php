@@ -11,7 +11,7 @@
                                     <div class="toolbar mb-3 d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" wire:click="addJudge">
                                             <div wire:loading.remove wire:target="addJudge">
-                                                Add
+                                                <i class="bi bi-plus-circle"></i>
                                             </div>
                                             <div wire:loading wire:target="addJudge">
                                                 <div class="spinner-border spinner-border-sm" role="status">
@@ -47,7 +47,7 @@
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" wire:click="editJudge({{$item->id}})">
                                                             <div wire:loading.remove wire:target="editJudge({{$item->id}})">
-                                                                Edit
+                                                                <i class="bi bi-pencil-square"></i>
                                                             </div>
                                                             <div wire:loading wire:target="editJudge({{$item->id}})">
                                                                 <div class="spinner-border spinner-border-sm" role="status">
