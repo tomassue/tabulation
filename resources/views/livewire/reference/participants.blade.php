@@ -8,7 +8,7 @@
                             <div class="toolbar mb-3 d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary" wire:click="addParticipant">
                                     <div wire:loading.remove wire:target="addParticipant">
-                                        Add
+                                        <i class="bi bi-plus-circle"></i>
                                     </div>
                                     <div wire:loading wire:target="addParticipant">
                                         <div class="spinner-border spinner-border-sm" role="status">
@@ -52,7 +52,7 @@
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button class="btn btn-sm btn-primary" wire:click="editParticipant({{$item->id}})">
                                                         <div wire:loading.remove wire:target="editParticipant({{$item->id}})">
-                                                            Edit
+                                                            <i class="bi bi-pencil-square"></i>
                                                         </div>
                                                         <div wire:loading wire:target="editParticipant({{$item->id}})">
                                                             <div class="spinner-border spinner-border-sm" role="status">
@@ -62,7 +62,7 @@
                                                     </button>
                                                     <button class="btn btn-sm btn-warning" wire:click="addPoster({{$item->id}})" style="display: {{ $item->category == 'poster' ? '' : 'none' }};">
                                                         <div wire:loading.remove wire:target="addPoster({{$item->id}})">
-                                                            Upload
+                                                            <i class="bi bi-upload"></i>
                                                         </div>
                                                         <div wire:loading wire:target="addPoster({{$item->id}})">
                                                             <div class="spinner-border spinner-border-sm" role="status">
@@ -163,23 +163,21 @@
                                     <input type="file" class="form-control upload_poster_file" accept="image/*">
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <!-- begin::Files -->
-                                <div class="col-12 mb-3" style="display: {{ $poster_photos ? '' : 'none' }};">
-                                    <table class="table table-row-dashed table-row-gray-300 gy-7">
-                                        <thead>
-                                            <tr class="fw-bolder fs-6 text-gray-800">
-                                                <th width="80%">File</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <td>
-                                                <img src="{{ $poster_photos }}" alt="image" class="img-fluid" style="max-width: 100%; max-height: 200px;">
-                                            </td>
-                                        </tbody>
-                                    </table>
+                            <div class="my-4">
+                                <!-- Poster Photo Preview Card -->
+                                @if ($poster_photos)
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 text-primary fw-bold">Poster Image</h6>
+                                        <span class="badge bg-info text-dark">Preview</span>
+                                    </div>
+                                    <div class="card-body text-center mt-4">
+                                        <a href="{{ $poster_photos }}" data-lightbox="{{ $poster_photos }}" data-title="Poster Image">
+                                            <img src="{{ $poster_photos }}" alt="Poster" class="img-thumbnail" style="max-height: 300px; object-fit: cover;">
+                                        </a>
+                                    </div>
                                 </div>
-                                <!-- end::Files -->
+                                @endif
                             </div>
                         </div>
                         <div class="modal-footer">
