@@ -47,8 +47,8 @@ class Poster extends Component
         $participants = RefParticipant::where('category', 'poster')
             ->leftjoin('posters', 'ref_participants.id', '=', 'posters.participant_id')
             ->groupBy('ref_participants.id')
-            ->orderByRaw('SUM(posters.score) DESC')
-            ->select('ref_participants.*',  DB::raw('SUM(posters.score) as total_score'))
+            ->select('ref_participants.*',  DB::raw('SUM(posters.score) / 3 as total_score'))
+            ->orderBy('total_score', 'DESC')
             ->get();
         $poster = PosterModel::all();
         $criterias = RefCriteria::where('category', 'poster')->get();

@@ -16,13 +16,13 @@ class Participants extends Component
     public $poster_photos;
 
     protected $rules = [
-        'poster_file' => 'required|file|max:51200|mimes:jpg,png,jpeg',
+        'poster_file' => 'required|file|max:51200|mimes:jpg,png,jpeg,heic',
     ];
 
     protected $messages = [
         'poster_file.required' => 'Please select a file to upload',
         'poster_file.max' => 'File size must be less than 50MB',
-        'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG',
+        'mimes' => 'Invalid file type. Allowed: JPG, PNG, JPEG, HEIC',
     ];
 
     public function render()

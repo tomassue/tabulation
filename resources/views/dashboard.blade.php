@@ -126,7 +126,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-semibold">{{$item->participant}}</div>
-                                        <div class="text-muted small">{{$item->averagePoster()}} pts</div>
+                                        <div class="text-muted small">{{bong_format($item->averagePoster())}} pts</div>
                                     </div>
                                 </li>
                                 @endforeach
