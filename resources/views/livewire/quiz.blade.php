@@ -27,7 +27,7 @@
                                 <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                 <datalist id="datalistOptions">
                                     @foreach ($part as $item)
-                                    <option value="{{$item->participant}}">
+                                    <option value="{{$item->school}}">
                                         @endforeach
                                 </datalist>
                             </div>

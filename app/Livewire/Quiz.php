@@ -15,7 +15,7 @@ class Quiz extends Component
     public $search = '', $base64pdf;
     public function render()
     {
-        $participants = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->where('category', 'quiz')->get();
+        $participants = RefParticipant::where('school', 'like', '%' . $this->search . '%')->where('category', 'quiz')->get();
         $part = RefParticipant::where('category', 'quiz')->get();
         $quizbees = QuizBee::all();
         return view('livewire.quiz', compact('participants', 'part', 'quizbees'));
