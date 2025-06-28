@@ -32,14 +32,14 @@ class DynamicLed extends Component
                     'ref_participants.*',
                     DB::raw('SUM(orals.score) as total_score'),
                     DB::raw('COALESCE(oral_deductions.deduction, 0) as deduction'),
-                    DB::raw('(SUM(orals.score) - COALESCE(oral_deductions.deduction, 0)) as final_score')
+                    DB::raw('(SUM(orals.score) / 3 - COALESCE(oral_deductions.deduction, 0)) as final_score')
                 )
                 ->orderBy('final_score', 'DESC');
         } else if ($led->category == "poster") {
             $participantsRaw =  $participantsRaw->leftjoin('posters', 'ref_participants.id', '=', 'posters.participant_id')
                 ->groupBy('ref_participants.id')
-                ->orderByRaw('SUM(posters.score) DESC')
-                ->select('ref_participants.*',  DB::raw('SUM(posters.score) as total_score'));
+                ->select('ref_participants.*',  DB::raw('SUM(posters.score) / 3 as total_score'))
+                ->orderBy('total_score', 'DESC');
         }
 
 

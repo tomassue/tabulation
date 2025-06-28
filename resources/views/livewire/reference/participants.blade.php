@@ -210,11 +210,11 @@
                     </div>
                     <div class="modal-body">
                         @include('layouts.message')
-                        <p>Are you sure to delete this participant?</p>
+                        <p class="text-danger">Are you sure to delete this participant?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" wire:click="executeDeleteParticipant()">Delete</button>
+                        <button type="submit" class="btn btn-danger" wire:click="executeDeleteParticipant()">Delete</button>
                     </div>
                 </div>
             </div>
