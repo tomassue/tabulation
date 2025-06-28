@@ -15,9 +15,11 @@ class DashboardController extends Controller
     {
         //PROGRESS RATE
         $participant = RefParticipant::all();
+
+        $part = RefParticipant::where('category', 'quiz')->count();
         $quizProgress = RefParticipant::leftjoin('quiz_bees', 'quiz_bees.participant_id', 'ref_participants.id')
             ->where('ref_participants.category', 'quiz')
-            ->whereNotNull('quiz_bees.score')->count() / 25 * 100;
+            ->whereNotNull('quiz_bees.score')->count() / ($part * 25) * 100;
 
         $criOral = RefCriteria::where('category', 'oral')->count();
         $posterOral = $participant->where('category', 'oral')->count();
