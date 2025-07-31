@@ -6,9 +6,17 @@
                     <div class="col-lg-12">
                         <div class="col-lg-10 mx-auto">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-header toolbar mb-3  d-flex justify-content-between align-items-center">
                                     <h5 class="card-title">Add Criteria</h5>
-                                    <div class="toolbar mb-3 d-flex justify-content-end">
+                                    <div class="d-flex">
+                                        <div class="mx-2">
+                                            <select name="selectedCateg" wire:model.live="selectedCateg" class="form-select" id="selectedCateg">
+                                                <option value="">--- SELECT ---</option>
+                                                @foreach ($categories as $item)
+                                                    <option value="{{ $item->category }}">{{ $item->description }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <button type="button" class="btn btn-primary" wire:click="addCriteria">
                                             <div wire:loading.remove wire:target="addCriteria">
                                                 <i class="bi bi-plus-circle"></i>
@@ -20,6 +28,8 @@
                                             </div>
                                         </button>
                                     </div>
+                                </div>
+                                <div class="card-body">
                                     <div class="table-responsive">
                                         <!-- Table with hoverable rows -->
                                         <table class="table table-hover">
@@ -27,39 +37,39 @@
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Name</th>
-                                                    <th scope="col">Category</th>
+                                                    <th scope="col">Event</th>
                                                     <th scope="col">Perfect Score</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($criterias as $item)
-                                                <tr>
-                                                    <th scope="row">
-                                                        {{$loop->iteration}}
-                                                    </th>
-                                                    <th scope="row">
-                                                        {{$item->criteria}}
-                                                    </th>
-                                                    <th scope="row" class="text-capitalize">
-                                                        {{$item->category}}
-                                                    </th>
-                                                    <td>
-                                                        {{$item->perfect_score}}
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-primary" wire:click="editCriteria({{$item->id}})">
-                                                            <div wire:loading.remove wire:target="editCriteria({{$item->id}})">
-                                                                <i class="bi bi-pencil-square"></i>
-                                                            </div>
-                                                            <div wire:loading wire:target="editCriteria({{$item->id}})">
-                                                                <div class="spinner-border spinner-border-sm" role="status">
-                                                                    <span class="visually-hidden">Loading...</span>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            {{ $loop->iteration }}
+                                                        </th>
+                                                        <th scope="row">
+                                                            {{ $item->criteria }}
+                                                        </th>
+                                                        <th scope="row" class="text-capitalize">
+                                                            {{ $item->category }}
+                                                        </th>
+                                                        <td>
+                                                            {{ $item->perfect_score }}
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary" wire:click="editCriteria({{ $item->id }})">
+                                                                <div wire:loading.remove wire:target="editCriteria({{ $item->id }})">
+                                                                    <i class="bi bi-pencil-square"></i>
                                                                 </div>
-                                                            </div>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                                <div wire:loading wire:target="editCriteria({{ $item->id }})">
+                                                                    <div class="spinner-border spinner-border-sm" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -90,11 +100,12 @@
                             <input type="text" class="form-control" wire:model="criteria" id="criteria" placeholder="Enter criteria name">
                         </div>
                         <div class="mb-3">
-                            <label for="category">Category</label>
+                            <label for="category">Event</label>
                             <select wire:model="category" id="category" class="form-select">
                                 <option value="">--- SELECT ---</option>
-                                <option value="oral">Oral</option>
-                                <option value="poster">Poster</option>
+                                @foreach ($categories as $item)
+                                    <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
@@ -121,15 +132,15 @@
     </div>
 </section>
 @script
-<script>
-    window.addEventListener('openModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
-        myModal.show();
-    });
+    <script>
+        window.addEventListener('openModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            myModal.show();
+        });
 
-    window.addEventListener('hideModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
-        myModal.hide();
-    });
-</script>
+        window.addEventListener('hideModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            myModal.hide();
+        });
+    </script>
 @endscript

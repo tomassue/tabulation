@@ -6,9 +6,17 @@
                     <div class="col-lg-12">
                         <div class="col-lg-10 mx-auto">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-header toolbar mb-3  d-flex justify-content-between align-items-center">
                                     <h5 class="card-title">Add Judges</h5>
-                                    <div class="toolbar mb-3 d-flex justify-content-end">
+                                    <div class="d-flex">
+                                        <div class="mx-2">
+                                            <select name="selectedCateg" wire:model.live="selectedCateg" class="form-select" id="selectedCateg">
+                                                <option value="">--- SELECT ---</option>
+                                                @foreach ($categories as $item)
+                                                    <option value="{{ $item->category }}">{{ $item->description }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <button type="button" class="btn btn-primary" wire:click="addJudge">
                                             <div wire:loading.remove wire:target="addJudge">
                                                 <i class="bi bi-plus-circle"></i>
@@ -20,6 +28,8 @@
                                             </div>
                                         </button>
                                     </div>
+                                </div>
+                                <div class="card-body">
                                     <div class="table-responsive">
                                         <!-- Table with hoverable rows -->
                                         <table class="table table-hover">
@@ -27,36 +37,36 @@
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Name</th>
-                                                    <th scope="col">Category</th>
+                                                    <th scope="col">Event</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($judges as $item)
-                                                <tr>
-                                                    <th scope="row">
-                                                        {{$loop->iteration}}
-                                                    </th>
-                                                    <th scope="row">
-                                                        {{$item->judge}}
-                                                        <span class="badge text-bg-secondary">{{$item->nickname}}</span>
-                                                    </th>
-                                                    <th scope="row" class="text-capitalize">
-                                                        {{$item->category}}
-                                                    </th>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-primary" wire:click="editJudge({{$item->id}})">
-                                                            <div wire:loading.remove wire:target="editJudge({{$item->id}})">
-                                                                <i class="bi bi-pencil-square"></i>
-                                                            </div>
-                                                            <div wire:loading wire:target="editJudge({{$item->id}})">
-                                                                <div class="spinner-border spinner-border-sm" role="status">
-                                                                    <span class="visually-hidden">Loading...</span>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            {{ $loop->iteration }}
+                                                        </th>
+                                                        <th scope="row">
+                                                            {{ $item->judge }}
+                                                            <span class="badge text-bg-secondary">{{ $item->nickname }}</span>
+                                                        </th>
+                                                        <th scope="row" class="text-capitalize">
+                                                            {{ implode(', ', $item->category) }}
+                                                        </th>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
+                                                                <div wire:loading.remove wire:target="editJudge({{ $item->id }})">
+                                                                    <i class="bi bi-pencil-square"></i>
                                                                 </div>
-                                                            </div>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                                <div wire:loading wire:target="editJudge({{ $item->id }})">
+                                                                    <div class="spinner-border spinner-border-sm" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
 
                                             </tbody>
@@ -91,12 +101,15 @@
                             <input type="text" class="form-control" wire:model="nickname" id="NickName" placeholder="Enter judge's nickname">
                         </div>
                         <div class="mb-3">
-                            <label for="category">Category</label>
-                            <select wire:model="category" id="category" class="form-select">
-                                <option value="">--- SELECT ---</option>
-                                <option value="oral">Oral</option>
-                                <option value="poster">Poster</option>
-                            </select>
+                            <label for="category">Event Judge</label>
+                            @foreach ($categories as $item)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input w-5 h-5 text-blue-600 rounded focus:ring-blue-500" wire:model="selectedCategories" value="{{ $item->category }}">
+                                    <label for="flexCheckDefault">
+                                        {{ $item->description }}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -118,14 +131,14 @@
     </div>
 </section>
 @script
-<script>
-    window.addEventListener('openModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
-        myModal.show();
-    });
-    window.addEventListener('hideModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
-        myModal.show();
-    });
-</script>
+    <script>
+        window.addEventListener('openModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
+            myModal.show();
+        });
+        window.addEventListener('hideModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
+            myModal.show();
+        });
+    </script>
 @endscript

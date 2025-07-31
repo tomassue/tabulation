@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ref_criterias', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string("criteria")->nullale();
-            $table->integer("perfect_score")->nullable();
-            $table->text('category')->nullable();
+            $table->string("name")->nullable();
+            $table->string("value")->nullable();
+            $table->string("description")->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ref_criterias');
+        Schema::dropIfExists('settings');
     }
 };

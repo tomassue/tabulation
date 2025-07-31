@@ -50,6 +50,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     //LED MANAGEMENT
     Route::view('/display-management', 'display-management')->name('display-management');
+
+    //HIGALAAY
+    Route::view('/band', 'higalaay.band')->name('band');
+    Route::view('/float', 'higalaay.float')->name('float');
+    Route::view('/costume', 'higalaay.costume')->name('costume');
+    Route::view('/majorette', 'higalaay.majorette')->name('majorette');
+    Route::view('/major', 'higalaay.major')->name('major');
 });
 
 
