@@ -18,3 +18,13 @@ if (! function_exists('bong_format')) {
         return number_format($value, 2);
     }
 }
+if (! function_exists('bong_ordinal')) {
+    function bong_ordinal($number): String
+    {
+        $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+        if ((($number % 100) >= 11) && (($number % 100) <= 13))
+            return $number . 'th';
+        else
+            return $number . $ends[$number % 10];
+    }
+}

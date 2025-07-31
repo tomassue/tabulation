@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("judge")->nullable();
             $table->string("nickname")->nullable();
-            $table->enum("category", ["oral","poster"]);
+            $table->text("category");
             $table->timestamps();
         });
     }

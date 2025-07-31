@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class RefParticipant extends Model
 {
+    protected $fillable = [
+        'category',
+    ];
+    protected $casts = [
+        'category' => 'array', // Casts the 'details' column to a PHP array
+    ];
+
+    public function scopeCategory($query, $category)
+    {
+        return $query->whereJsonContains('ref_participants.category', $category);
+    }
     public function sumRound1()
     {
         return $this->hasMany(QuizBee::class, 'participant_id')->where('round_id', 1)->sum('score');
@@ -75,5 +86,18 @@ class RefParticipant extends Model
     {
         $deduction = $this->deductions?->deduction;
         return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') / 3) - $deduction;
+    }
+    public function averageHigalaay($category)
+    {
+        $deduction = $this->higalaayDeduction?->deduction;
+        return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('category', $category)->sum('score') / 3) - $deduction;
+    }
+    public function getHigalaayScoreByJudge($judge_id, $category)
+    {
+        return $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category)->where('judge_id', $judge_id)->sum('score');
+    }
+    public function higalaayDeduction()
+    {
+        return $this->hasOne(HigalaayDeduction::class, 'participant_id', 'id');
     }
 }

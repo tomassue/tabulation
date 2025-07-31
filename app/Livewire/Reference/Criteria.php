@@ -2,16 +2,18 @@
 
 namespace App\Livewire\Reference;
 
+use App\Models\Category;
 use Livewire\Component;
 use App\Models\RefCriteria;
 
 class Criteria extends Component
 {
-    public $id, $criteria, $perfect_score, $category;
+    public $id, $criteria, $perfect_score, $category, $selectedCateg;
     public function render()
     {
-        $criterias = RefCriteria::all();
-        return view('livewire.reference.criteria', compact('criterias'));
+        $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->get();
+        $categories = Category::where('is_active', 1)->get();
+        return view('livewire.reference.criteria', compact('criterias', 'categories'));
     }
     public function addCriteria()
     {

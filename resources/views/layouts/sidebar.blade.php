@@ -2,35 +2,25 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
-                <i class="bi bi-card-heading"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'quiz' ? '' : 'collapsed' }}" href="{{ route('quiz') }}">
-                <i class="bi bi-question-lg"></i>
-                <span>Quiz</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'oral' ? '' : 'collapsed' }}" href="{{ route('oral') }}">
-                <i class="bi bi-mic"></i>
-                <span>Oratorical</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'poster' ? '' : 'collapsed' }}" href="{{ route('poster') }}">
-                <i class="bi bi-file-post"></i>
-                <span>Poster</span>
-            </a>
-        </li>
-
+        @php
+            $events = \App\Models\Category::where('is_active', 1)->get();
+        @endphp
+        @if (config('settings.module') != 'higalaay')
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
+                    <i class="bi bi-card-heading"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+        @endif
+        @foreach ($events as $item)
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == $item->category ? '' : 'collapsed' }}" href="{{ route($item->category) }}">
+                    {!! $item->icon !!}
+                    <span>{{ $item->description }}</span>
+                </a>
+            </li>
+        @endforeach
         <hr>
 
         <li class="nav-item">
@@ -51,11 +41,6 @@
                 <li>
                     <a href="{{ route('reference.participants') }}" class="{{ Route::currentRouteName() == 'reference.participants' ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Participants</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('reference.round') }}" class="{{ Route::currentRouteName() == 'reference.round' ? 'active' : '' }}">
-                        <i class="bi bi-circle"></i><span>Round</span>
                     </a>
                 </li>
             </ul>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reference;
 
+use App\Models\Category;
 use App\Models\PosterOutput;
 use Livewire\Component;
 use App\Models\RefParticipant;
@@ -12,7 +13,8 @@ class Participants extends Component
     use WithFileUploads;
 
     public $poster_file;
-    public $id, $participant, $category, $school, $participant_no, $participant_id;
+    public $id, $participant, $school, $participant_no, $participant_id, $selectedCateg;
+    public $selectedCategories = [];
     public $poster_photos;
 
     protected $rules = [
@@ -28,7 +30,11 @@ class Participants extends Component
     public function render()
     {
         $participants = RefParticipant::orderBy('category', 'asc')->get();
-        return view('livewire.reference.participants', compact('participants'));
+        if ($this->selectedCateg) {
+            $participants = RefParticipant::whereJsonContains('category', $this->selectedCateg)->orderBy('category', 'asc')->get();
+        }
+        $categories = Category::where('is_active', 1)->get();
+        return view('livewire.reference.participants', compact('participants', 'categories'));
     }
 
     public function saveParticipant()
@@ -36,12 +42,13 @@ class Participants extends Component
         $this->validate([
             'participant_no' => 'required',
             'participant' => 'required',
-            'category' => 'required',
+            'selectedCategories' => 'array',
+            'selectedCategories.*' => 'exists:categories,category',
             'school' => 'required'
         ]);
         $participant = $this->id ? RefParticipant::find($this->id) : new RefParticipant();
         $participant->participant = $this->participant;
-        $participant->category = $this->category;
+        $participant->category = $this->selectedCategories;
         $participant->participant_no = $this->participant_no;
         $participant->school = $this->school;
         $participant->save();
@@ -59,7 +66,7 @@ class Participants extends Component
     {
         $participant =  RefParticipant::find($id);
         $this->participant = $participant->participant;
-        $this->category = $participant->category;
+        $this->selectedCategories = $participant->category;
         $this->participant_no = $participant->participant_no;
         $this->school = $participant->school;
         $this->id = $id;
@@ -99,17 +106,19 @@ class Participants extends Component
 
         return null;
     }
-    public function deleteParticipant($id){
+    public function deleteParticipant($id)
+    {
         $this->id = $id;
         $this->dispatch('openDeleteModal');
-    }   
-    public function executeDeleteParticipant(){
+    }
+    public function executeDeleteParticipant()
+    {
         $participant = RefParticipant::find($this->id);
-        if($participant){
+        if ($participant) {
             $participant->delete();
-             return session()->flash("status", "Sucessfully deleted!");
+            return session()->flash("status", "Sucessfully deleted!");
         }
         return session()->flash("error", "Failed to delete");
         $this->dispatch('hideDeleteModal');
-    }   
+    }
 }

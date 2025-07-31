@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("participant_no")->nullable();
             $table->string("participant")->nullable();
-            $table->enum('category', ["oral", "poster","quiz"])->nullable();
+            $table->text('category')->nullable();
             $table->text("school")->nullable();
             $table->timestamps();
         });
