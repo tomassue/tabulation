@@ -3,23 +3,23 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
         @php
-            $events = \App\Models\Category::where('is_active', 1)->get();
+        $events = \App\Models\Category::where('is_active', 1)->get();
         @endphp
         @if (config('settings.module') != 'higalaay')
-            <li class="nav-item">
-                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
-                    <i class="bi bi-card-heading"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
+                <i class="bi bi-card-heading"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
         @endif
         @foreach ($events as $item)
-            <li class="nav-item">
-                <a class="nav-link {{ Route::currentRouteName() == $item->category ? '' : 'collapsed' }}" href="{{ route($item->category) }}">
-                    {!! $item->icon !!}
-                    <span>{{ $item->description }}</span>
-                </a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == $item->category ? '' : 'collapsed' }}" href="{{ route($item->category) }}">
+                {!! $item->icon !!}
+                <span>{{ $item->description }}</span>
+            </a>
+        </li>
         @endforeach
         <hr>
 
@@ -45,7 +45,34 @@
                 </li>
             </ul>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('settings*') ? '' : 'collapsed' }}" data-bs-target="#modules-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-gear"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="modules-nav" class="nav-content collapse {{ request()->is('settings*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('settings.modules') }}" class="{{ Route::currentRouteName() == 'settings.modules' ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Modules</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('settings.import-export') }}" class="{{ Route::currentRouteName() == 'settings.import-export' ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>DB Export/Import</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <!-- End Components Nav -->
+
+        <hr>
+
+        <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'settings.user-management' ? '' : 'collapsed' }}" href="{{ route('settings.user-management') }}">
+                <i class="bi bi-person-workspace"></i>
+                <span>User Management</span>
+            </a>
+        </li>
 
         <hr>
 

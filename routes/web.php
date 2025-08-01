@@ -9,6 +9,8 @@ use App\Http\Controllers\Reference\CriteriaController;
 use App\Http\Controllers\Reference\JudgesController;
 use App\Http\Controllers\Reference\ParticipantsController;
 use App\Http\Controllers\Reference\RoundController;
+use App\Http\Controllers\Settings\DBImportExport;
+use App\Http\Controllers\Settings\Modules;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,6 +48,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/reference/save-round', [RoundController::class, 'saveRound'])->name('save-round');
     /* -------------------------------- Reference ------------------------------- */
 
+    /* -------------------------------- Settings -------------------------------- */
+    Route::get('/settings/modules', [Modules::class, 'index'])->name('settings.modules');
+    Route::get('settings/import-export', [DBImportExport::class, 'index'])->name('settings.import-export');
+    Route::view('/settings/user-management', 'settings.user-management')->name('settings.user-management');
+    /* -------------------------------- Settings -------------------------------- */
+
     Route::get('/logs', [LogsController::class, 'index'])->name('logs');
 
     //LED MANAGEMENT
@@ -57,6 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::view('/costume', 'higalaay.costume')->name('costume');
     Route::view('/majorette', 'higalaay.majorette')->name('majorette');
     Route::view('/major', 'higalaay.major')->name('major');
+    Route::view('/dance', 'higalaay.dance')->name('dance');
 });
 
 

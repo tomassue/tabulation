@@ -5,6 +5,9 @@ namespace App\Livewire\Reference;
 use App\Models\Category;
 use Livewire\Component;
 use App\Models\RefJudge;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class Judges extends Component
 {
@@ -42,12 +45,20 @@ class Judges extends Component
             'selectedCategories.*' => 'exists:categories,category',
         ]);
 
-        $judge = $this->id ? RefJudge::find($this->id) : new RefJudge();
-        $judge->judge = $this->judge;
-        $judge->nickname = $this->nickname;
-        $judge->category = $this->selectedCategories;
-        $judge->save();
+        DB::transaction(function () {
+            $judge = $this->id ? RefJudge::find($this->id) : new RefJudge();
+            $judge->judge = $this->judge;
+            $judge->nickname = $this->nickname;
+            $judge->category = $this->selectedCategories;
+            $judge->save();
 
-        return session()->flash('status', 'Sucessfully saved!');
+            $user = $this->id ? User::find($this->id) : new User();
+            $user->name  = $this->judge;
+            $user->email = $this->judge . '@judge.com';
+            $user->password = Hash::make('password');
+            $user->save();
+
+            return session()->flash('status', 'Sucessfully saved!');
+        });
     }
 }
