@@ -54,7 +54,8 @@ class Judges extends Component
 
             $user = $this->id ? User::find($this->id) : new User();
             $user->name  = $this->judge;
-            $user->email = $this->judge . '@judge.com';
+            $user->email = str_replace(' ', $this->judge, strtolower($this->judge)) . '@example.com';
+            $user->role = 'user';
             $user->password = Hash::make('password');
             $user->save();
 

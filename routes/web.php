@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::view('/majorette', 'higalaay.majorette')->name('majorette');
     Route::view('/major', 'higalaay.major')->name('major');
     Route::view('/dance', 'higalaay.dance')->name('dance');
+    Route::view('/kahigayonan', 'higalaay.kahigayonan')->name('kahigayonan');
 });
 
 

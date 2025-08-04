@@ -46,19 +46,36 @@
                                                 <tbody>
                                                     @foreach ($users as $item)
                                                     <tr>
-                                                        <td>#</td>
+                                                        <td>
+                                                            {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
+                                                        </td>
                                                         <td>{{ $item->name }}</td>
                                                         <td>{{ $item->email }}</td>
                                                         <td>{{ $item->role }}</td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>
+                                                            <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
+                                                                {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                <button type="button" class="btn btn-primary" wire:click="editUser({{ $item->id }})">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </button>
+                                                                <button type="button"
+                                                                    class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}"
+                                                                    wire:click="{{ $item->is_active == 1 ? 'deactivateUser('.$item->id.')' : 'activateUser('.$item->id.')' }}">
+                                                                    <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                             <!-- End Table with hoverable rows -->
                                             <div>
-                                                <!-- pagination -->
+                                                {{ $users->links() }}
                                             </div>
                                         </div>
                                     </div>
@@ -71,24 +88,29 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="criteriaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Add</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="clear"></button>
                     </div>
-                    <form wire:submit.prevent="saveModule">
+                    <form wire:submit.prevent="saveUser">
                         <div class="modal-body">
                             @include('layouts.message')
                             <div class="mb-3">
-                                <label for="category" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" wire:model="category" id="category" placeholder="Enter category name">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" wire:model="name" id="name" placeholder="Enter name">
                             </div>
                             <div class="mb-3">
-                                <label for="description" class="form-label">Description Name</label>
-                                <input type="text" class="form-control" wire:model="description" id="description" placeholder="Enter description name">
+                                <label for="role" class="form-label">Role</label>
+                                <select name="role" id="role" class="form-select" wire:model="role">
+                                    <option value="">--- SELECT ---</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="user">User</option>
+                                </select>
                             </div>
+                            @if ($editMode)
                             <div class="mb-3">
                                 <label for="is_active">Is Active?</label>
                                 <select wire:model="is_active" id="is_active" class="form-select">
@@ -97,6 +119,7 @@
                                     <option value="0">No</option>
                                 </select>
                             </div>
+                            @endif
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" wire:click="clear">Close</button>
@@ -119,12 +142,12 @@
     @script
     <script>
         window.addEventListener('openModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            var myModal = new bootstrap.Modal(document.getElementById('userModal'));
             myModal.show();
         });
 
         window.addEventListener('hideModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            var myModal = new bootstrap.Modal(document.getElementById('userModal'));
             myModal.hide();
         });
     </script>
