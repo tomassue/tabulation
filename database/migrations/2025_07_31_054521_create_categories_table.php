@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("category")->nullable();
             $table->string("description")->nullable();
             $table->integer("is_active")->default(1)->nullable();
+            $table->integer("winners")->default(3);
             $table->string("icon")->nullable();
             $table->timestamps();
         });
