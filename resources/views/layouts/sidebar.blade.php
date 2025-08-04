@@ -3,23 +3,23 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
         @php
-        $events = \App\Models\Category::where('is_active', 1)->get();
+            $events = \App\Models\Category::where('is_active', 1)->get();
         @endphp
         @if (config('settings.module') != 'higalaay')
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
-                <i class="bi bi-card-heading"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == 'dashboard' ? '' : 'collapsed' }}" href="{{ route('dashboard') }}">
+                    <i class="bi bi-card-heading"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
         @endif
         @foreach ($events as $item)
-        <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == $item->category ? '' : 'collapsed' }}" href="{{ route($item->category) }}">
-                {!! $item->icon !!}
-                <span>{{ $item->description }}</span>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::currentRouteName() == $item->category ? '' : 'collapsed' }}" href="{{ route('event', $item->category) }}">
+                    {!! $item->icon !!}
+                    <span>{{ $item->description }}</span>
+                </a>
+            </li>
         @endforeach
         <hr>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\OralController;
@@ -60,13 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::view('/display-management', 'display-management')->name('display-management');
 
     //HIGALAAY
-    Route::view('/band', 'higalaay.band')->name('band');
-    Route::view('/float', 'higalaay.float')->name('float');
-    Route::view('/costume', 'higalaay.costume')->name('costume');
-    Route::view('/majorette', 'higalaay.majorette')->name('majorette');
-    Route::view('/major', 'higalaay.major')->name('major');
-    Route::view('/dance', 'higalaay.dance')->name('dance');
-    Route::view('/kahigayonan', 'higalaay.kahigayonan')->name('kahigayonan');
+    Route::get('/show-event/{slug}', [CategoryController::class, 'show'])->name('event');
 });
 
 
