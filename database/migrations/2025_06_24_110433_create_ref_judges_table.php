@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("judge")->nullable();
             $table->string("nickname")->nullable();
             $table->text("category");
+            $table->integer("user_id")->nullable();
             $table->timestamps();
         });
     }

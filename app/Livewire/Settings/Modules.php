@@ -5,7 +5,7 @@ namespace App\Livewire\Settings;
 use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use Illuminate\Support\Str;
 use function Laravel\Prompts\error;
 
 class Modules extends Component
@@ -74,7 +74,7 @@ class Modules extends Component
             Category::updateOrCreate(
                 ['id' => $this->category_id],
                 [
-                    'category' => $this->category,
+                    'category' => Str::slug($this->category),
                     'description' => $this->description,
                     'is_active' => $this->is_active,
                     'icon' => '<i class="bi bi-box-seam"></i>'

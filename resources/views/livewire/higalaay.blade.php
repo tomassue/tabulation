@@ -5,7 +5,7 @@
                 <div class="card" wire:loading.class="opacity-50 pe-none">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h5 class="text-uppercase">{{ $type }} SCORE TABLE</h5>
+                            <h5 class="text-uppercase">{{ $categoryName }} SCORE TABLE</h5>
                             <div>
                                 <div class="input-group">
                                     <button class="btn btn-primary" wire:click="generateReport">
@@ -36,15 +36,17 @@
                                     @endforeach
                                 </datalist>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="">JUDGES</label>
-                                <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
-                                    <option value="">ALL</option>
-                                    @foreach ($jud as $item)
-                                        <option value="{{ $item->id }}">{{ $item->judge }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @if (auth()->user()->role == 'admin')
+                                <div class="col-md-4 mb-3">
+                                    <label for="">JUDGES</label>
+                                    <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
+                                        <option value="">ALL</option>
+                                        @foreach ($jud as $item)
+                                            <option value="{{ $item->id }}">{{ $item->judge }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
                         <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
                             <!-- Table with hoverable rows -->

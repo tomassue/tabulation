@@ -46,11 +46,7 @@ class Judges extends Component
         ]);
 
         DB::transaction(function () {
-            $judge = $this->id ? RefJudge::find($this->id) : new RefJudge();
-            $judge->judge = $this->judge;
-            $judge->nickname = $this->nickname;
-            $judge->category = $this->selectedCategories;
-            $judge->save();
+
 
             $user = $this->id ? User::find($this->id) : new User();
             $user->name  = $this->judge;
@@ -58,6 +54,13 @@ class Judges extends Component
             $user->role = 'user';
             $user->password = Hash::make('password');
             $user->save();
+
+            $judge = $this->id ? RefJudge::find($this->id) : new RefJudge();
+            $judge->judge = $this->judge;
+            $judge->nickname = $this->nickname;
+            $judge->category = $this->selectedCategories;
+            $judge->user_id = $user->id;
+            $judge->save();
 
             return session()->flash('status', 'Sucessfully saved!');
         });

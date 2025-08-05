@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("participant_id")->nullable();
             $table->integer("score")->nullable();
-            $table->enum('category', ["band", "float", "majorette", "major", "costume", "kahigayonan"])->nullable();
+            $table->string('category')->nullable();
             $table->integer("criteria_id")->nullable();
             $table->integer("judge_id")->nullable();
             $table->timestamps();
