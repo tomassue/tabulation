@@ -79,16 +79,18 @@
                                         <tr scope="row">
                                             <th data-content="#">{{ $loop->iteration }}</th>
                                             <th data-content="Participant">
-                                                <h4>{{ $participant->participant_no }}</h4>
-                                                <small>{{ $participant->participant }}</small>
-                                                @php
-                                                    $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
-                                                @endphp
-                                                <div class="my-2">
-                                                    <label class="text-muted small">Deduction</label>
-                                                    <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                                <div class="row">
+                                                    <h4 class="col-12 ">{{ $participant->participant_no }}</h4>
+                                                    <h4 class="col-12">{{ $participant->participant }}</h4>
+                                                    @php
+                                                        $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
+                                                    @endphp
+                                                    <div class="my-2 col-12">
+                                                        <label class="text-muted small">Deduction</label>
+                                                        <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                                    </div>
+                                                    <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                 </div>
-                                                <div class="text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                             </th>
                                             @foreach ($judges as $judge)
                                                 <td data-content="{{ $judge->judge }}">
