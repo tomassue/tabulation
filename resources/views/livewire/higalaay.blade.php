@@ -29,12 +29,16 @@
                         <div class="row d-flex justify-content-center my-3">
                             <div class="col-md-4 mb-3">
                                 <label for="">PARTICIPANT</label>
-                                <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
-                                <datalist id="datalistOptions">
-                                    @foreach ($part as $item)
-                                        <option value="{{ $item->participant_no }}">
-                                    @endforeach
-                                </datalist>
+                                <input type="search" wire:model.live="search" @focus="showDropdown = true" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
+                                @if ($showDropdown && count($suggestions) > 0)
+                                    <ul class="list-group">
+                                        @foreach ($suggestions as $item)
+                                            <li wire:click="selectSuggestion({{ $item->id }})" class="list-group-item list-group-item-action" style="cursor: pointer">
+                                                {{ $item->participant_no }} - {{ $item->participant }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             </div>
                             @if (auth()->user()->role == 'admin')
                                 <div class="col-md-4 mb-3">
@@ -72,9 +76,9 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($participants as $participant)
-                                        <tr>
-                                            <th scope="row">{{ $loop->iteration }}</th>
-                                            <th scope="row">
+                                        <tr scope="row">
+                                            <th scope="col">{{ $loop->iteration }}</th>
+                                            <th scope="col">
                                                 <h4>{{ $participant->participant_no }}</h4>
                                                 <small>{{ $participant->participant }}</small>
                                                 @php
@@ -87,14 +91,14 @@
                                                 <div class="text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                             </th>
                                             @foreach ($judges as $judge)
-                                                <td>
+                                                <td scope="col">
                                                     @foreach ($criterias as $criteria)
                                                         @php
                                                             $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
                                                         @endphp
                                                         <div class="mb-2">
-                                                            <label for="" class="text-muted small">{{ $criteria->criteria }} ({{ $criteria->perfect_score }} points)</label>
-                                                            <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="Score">
+                                                            <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
+                                                            <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}" oninput="this.value = this.value > {{ $criteria->perfect_score }} ? {{ $criteria->perfect_score }} : this.value" />
                                                         </div>
                                                     @endforeach
                                                 </td>

@@ -17,11 +17,17 @@ use Livewire\Component;
 class Higalaay extends Component
 {
     public $type, $winner;
-    public $search, $judge_id, $base64pdf = '';
+    public $search, $selectedParticipant, $judge_id, $base64pdf = '';
+    public $showDropdown = false;
+    public $suggestions = [];
+
     public function render()
     {
-        $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->category($this->type)->get();
-        $part = RefParticipant::category($this->type)->get();
+        $selected = $this->selectedParticipant;
+        $participants = RefParticipant::when(!empty($selected), function ($query) use ($selected) {
+            $query->where('participant_no', $selected);
+        })->category($this->type)->get();
+
         $criterias = RefCriteria::where('category', $this->type)->get();
 
         if (Auth::user()->role == 'admin') {
@@ -32,10 +38,38 @@ class Higalaay extends Component
 
         $jud  = RefJudge::category($this->type)->get();
         $categoryName = Category::where('category', $this->type)->pluck('description')->first();
-        return view('livewire.higalaay', compact('jud', 'judges', 'part', 'participants', 'criterias', 'categoryName'));
+        return view('livewire.higalaay', compact('jud', 'judges', 'participants', 'criterias', 'categoryName'));
+    }
+    public function updatedSearch()
+    {
+        if (strlen($this->search) > 2) {
+
+            $this->suggestions  = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->category($this->type)
+                ->limit(5) // Limit suggestions
+                ->get();
+            $this->showDropdown = true;
+        } else {
+            $this->suggestions = [];
+            $this->selectedParticipant = null;
+            $this->showDropdown = false;
+        }
+    }
+    public function selectSuggestion($id)
+    {
+        $selectedItem = RefParticipant::find($id);
+        if ($selectedItem) {
+            $this->search = $selectedItem->participant;
+            $this->selectedParticipant = $id;
+            $this->showDropdown = false;
+        }
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)
     {
+        $criteria = RefCriteria::find($criteria_id);
+        if ($criteria && $score > $criteria->perfect_score) {
+            $score = $criteria->perfect_score;
+        }
+
         $higalaay = ModelsHigalaay::where('participant_id', $participant_id)->where('category', $this->type)->where('criteria_id', $criteria_id)->where('judge_id', $judge_id)->first();
         if (!$higalaay) {
             $higalaay = new ModelsHigalaay();
