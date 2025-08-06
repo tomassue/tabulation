@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Settings;
 
+use App\Models\Category;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -68,9 +70,10 @@ class UserManagement extends Component
                 ['id' => $this->user_id],
                 [
                     'name' => $this->name,
-                    'email' => $this->name . '@example.com',
+                    'email' => str_replace(' ', '', strtolower($this->name)) . '@example.com',
                     'role' => $this->role,
-                    'is_active' => $this->is_active
+                    'is_active' => $this->is_active,
+                    'password' => Hash::make('password'),
                 ]
             );
 
@@ -84,6 +87,7 @@ class UserManagement extends Component
     {
         $data = [
             'users' => $this->getUsers(),
+            'categories' => $this->getCategories(),
         ];
 
         return view('livewire.settings.user-management', $data);
@@ -97,5 +101,12 @@ class UserManagement extends Component
             ->paginate(10);
 
         return $user;
+    }
+
+    public function getCategories()
+    {
+        $categories = Category::where('is_active', 1)->get();
+
+        return $categories;
     }
 }

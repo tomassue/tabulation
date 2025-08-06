@@ -104,7 +104,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
-                                <select name="role" id="role" class="form-select" wire:model="role">
+                                <select name="role" id="role" class="form-select" wire:model.live="role">
                                     <option value="">--- SELECT ---</option>
                                     <option value="admin">Admin</option>
                                     <option value="user">User</option>
@@ -118,6 +118,19 @@
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
+                            </div>
+                            @endif
+                            @if ($role == 'user')
+                            <div class="mb-3">
+                                <label for="category">Event Judge</label>
+                                @foreach ($categories as $item)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input w-5 h-5 text-blue-600 rounded focus:ring-blue-500" wire:model="selectedCategories" value="{{ $item->category }}">
+                                    <label for="flexCheckDefault">
+                                        {{ $item->description }}
+                                    </label>
+                                </div>
+                                @endforeach
                             </div>
                             @endif
                         </div>
