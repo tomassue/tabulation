@@ -14,7 +14,7 @@ class Log extends Component
     public $user_id;
     public function render()
     {
-        $logs = ModelsLog::where('user_id', 'LIKe', '%' . $this->user_id . '%')->paginate(10);
+        $logs = ModelsLog::where('user_id', 'LIKe', '%' . $this->user_id . '%')->orderBy('created_at', 'desc')->paginate(10);
         $users = User::all();
         return view('livewire.log', compact('logs', 'users'));
     }
