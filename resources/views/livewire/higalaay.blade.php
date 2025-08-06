@@ -98,7 +98,17 @@
                                                         @endphp
                                                         <div class="mb-2">
                                                             <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
-                                                            <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}" oninput="this.value = this.value > {{ $criteria->perfect_score }} ? {{ $criteria->perfect_score }} : this.value" />
+                                                            <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}"
+                                                                oninput="
+                                                                    const max = {{ $criteria->perfect_score }};
+                                                                    const value = parseFloat(this.value) || 0;
+                                                                    const correctedValue = value > max ? max : value;
+                                                                    
+                                                                    if (value !== correctedValue) {
+                                                                        this.value = correctedValue;
+                                                                        this.dispatchEvent(new Event('change'));
+                                                                    }
+                                                            " />
                                                         </div>
                                                     @endforeach
                                                 </td>

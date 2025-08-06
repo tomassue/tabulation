@@ -146,7 +146,7 @@
                     <td class="text-center" style="padding:5px;color:black;{{ $font }};">{{ $item->getHigalaayScoreByJudge($judge->id, $category) }}</td>
                 @endforeach
 
-                <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->higalaayDeduction?->deduction) }}</td>
+                <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->deduction == 0 ? '-' : bong_format($item->higalaayDeduction?->deduction) }}</td>
                 <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->averageHigalaay($category)) }}</td>
             </tr>
         @endforeach
