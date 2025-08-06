@@ -18,14 +18,15 @@ class Modules extends Component
     public $category_id;
     public $category,
         $description,
-        $winners,
-        $is_active;
+        $is_active,
+        $winners;
 
     public function rules()
     {
         return [
             'category' => 'required',
             'description' => 'required',
+            'winners' => 'required',
             'is_active' => 'required',
         ];
     }
@@ -77,6 +78,7 @@ class Modules extends Component
                 [
                     'category' => Str::slug($this->category),
                     'description' => $this->description,
+                    'winners' => $this->winners,
                     'is_active' => $this->is_active,
                     'winners' => $this->winners,
                     'icon' => '<i class="bi bi-box-seam"></i>'
@@ -93,6 +95,7 @@ class Modules extends Component
         $this->category_id = $id;
         $this->category = Category::find($id)->category;
         $this->description = Category::find($id)->description;
+        $this->winners = Category::find($id)->winners;
         $this->is_active = Category::find($id)->is_active;
         $this->winners = Category::find($id)->winners;
 

@@ -37,6 +37,7 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">Category</th>
                                                     <th scope="col">Name</th>
+                                                    <th scope="col" class="text-center">Winners</th>
                                                     <th scope="col">Status</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
@@ -51,6 +52,9 @@
                                                     <td>
                                                         {{ $item->description }}
                                                     </td>
+                                                    <td class="text-center">
+                                                        {{ $item->winners }}
+                                                    </td>
                                                     <td>
                                                         <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
                                                             {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
@@ -61,9 +65,7 @@
                                                             <button type="button" class="btn btn-primary" wire:click="editModule({{ $item->id }})">
                                                                 <i class="bi bi-pencil"></i>
                                                             </button>
-                                                            <button type="button"
-                                                                class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}"
-                                                                wire:click="{{ $item->is_active == 1 ? 'deactivateModule('.$item->id.')' : 'activateModule('.$item->id.')' }}">
+                                                            <button type="button" class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}" wire:click="{{ $item->is_active == 1 ? 'deactivateModule(' . $item->id . ')' : 'activateModule(' . $item->id . ')' }}">
                                                                 <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
                                                             </button>
                                                         </div>
@@ -106,8 +108,8 @@
                             <input type="text" class="form-control" wire:model="description" id="description" placeholder="Enter description name">
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Winners</label>
-                            <input type="number" class="form-control" wire:model="winners" id="winners" placeholder="Enter number of winners">
+                            <label for="winners" class="form-label">Winner/s</label>
+                            <input type="number" class="form-control" wire:model="winners" id="winners" placeholder="Enter winners count">
                         </div>
                         <div class="mb-3">
                             <label for="is_active">Is Active?</label>
