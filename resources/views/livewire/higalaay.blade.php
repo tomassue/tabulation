@@ -80,8 +80,8 @@
                                             <th data-content="#">{{ $loop->iteration }}</th>
                                             <th data-content="Participant">
                                                 <div class="row">
-                                                    <h4 class="col-12 ">{{ $participant->participant_no }}</h4>
-                                                    <h4 class="col-12">{{ $participant->participant }}</h4>
+                                                    <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
+                                                    <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
                                                     @php
                                                         $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
                                                     @endphp
