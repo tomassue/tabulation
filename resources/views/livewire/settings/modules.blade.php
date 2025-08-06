@@ -37,38 +37,40 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">Category</th>
                                                     <th scope="col">Name</th>
+                                                    <th scope="col" class="text-center">Winners</th>
                                                     <th scope="col">Status</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($modules as $item)
-                                                <tr>
-                                                    <td>{{ ($modules->currentPage() - 1) * $modules->perPage() + $loop->iteration }}</td>
-                                                    <td class="text-capitalize">
-                                                        {{ $item->category }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $item->description }}
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
-                                                            {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                                            <button type="button" class="btn btn-primary" wire:click="editModule({{ $item->id }})">
-                                                                <i class="bi bi-pencil"></i>
-                                                            </button>
-                                                            <button type="button"
-                                                                class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}"
-                                                                wire:click="{{ $item->is_active == 1 ? 'deactivateModule('.$item->id.')' : 'activateModule('.$item->id.')' }}">
-                                                                <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>{{ ($modules->currentPage() - 1) * $modules->perPage() + $loop->iteration }}</td>
+                                                        <td class="text-capitalize">
+                                                            {{ $item->category }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $item->description }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ $item->winners }}
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
+                                                                {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                <button type="button" class="btn btn-primary" wire:click="editModule({{ $item->id }})">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </button>
+                                                                <button type="button" class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}" wire:click="{{ $item->is_active == 1 ? 'deactivateModule(' . $item->id . ')' : 'activateModule(' . $item->id . ')' }}">
+                                                                    <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -106,6 +108,10 @@
                             <input type="text" class="form-control" wire:model="description" id="description" placeholder="Enter description name">
                         </div>
                         <div class="mb-3">
+                            <label for="winners" class="form-label">Winner/s</label>
+                            <input type="number" class="form-control" wire:model="winners" id="winners" placeholder="Enter winners count">
+                        </div>
+                        <div class="mb-3">
                             <label for="is_active">Is Active?</label>
                             <select wire:model="is_active" id="is_active" class="form-select">
                                 <option value="">--- SELECT ---</option>
@@ -133,15 +139,15 @@
     </div>
 </section>
 @script
-<script>
-    window.addEventListener('openModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
-        myModal.show();
-    });
+    <script>
+        window.addEventListener('openModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            myModal.show();
+        });
 
-    window.addEventListener('hideModal', event => {
-        var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
-        myModal.hide();
-    });
-</script>
+        window.addEventListener('hideModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            myModal.hide();
+        });
+    </script>
 @endscript
