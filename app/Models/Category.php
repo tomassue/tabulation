@@ -13,6 +13,7 @@ class Category extends Model
     protected $fillable = [
         'category',
         'description',
+        'winners',
         'is_active',
         'icon'
     ];
