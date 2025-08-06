@@ -106,6 +106,7 @@
 
                 <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 20px;">
                     {{ $categoryName ?? 'COMPETITION' }} SCORE REPORT
+                    <div style="font-size: 9pt;">{{ $judges->count() == 1 ? 'PARTIAL' : 'FINAL' }}</div>
                 </div>
             </td>
         </tr>
