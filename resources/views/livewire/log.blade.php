@@ -10,7 +10,7 @@
                             <select class="form-select w-auto" wire:model="user_id" style="min-width: 200px;">
                                 <option selected>All Users</option>
                                 @foreach ($users as $item)
-                                     <option value="{{$item->id}}">{{$item->name}}</option>
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -25,26 +25,25 @@
                             <table class="table table-hover table-bordered align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">#</th>
+                                        <th scope="col">Date</th>
                                         <th scope="col">User</th>
                                         <th scope="col">Description</th>
-                                        <th scope="col">Date</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($logs as $item)
-                                    <tr>
-                                        <th>{{($logs->currentPage() - 1) * $logs->perPage() + $loop->iteration}}</th>
-                                        <td>{{$item->user->name}}</td>
-                                        <td><span class="badge bg-success">{{$item->activity}}</td>
-                                        <td>{{$item->created_at}}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ date('F d, Y h:i A', strtotime($item->created_at)) }}</td>
+                                            <td>{{ $item->user->name }}</td>
+                                            <td><span class="badge bg-success">{{ $item->activity }}</td>
+                                        </tr>
                                     @endforeach
-                                   
+
                                 </tbody>
                             </table>
                             <div>
-                                {{$logs->links('pagination::bootstrap-5')}}
+                                {{ $logs->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
                     </div>
