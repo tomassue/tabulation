@@ -27,7 +27,7 @@
 
                             {{-- Percentage Here Sir Bongs --}}
                             <span class="badge bg-light text-dark ms-2">
-                                {{ $item->getPercent() ?? 0 }}%
+                                {{ bong_format($item->getPercent()) }}%
                             </span>
                         </a>
                     </div>
