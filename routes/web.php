@@ -52,7 +52,7 @@ Route::group(['middleware' => ['auth']], function () {
     /* -------------------------------- Settings -------------------------------- */
     Route::get('/settings/modules', [Modules::class, 'index'])->name('settings.modules');
     Route::get('settings/import-export', [DBImportExport::class, 'index'])->name('settings.import-export');
-    Route::view('/settings/user-management', 'settings.user-management')->name('settings.user-management');
+    Route::view('/user-management', 'settings.user-management')->name('settings.user-management');
     /* -------------------------------- Settings -------------------------------- */
 
     Route::get('/logs', [LogsController::class, 'index'])->name('logs');

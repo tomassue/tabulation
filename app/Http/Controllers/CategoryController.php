@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class CategoryController extends Controller
 {
@@ -20,12 +21,9 @@ class CategoryController extends Controller
 
     public function show($slug)
     {
-        $category = Cache::remember("category_{$slug}", 3600, function () use ($slug) {
-            return Category::where('category', $slug)
-                ->where('is_active', 1)
-                ->firstOrFail();
-        });
-
+        $category = Category::where('category', $slug)
+            ->where('is_active', 1)
+            ->firstOrFail();
         return view('category', compact('category'));
     }
 }

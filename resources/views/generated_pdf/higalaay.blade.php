@@ -64,11 +64,11 @@
 </head>
 
 <body>
-    <div id="watermark">
+    {{-- <div id="watermark">
         <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
-    </div>
+    </div> --}}
     <table class="table">
-        <tr>
+        {{-- <tr>
             <td class="text-start" style="vertical-align: top;" width="30%">
                 <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="80">
                 <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
@@ -84,22 +84,28 @@
                 <img src="{{ convert_image(public_path() . '/img/higalaay_email.png') }}" width="120">
                 <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="75">
             </td>
+        </tr> --}}
+        <tr>
+            <td class="text-start" style="vertical-align: top;" width="30%">
+                <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="80">
+                <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
+            </td>
+            <td class="text-center">
+                <div style="font-size: 20pt;font-weight:bold;">KAHIGAYONAN 2025</div>
+                <div style="font-size: 18pt;">Skills Training and Expo</div>
+                <div style="font-size: 12pt;">Piyesta sa Dakbayan, Tabo sa Opportunidad Year 4</div>
+                <div style="font-size: 9pt;">August 08, 2025</div>
+            </td>
+            <td class="text-end" width="30%">
+                <img src="{{ convert_image(public_path() . '/img/risebig.png') }}" width="150">
+                <img src="{{ convert_image(public_path() . '/img/oysda.png') }}" width="100">
+            </td>
         </tr>
         <tr>
             <td colspan="3" class="text-center">
 
                 <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 20px;">
-                    @if ($category == 'band')
-                        MARCHING BAND SCORE REPORT
-                    @elseif ($category == 'float')
-                        FLOAT COMPITITION SCORE REPORT
-                    @elseif ($category == 'majorette')
-                        BEST BAND MAJORETTE SCORE REPORT
-                    @elseif ($category == 'major')
-                        BEST BAND MAJOR SCORE REPORT
-                    @elseif ($category == 'costume')
-                        BEST IN COSTUME SCORE REPORT
-                    @endif
+                    {{ $categoryName ?? 'COMPETITION' }} SCORE REPORT
                 </div>
             </td>
         </tr>

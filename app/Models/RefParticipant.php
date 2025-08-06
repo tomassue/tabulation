@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class RefParticipant extends Model
 {
@@ -90,7 +91,13 @@ class RefParticipant extends Model
     public function averageHigalaay($category)
     {
         $deduction = $this->higalaayDeduction?->deduction;
-        return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('category', $category)->sum('score') / 3) - $deduction;
+        if (Auth::user()->role == 'admin') {
+            $judges = RefJudge::category($category)->count();
+            return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('category', $category)->sum('score') / $judges) - $deduction;
+        } else {
+            $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
+            return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('judge_id', $judge->id)->where('category', $category)->sum('score') / 1) - $deduction;
+        }
     }
     public function getHigalaayScoreByJudge($judge_id, $category)
     {

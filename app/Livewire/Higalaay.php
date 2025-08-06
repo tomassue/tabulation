@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Higalaay as ModelsHigalaay;
 use App\Models\HigalaayDeduction;
 use App\Models\Log;
@@ -22,9 +23,16 @@ class Higalaay extends Component
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->category($this->type)->get();
         $part = RefParticipant::category($this->type)->get();
         $criterias = RefCriteria::where('category', $this->type)->get();
-        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->category($this->type)->get();
+
+        if (Auth::user()->role == 'admin') {
+            $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->category($this->type)->get();
+        } else {
+            $judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
+        }
+
         $jud  = RefJudge::category($this->type)->get();
-        return view('livewire.higalaay', compact('jud', 'judges', 'part', 'participants', 'criterias'));
+        $categoryName = Category::where('category', $this->type)->pluck('description')->first();
+        return view('livewire.higalaay', compact('jud', 'judges', 'part', 'participants', 'criterias', 'categoryName'));
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)
     {
@@ -50,17 +58,39 @@ class Higalaay extends Component
         $paper = array(0, 0, 850, 1400);
         $category = $this->type;
         $winner =  $this->winner;
-        $judges = RefJudge::category($this->type)->get();
-        $participants = RefParticipant::category($this->type)
+
+        $user = Auth::user();
+        $isAdmin = ($user->role == 'admin');
+
+        //get judges base on user role
+        if ($isAdmin) {
+            $judges = RefJudge::category($this->type)->get();
+        } else {
+            $judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
+        }
+
+        // Determine divisor for score calculation
+        $divisor = $isAdmin ? ($judges->count() ?: 1) : 1;  // Prevent division by zero
+
+        $participantsraw = RefParticipant::category($this->type);
+
+        if (!$isAdmin) {
+            $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
+            $participantsraw->where('judge_id', $judge->id);
+        }
+
+        $participants = $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'))
             ->leftjoin('higalaays', 'ref_participants.id', '=', 'higalaays.participant_id')
             ->leftjoin('higalaay_deductions', 'ref_participants.id', '=', 'higalaay_deductions.participant_id')
             ->groupBy('ref_participants.id', 'deduction')
-            ->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) / 3 - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'))
             ->get();
+
         $poster = ModelsHigalaay::all();
 
         $criterias = RefCriteria::where('category',  $this->type)->get();
-        $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster', 'criterias', 'judges', 'category', 'winner'))->setPaper('letter', 'landscape');
+        $categoryName = Category::where('category', $this->type)->pluck('description')->first();
+
+        $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster', 'criterias', 'judges', 'category', 'categoryName', 'winner'))->setPaper('letter', 'landscape');
         $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }

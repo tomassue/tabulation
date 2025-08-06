@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function judge()
+    {
+        return $this->hasOne(RefJudge::class, 'user_id', 'id');
+    }
 }
