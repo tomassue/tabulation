@@ -18,6 +18,7 @@ class Modules extends Component
     public $category_id;
     public $category,
         $description,
+        $winners,
         $is_active;
 
     public function rules()
@@ -77,6 +78,7 @@ class Modules extends Component
                     'category' => Str::slug($this->category),
                     'description' => $this->description,
                     'is_active' => $this->is_active,
+                    'winners' => $this->winners,
                     'icon' => '<i class="bi bi-box-seam"></i>'
                 ]
             );
@@ -92,6 +94,7 @@ class Modules extends Component
         $this->category = Category::find($id)->category;
         $this->description = Category::find($id)->description;
         $this->is_active = Category::find($id)->is_active;
+        $this->winners = Category::find($id)->winners;
 
         $this->dispatch('openModal');
     }

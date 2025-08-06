@@ -106,6 +106,10 @@
                             <input type="text" class="form-control" wire:model="description" id="description" placeholder="Enter description name">
                         </div>
                         <div class="mb-3">
+                            <label for="description" class="form-label">Winners</label>
+                            <input type="number" class="form-control" wire:model="winners" id="winners" placeholder="Enter number of winners">
+                        </div>
+                        <div class="mb-3">
                             <label for="is_active">Is Active?</label>
                             <select wire:model="is_active" id="is_active" class="form-select">
                                 <option value="">--- SELECT ---</option>
