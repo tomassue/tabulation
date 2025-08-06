@@ -54,7 +54,7 @@
                         </div>
                         <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
                             <!-- Table with hoverable rows -->
-                            <table class="table table-hover table-bordered table-striped">
+                            <table class="table table-hover table-bordered table-striped table-mobile-responsive table-mobile-sided">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -77,8 +77,8 @@
                                 <tbody>
                                     @foreach ($participants as $participant)
                                         <tr scope="row">
-                                            <th scope="col">{{ $loop->iteration }}</th>
-                                            <th scope="col">
+                                            <th data-content="#">{{ $loop->iteration }}</th>
+                                            <th data-content="Participant">
                                                 <h4>{{ $participant->participant_no }}</h4>
                                                 <small>{{ $participant->participant }}</small>
                                                 @php
@@ -91,15 +91,17 @@
                                                 <div class="text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                             </th>
                                             @foreach ($judges as $judge)
-                                                <td scope="col">
-                                                    @foreach ($criterias as $criteria)
-                                                        @php
-                                                            $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                        @endphp
-                                                        <div class="mb-2">
-                                                            <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
-                                                            <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}"
-                                                                oninput="
+                                                <td data-content="{{ $judge->judge }}">
+                                                    <div class="row">
+                                                        @foreach ($criterias as $criteria)
+                                                            @php
+                                                                $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                            @endphp
+
+                                                            <div class="col-lg-12 col-sm-6 col-md-4 mb-2">
+                                                                <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
+                                                                <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}"
+                                                                    oninput="
                                                                     const max = {{ $criteria->perfect_score }};
                                                                     const value = parseFloat(this.value) || 0;
                                                                     const correctedValue = value > max ? max : value;
@@ -108,9 +110,10 @@
                                                                         this.value = correctedValue;
                                                                         this.dispatchEvent(new Event('change'));
                                                                     }
-                                                            " />
-                                                        </div>
-                                                    @endforeach
+                                                                    " />
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
                                                 </td>
                                             @endforeach
                                         </tr>
@@ -162,6 +165,9 @@
             }
         </style>
 </section>
+@assets
+    <link rel="stylesheet" href="{{ asset('css/responsive-table.css') }}" />
+@endassets
 @script
     <script>
         window.addEventListener('openModal', event => {
