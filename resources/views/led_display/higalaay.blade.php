@@ -66,13 +66,13 @@
                                 <div class="col-md-2 fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
                                     #{{ $item->participant_no }}
                                 </div>
-                                <div class="col-md-8 fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
+                                <div class="col-md-7 fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
                                     <div style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{ $font[$index] }};">
                                         <i>{{ $item->participant }}</i>
                                     </div>
                                 </div>
                                 <div class="col fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
-                                    {{ bong_format($item->averageOral()) }}
+                                    {{ bong_format($item->averageHigalaay($led?->category)) }}
                                 </div>
                             </div>
                         </div>

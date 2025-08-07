@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\LedManagement;
+use App\Models\RefJudge;
 use App\Models\RefParticipant;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -41,6 +42,7 @@ class DynamicLed extends Component
                 ->select('ref_participants.*',  DB::raw('SUM(posters.score) / 3 as total_score'))
                 ->orderBy('total_score', 'DESC');
         } else {
+            $judges = RefJudge::category($led->category)->get();
             $participantsRaw =  $participantsRaw->leftjoin('higalaays', 'ref_participants.id', '=', 'higalaays.participant_id')
                 ->leftjoin('higalaay_deductions', 'ref_participants.id', '=', 'higalaay_deductions.participant_id')
                 ->groupBy([
@@ -53,7 +55,7 @@ class DynamicLed extends Component
                     'ref_participants.*',
                     DB::raw('SUM(higalaays.score) as total_score'),
                     DB::raw('COALESCE(higalaay_deductions.deduction, 0) as deduction'),
-                    DB::raw('(SUM(higalaays.score) / 3 - COALESCE(higalaay_deductions.deduction, 0)) as final_score')
+                    DB::raw('(SUM(higalaays.score) / ' . count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) as final_score')
                 )
                 ->orderBy('final_score', 'DESC');
         }
