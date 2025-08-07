@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Category extends Model
 {
@@ -20,13 +21,23 @@ class Category extends Model
 
     public function getPercent()
     {
-        $judges = RefJudge::category($this->category)->count();
         $participant = RefParticipant::category($this->category)->count();
         $criterias = RefCriteria::where('category', $this->category)->count();
+        $rawSql = $this->hasMany(Higalaay::class, 'category', 'category');
+
+        if (Auth::user()->role == 'admin') {
+            $judges = RefJudge::category($this->category)->count();
+        } else {
+            $judges = 1;
+            $judge_id = RefJudge::where('user_id', Auth::user()->id)->category($this->category)->first();
+            $rawSql->where('judge_id', $judge_id->id);
+        }
+
         $total = ($participant * $criterias) * $judges;
         if ($total == 0) {
             return 0;
         }
-        return ($this->hasMany(Higalaay::class, 'category', 'category')->whereNotNull('score')->count() / $total) * 100;
+
+        return ($rawSql->whereNotNull('score')->count() / $total) * 100;
     }
 }

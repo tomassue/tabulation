@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('led_management', function (Blueprint $table) {
             $table->id();
-            $table->enum('category', ["oral", "poster", "quiz"])->nullable();
+            $table->string('category')->nullable();
             $table->integer("show_all")->default(false);
             $table->integer("show_first")->default(false);
             $table->integer("show_second")->default(false);
