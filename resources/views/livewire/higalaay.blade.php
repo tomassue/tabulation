@@ -100,7 +100,7 @@
                                                                 $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
                                                             @endphp
 
-                                                            <div class="col-lg-12 col-sm-6 col-md-4 mb-2">
+                                                            <div class="col-12 mb-2">
                                                                 <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
                                                                 <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}"
                                                                     oninput="

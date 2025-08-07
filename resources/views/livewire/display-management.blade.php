@@ -17,34 +17,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($leds as $item)
                             <tr>
                                 <td>
-                                    <div class="fw-semibold text-uppercase mb-2">{{ $item->category }}</div>
+                                    <div class="fw-semibold text-uppercase mb-2">{{ $led?->category }}</div>
                                     <select name="category" id="category" wire:model="category" wire:change="changeCategory" class="form-select form-select-sm w-auto mx-auto">
-                                        <option value="quiz">Quiz</option>
-                                        <option value="oral">Oral</option>
-                                        <option value="poster">Poster</option>
+                                        <option value="">--- SELECT ---</option>
+                                        @foreach ($categories as $item)
+                                            <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $item->show_all ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{{ $led?->show_all ? 'Shown' : 'Hidden' }}</div>
                                     <button class="btn btn-outline-primary btn-sm" wire:click="changeAll">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $item->show_first ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{{ $led?->show_first ? 'Shown' : 'Hidden' }}</div>
                                     <button class="btn btn-outline-success btn-sm" wire:click="changeFirst">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $item->show_second ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{{ $led?->show_second ? 'Shown' : 'Hidden' }}</div>
                                     <button class="btn btn-outline-warning btn-sm" wire:click="changeSecond">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $item->show_third ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{{ $led?->show_third ? 'Shown' : 'Hidden' }}</div>
                                     <button class="btn btn-outline-danger btn-sm" wire:click="changeThird">Update</button>
                                 </td>
                             </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>

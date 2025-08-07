@@ -14,7 +14,7 @@ class DynamicLed extends Component
         $led = LedManagement::first();
         $participants = [];
         $position = null;
-        $participantsRaw = RefParticipant::groupBy('ref_participants.id')->where('category', $led->category)->limit(3);
+        $participantsRaw = RefParticipant::groupBy('ref_participants.id')->category($led->category)->limit(3);
         if ($led->category == "quiz") {
             $participantsRaw =  $participantsRaw->leftjoin('quiz_bees', 'ref_participants.id', '=', 'quiz_bees.participant_id')
                 ->orderByRaw('SUM(quiz_bees.score) DESC')
@@ -40,6 +40,22 @@ class DynamicLed extends Component
                 ->groupBy('ref_participants.id')
                 ->select('ref_participants.*',  DB::raw('SUM(posters.score) / 3 as total_score'))
                 ->orderBy('total_score', 'DESC');
+        } else {
+            $participantsRaw =  $participantsRaw->leftjoin('higalaays', 'ref_participants.id', '=', 'higalaays.participant_id')
+                ->leftjoin('higalaay_deductions', 'ref_participants.id', '=', 'higalaay_deductions.participant_id')
+                ->groupBy([
+                    'ref_participants.id',
+                    'ref_participants.participant_no',
+                    'ref_participants.participant',
+                    'deduction'
+                ])
+                ->select(
+                    'ref_participants.*',
+                    DB::raw('SUM(higalaays.score) as total_score'),
+                    DB::raw('COALESCE(higalaay_deductions.deduction, 0) as deduction'),
+                    DB::raw('(SUM(higalaays.score) / 3 - COALESCE(higalaay_deductions.deduction, 0)) as final_score')
+                )
+                ->orderBy('final_score', 'DESC');
         }
 
 

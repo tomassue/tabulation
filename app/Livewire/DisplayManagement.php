@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\LedManagement;
 use Livewire\Component;
 
@@ -10,23 +11,40 @@ class DisplayManagement extends Component
     public $id, $category, $show_first = false, $show_second = false, $show_third = false, $show_all = false;
     public function render()
     {
-        $leds = LedManagement::get();
-        $this->category = $leds->first()->category;
-        $this->show_first = $leds->where('category', $this->category)->first()->show_first;
-        $this->show_second = $leds->where('category', $this->category)->first()->show_second;
-        $this->show_third = $leds->where('category', $this->category)->first()->show_third;
-        $this->show_all = $leds->where('category', $this->category)->first()->show_all;
-        return view('livewire.display-management', compact('leds'));
+        $led = LedManagement::first();
+        if ($led) {
+
+            $this->category = $led->category;
+            $this->show_first = $led->show_first;
+            $this->show_second = $led->show_second;
+            $this->show_third = $led->show_third;
+            $this->show_all = $led->show_all;
+        }
+        $categories = Category::where('is_active', 1)->get();
+        return view('livewire.display-management', compact('led', 'categories'));
     }
     public function changeCategory()
     {
-        LedManagement::first()->update([
-            'show_first' => 0,
-            'show_second' =>  0,
-            'show_third' => 0,
-            'show_all' =>   0,
-            'category' =>   $this->category
-        ]);
+        $exist = LedManagement::first();
+        if (!$exist) {
+            LedManagement::create([
+                'show_first' => 0,
+                'show_second' =>  0,
+                'show_third' => 0,
+                'show_all' =>   0,
+                'category' =>   $this->category
+            ]);
+        } else {
+            $exist->update(
+                [
+                    'show_first' => 0,
+                    'show_second' =>  0,
+                    'show_third' => 0,
+                    'show_all' =>   0,
+                    'category' =>   $this->category
+                ]
+            );
+        }
     }
     public function changeFirst()
     {
