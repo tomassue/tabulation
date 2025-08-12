@@ -105,8 +105,9 @@
             <td colspan="3" class="text-center">
 
                 <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 20px;">
-                    {{ $categoryName ?? 'COMPETITION' }} SCORE REPORT
-                    <div style="font-size: 9pt;">{{ $judges->count() == 1 ? 'PARTIAL' : 'FINAL' }}</div>
+                    <div>{{ $categoryName ?? 'COMPETITION' }} SCORE REPORT</div>
+                    <div>{{ $criteria ? '(BEST IN ' . $criteria->criteria . ')' : '' }}</div>
+                    <div style="font-size: 9pt;">{{ $judges->count() == 1 ? '(JUDGE: ' . $judges->first()->judge . ')' : '' }}</div>
                 </div>
             </td>
         </tr>
@@ -123,6 +124,8 @@
                     </th>
                 @endforeach
                 <th class="text-center  p-2 bold"style="font-size:10pt;">DEDUCTION</th>
+                <th class="text-center  p-2 bold"style="font-size:10pt;">TIME</th>
+                <th class="text-center  p-2 bold"style="font-size:10pt;">REMARKS</th>
                 <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL</th>
             </tr>
         </thead>
@@ -143,11 +146,13 @@
                 <td class="text-start" style="padding:5px;color:black;{{ $font }};">{{ $item->participant }}</td>
                 <td class="text-center" style="padding:5px;color:black;{{ $font }};">{{ $item->participant_no }}</td>
                 @foreach ($judges as $judge)
-                    <td class="text-center" style="padding:5px;color:black;{{ $font }};">{{ $item->getHigalaayScoreByJudge($judge->id, $category) }}</td>
+                    <td class="text-center" style="padding:5px;color:black;{{ $font }};">{{ $item->getHigalaayScoreByJudge($judge->id, $category, $criteria) }}</td>
                 @endforeach
 
                 <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->deduction == 0 ? '-' : bong_format($item->higalaayDeduction?->deduction) }}</td>
-                <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->averageHigalaay($category)) }}</td>
+                <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->duration }}</td>
+                <td class="text-start" style="padding:5px;font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->remarks }}</td>
+                <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->averageHigalaay($category, $criteria)) }}</td>
             </tr>
         @endforeach
     </table>

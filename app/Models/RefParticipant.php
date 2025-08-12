@@ -88,20 +88,31 @@ class RefParticipant extends Model
         $deduction = $this->deductions?->deduction;
         return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') / 3) - $deduction;
     }
-    public function averageHigalaay($category)
+    public function averageHigalaay($category, $criteria =  null)
     {
         $deduction = $this->higalaayDeduction?->deduction;
+        $relation = $this->hasOne(Higalaay::class, 'participant_id', 'id');
+        if ($criteria) {
+            $relation->where('criteria_id', $criteria->id);
+        }
         if (Auth::user()->role == 'admin') {
             $judges = RefJudge::category($category)->count();
-            return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('category', $category)->sum('score') / $judges) - $deduction;
+            if ($judges == 0) {
+                return 0;
+            }
+            return ($relation->where('category', $category)->sum('score') / $judges) - $deduction;
         } else {
             $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
-            return ($this->hasOne(Higalaay::class, 'participant_id', 'id')->where('judge_id', $judge->id)->where('category', $category)->sum('score') / 1) - $deduction;
+            return ($relation->where('judge_id', $judge->id)->where('category', $category)->sum('score') / 1) - $deduction;
         }
     }
-    public function getHigalaayScoreByJudge($judge_id, $category)
+    public function getHigalaayScoreByJudge($judge_id, $category,  $criteria =  null)
     {
-        return $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category)->where('judge_id', $judge_id)->sum('score');
+        $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id');
+        if ($criteria) {
+            $relation->where('criteria_id', $criteria->id);
+        }
+        return $relation->where('category', $category)->where('judge_id', $judge_id)->sum('score');
     }
     public function higalaayDeduction()
     {

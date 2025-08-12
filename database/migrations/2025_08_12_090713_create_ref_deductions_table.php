@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('higalaay_deductions', function (Blueprint $table) {
+        Schema::create('ref_deductions', function (Blueprint $table) {
             $table->id();
-            $table->integer("participant_id")->nullable();
-            $table->integer("deduction")->nullable();
-            $table->text("remarks")->nullable();
-            $table->text("deduction_details")->nullable();
-            $table->string("duration")->nullable();
+            $table->text('category')->nullable();
+            $table->text('deduction_name')->nullable();
+            $table->text('deduction')->nullable();
+            $table->integer('checked')->default(0)->nullable();
+            $table->integer('is_active')->default(1);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('higalaay_deductions');
+        Schema::dropIfExists('ref_deductions');
     }
 };
