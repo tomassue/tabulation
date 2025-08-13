@@ -31,25 +31,25 @@
                                 <label for="">PARTICIPANT</label>
                                 <input type="search" wire:model.live="search" @focus="showDropdown = true" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                 @if ($showDropdown && count($suggestions) > 0)
-                                    <ul class="list-group">
-                                        @foreach ($suggestions as $item)
-                                            <li wire:click="selectSuggestion({{ $item->id }})" class="list-group-item list-group-item-action" style="cursor: pointer">
-                                                {{ $item->participant_no }} - {{ $item->participant }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                <ul class="list-group">
+                                    @foreach ($suggestions as $item)
+                                    <li wire:click="selectSuggestion({{ $item->id }})" class="list-group-item list-group-item-action" style="cursor: pointer">
+                                        {{ $item->participant_no }} - {{ $item->participant }}
+                                    </li>
+                                    @endforeach
+                                </ul>
                                 @endif
                             </div>
                             @if (auth()->user()->role == 'admin')
-                                <div class="col-md-4 mb-3">
-                                    <label for="">JUDGES</label>
-                                    <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
-                                        <option value="">ALL</option>
-                                        @foreach ($jud as $item)
-                                            <option value="{{ $item->id }}">{{ $item->judge }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="">JUDGES</label>
+                                <select name="judge_id" wire:model.live="judge_id" class="form-select" id="judge_id">
+                                    <option value="">ALL</option>
+                                    @foreach ($jud as $item)
+                                    <option value="{{ $item->id }}">{{ $item->judge }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @endif
                         </div>
                         <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
@@ -60,50 +60,50 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Participant</th>
                                         @foreach ($judges as $item)
-                                            <th scope="col">
-                                                <div>{{ $item->judge }}</div>
-                                                <span class="small text-muted">Judge {{ $loop->iteration }}</span>
-                                                @php
-                                                    $percent = $item->getHigalaayPercent($type);
-                                                @endphp
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-success" style="width: {{ $percent }}%"></div>
-                                                </div>
-                                                <small> {{ $percent }}%</small>
-                                            </th>
+                                        <th scope="col">
+                                            <div>{{ $item->judge }}</div>
+                                            <span class="small text-muted">Judge {{ $loop->iteration }}</span>
+                                            @php
+                                            $percent = $item->getHigalaayPercent($type);
+                                            @endphp
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: {{ $percent }}%"></div>
+                                            </div>
+                                            <small> {{ $percent }}%</small>
+                                        </th>
                                         @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($participants as $participant)
-                                        <tr scope="row">
-                                            <th data-content="#">{{ $loop->iteration }}</th>
-                                            <th data-content="Participant">
-                                                <div class="row">
-                                                    <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
-                                                    <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
-                                                    @php
-                                                        $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
-                                                    @endphp
-                                                    <div class="my-2 col-12">
-                                                        <label class="text-muted small">Deduction</label>
-                                                        <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                                    </div>
-                                                    <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
+                                    <tr scope="row">
+                                        <th data-content="#">{{ $loop->iteration }}</th>
+                                        <th data-content="Participant">
+                                            <div class="row">
+                                                <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
+                                                <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
+                                                @php
+                                                $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
+                                                @endphp
+                                                <div class="my-2 col-12">
+                                                    <label class="text-muted small">Deduction</label>
+                                                    <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
                                                 </div>
-                                            </th>
-                                            @foreach ($judges as $judge)
-                                                <td data-content="{{ $judge->judge }}">
-                                                    <div class="row">
-                                                        @foreach ($criterias as $criteria)
-                                                            @php
-                                                                $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                            @endphp
+                                                <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
+                                            </div>
+                                        </th>
+                                        @foreach ($judges as $judge)
+                                        <td data-content="{{ $judge->judge }}">
+                                            <div class="row">
+                                                @foreach ($criterias as $criteria)
+                                                @php
+                                                $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                @endphp
 
-                                                            <div class="col-12 mb-2">
-                                                                <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
-                                                                <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="youre score..." min="0" max="{{ $criteria->perfect_score }}"
-                                                                    oninput="
+                                                <div class="col-12 mb-2">
+                                                    <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
+                                                    <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="your score..." min="0" max="{{ $criteria->perfect_score }}"
+                                                        oninput="
                                                                     const max = {{ $criteria->perfect_score }};
                                                                     const value = parseFloat(this.value) || 0;
                                                                     const correctedValue = value > max ? max : value;
@@ -113,12 +113,12 @@
                                                                         this.dispatchEvent(new Event('change'));
                                                                     }
                                                                     " />
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                            @endforeach
-                                        </tr>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </td>
+                                        @endforeach
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="modal-body">
                     @if ($base64pdf)
-                        <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600" type="application/pdf" frameborder="0"></iframe>
+                    <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600" type="application/pdf" frameborder="0"></iframe>
                     @endif
                 </div>
                 <div class="modal-footer">
@@ -168,13 +168,13 @@
         </style>
 </section>
 @assets
-    <link rel="stylesheet" href="{{ asset('css/responsive-table.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/responsive-table.css') }}" />
 @endassets
 @script
-    <script>
-        window.addEventListener('openModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('reportModal'));
-            myModal.show();
-        });
-    </script>
+<script>
+    window.addEventListener('openModal', event => {
+        var myModal = new bootstrap.Modal(document.getElementById('reportModal'));
+        myModal.show();
+    });
+</script>
 @endscript
