@@ -16,7 +16,7 @@
                         <img src="{{ asset('img/seallogo.png') }}" alt="Logo" style="height: 70px;">
                         <img src="{{ asset('img/risebig.png') }}" alt="Logo" style="height: 50px;">
                         <img src="{{ asset('img/logo1.png') }}" alt="Logo" style="height: 50px;">
-                        <img src="{{ asset('img/tourismlogo.png') }}" alt="Logo" style="height: 50px;">
+                        <!-- <img src="{{ asset('img/tourismlogo.png') }}" alt="Logo" style="height: 50px;"> -->
                         <img src="{{ asset('img/ictlogo.png') }}" alt="Logo" style="height: 50px;">
 
                         <!-- <h4 class="fw-bold mb-0 text-primary">Tabulation System</h4> -->
