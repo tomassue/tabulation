@@ -130,6 +130,15 @@ class Higalaay extends Component
         $categoryName = Category::where('category', $this->type)->pluck('description')->first();
 
         $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster',  'judges', 'category', 'criteria', 'categoryName', 'winner'))->setPaper('folio', 'landscape');
+
+        // Add page numbering script
+        $pdf->getDomPDF()->setCallbacks([
+            'my_footer_callback' => function ($pdf) {
+                $font = $pdf->getFontMetrics()->get_font("serif", "normal");
+                $pdf->page_text(500, $pdf->get_height() - 30, "Page {PAGE_NUM} of {PAGE_COUNT}", $font, 9, array(0, 0, 0));
+            }
+        ]);
+
         $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }
