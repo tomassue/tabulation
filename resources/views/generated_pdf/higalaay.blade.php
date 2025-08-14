@@ -116,10 +116,12 @@
                             {{ $judge->judge }}
                         </th>
                     @endforeach
-                    <th class="text-center  p-2 bold"style="font-size:10pt;">DEDUCTION</th>
-                    <th class="text-center  p-2 bold"style="font-size:10pt;">TIME</th>
-                    <th class="text-center  p-2 bold"style="font-size:10pt;">REMARKS</th>
-                    <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL</th>
+                    @if (auth()->user()->role == 'admin')
+                        <th class="text-center  p-2 bold"style="font-size:10pt;">DEDUCTION</th>
+                        <th class="text-center  p-2 bold"style="font-size:10pt;">TIME</th>
+                        <th class="text-center  p-2 bold"style="font-size:10pt;">REMARKS</th>
+                        <th class="text-center  p-2 bold"style="font-size:10pt;">TOTAL</th>
+                    @endif
                 </tr>
             </thead>
             @foreach ($participants as $position => $item)
@@ -141,11 +143,12 @@
                     @foreach ($judges as $judge)
                         <td class="text-center" style="padding:5px;color:black;{{ $font }};">{{ $item->getHigalaayScoreByJudge($judge->id, $category, $criteria) }}</td>
                     @endforeach
-
-                    <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->deduction == 0 ? '-' : bong_format($item->higalaayDeduction?->deduction) }}</td>
-                    <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->duration }}</td>
-                    <td class="text-start" style="padding:5px;font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->remarks }}</td>
-                    <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->averageHigalaay($category, $criteria)) }}</td>
+                    @if (auth()->user()->role == 'admin')
+                        <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->deduction == 0 ? '-' : bong_format($item->higalaayDeduction?->deduction) }}</td>
+                        <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->duration }}</td>
+                        <td class="text-start" style="padding:5px;font-weight: bold;color:black;{{ $font }}">{{ $item->higalaayDeduction?->remarks }}</td>
+                        <td class="text-center" style="font-weight: bold;color:black;{{ $font }}">{{ bong_format($item->averageHigalaay($category, $criteria)) }}</td>
+                    @endif
                 </tr>
             @endforeach
         </table>
