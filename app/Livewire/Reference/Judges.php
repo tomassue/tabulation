@@ -65,7 +65,7 @@ class Judges extends Component
             return session()->flash('status', 'Sucessfully saved!');
         });
     }
-    private static function generateEmailFromName(string $name, string $domain = 'example.com'): string
+    private static function generateEmailFromName(string $name, string $domain = 'tabulation.com'): string
     {
         // Convert name to lowercase
         $email = strtolower($name);

@@ -88,8 +88,8 @@
                                                 <div class="row">
                                                     <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
                                                     <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
-                                                    <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                     @if (auth()->user()->role == 'admin')
+                                                        <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                         @php
                                                             $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
                                                         @endphp
@@ -100,6 +100,8 @@
                                                                 <button class="btn btn-primary btn-sm" wire:click="showDeductionDetails({{ $participant->id }})"><i class="bi bi-three-dots"></i></button>
                                                             </div>
                                                         </div>
+                                                    @else
+                                                        <div class="col-12 text-success fw-bold">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</div>
                                                     @endif
                                                 </div>
                                             </th>
