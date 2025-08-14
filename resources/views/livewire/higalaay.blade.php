@@ -88,17 +88,19 @@
                                                 <div class="row">
                                                     <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
                                                     <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
-                                                    @php
-                                                        $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
-                                                    @endphp
                                                     <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
-                                                    <div class="my-2 col-12">
-                                                        <label class="text-muted small">Deduction</label>
-                                                        <div class="input-group">
-                                                            <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                                            <button class="btn btn-primary btn-sm" wire:click="showDeductionDetails({{ $participant->id }})"><i class="bi bi-three-dots"></i></button>
+                                                    @if (auth()->user()->role == 'admin')
+                                                        @php
+                                                            $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
+                                                        @endphp
+                                                        <div class="my-2 col-12">
+                                                            <label class="text-muted small">Deduction</label>
+                                                            <div class="input-group">
+                                                                <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                                                <button class="btn btn-primary btn-sm" wire:click="showDeductionDetails({{ $participant->id }})"><i class="bi bi-three-dots"></i></button>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @endif
                                                 </div>
                                             </th>
                                             @foreach ($judges as $judge)
