@@ -68,7 +68,7 @@
                                         @foreach ($judges as $item)
                                             <th scope="col">
                                                 <div>{{ $item->judge }}</div>
-                                                <span class="small text-muted">Judge {{ $loop->iteration }}</span>
+                                                <span class="small text-muted">Judge {{ $item->nickname }}</span>
                                                 @php
                                                     $percent = $item->getHigalaayPercent($type);
                                                 @endphp
