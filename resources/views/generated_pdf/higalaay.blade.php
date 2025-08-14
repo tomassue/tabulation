@@ -71,19 +71,19 @@
         {{-- <tr>
             <td class="text-start" style="vertical-align: top;" width="30%">
                 <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="80">
-                <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
+        <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
 
-            </td>
-            <td class="text-center">
-                <div style="font-size: 20pt;font-weight:bold;">HIGALAAY FESTIVAL</div>
-                <div style="font-size: 11pt;font-weight:bold;color: #26a75c;">CAGAYAN DE ORO at 75</div>
-                <div style="font-size: 12pt;">Proud of our Roots. Bold in our Dreams</div>
-                <div style="font-size: 9pt;">August 27, 2025</div>
-            </td>
-            <td class="text-end" width="30%">
-                <img src="{{ convert_image(public_path() . '/img/higalaay_email.png') }}" width="120">
-                <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="75">
-            </td>
+        </td>
+        <td class="text-center">
+            <div style="font-size: 20pt;font-weight:bold;">HIGALAAY FESTIVAL</div>
+            <div style="font-size: 11pt;font-weight:bold;color: #26a75c;">CAGAYAN DE ORO at 75</div>
+            <div style="font-size: 12pt;">Proud of our Roots. Bold in our Dreams</div>
+            <div style="font-size: 9pt;">August 27, 2025</div>
+        </td>
+        <td class="text-end" width="30%">
+            <img src="{{ convert_image(public_path() . '/img/higalaay_email.png') }}" width="120">
+            <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="75">
+        </td>
         </tr> --}}
         <tr>
             <td class="text-start" style="vertical-align: top;" width="30%">
@@ -94,7 +94,7 @@
                 <div style="font-size: 20pt;font-weight:bold;">KAHIGAYONAN 2025</div>
                 <div style="font-size: 18pt;">Skills Training and Expo</div>
                 <div style="font-size: 12pt;">Piyesta sa Dakbayan, Tabo sa Opportunidad Year 4</div>
-                <div style="font-size: 9pt;">August 08, 2025</div>
+                <div style="font-size: 9pt;">August 13, 2025</div>
             </td>
             <td class="text-end" width="30%">
                 <img src="{{ convert_image(public_path() . '/img/risebig.png') }}" width="150">
@@ -116,10 +116,10 @@
         <thead>
             <tr>
                 <th class="text-center p-2 bold" style="font-size:10pt;">RANK</th>
-                <th class="text-center  p-2 bold"style="font-size:10pt;">CONTESTANT</th>
+                <th class="text-center  p-2 bold" style="font-size:10pt;">CONTESTANT</th>
                 <th class="text-center p-2 bold" style="font-size:10pt;">NUMBER</th>
                 @foreach ($judges as $judge)
-                    <th class="text-center  p-2 bold"style="font-size:10pt;">
+                    <th class="text-center  p-2 bold" style="font-size:10pt;">
                         {{ $judge->judge }}
                     </th>
                 @endforeach
