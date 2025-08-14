@@ -8,7 +8,7 @@ use App\Models\RefCriteria;
 
 class Criteria extends Component
 {
-    public $id, $criteria, $perfect_score, $category, $selectedCateg;
+    public $id, $criteria, $perfect_score, $category, $selectedCateg, $password;
     public function render()
     {
         $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->get();
@@ -45,5 +45,25 @@ class Criteria extends Component
         $criteria->save();
 
         return session()->flash('status', 'Sucessfully saved!');
+    }
+    public function deleteCriteria($id)
+    {
+        $this->resetValidation();
+        $this->id = $id;
+        $this->dispatch('openDeleteModal');
+    }
+    public function executeDelete()
+    {
+        $this->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $criteria = RefCriteria::find($this->id);
+        if ($criteria) {
+            $criteria->delete();
+            $this->password = null;
+            return session()->flash("status", "Sucessfully deleted!");
+        }
+        return session()->flash("error", "Failed to delete");
     }
 }

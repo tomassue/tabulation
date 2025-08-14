@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,30 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+    // Add this method to override credentials
+    protected function credentials(Request $request)
+    {
+        return array_merge(
+            $request->only($this->username(), 'password'),
+            ['is_active' => 1] // Add active status check
+        );
+    }
+    // (Optional) Customize failed login response for inactive users
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        // Check if user exists but is inactive
+        $user = \App\Models\User::where($this->username(), $request->{$this->username()})->first();
+
+        if ($user && $user->is_active != 1) {
+            throw ValidationException::withMessages([
+                $this->username() => [trans('auth.inactive')],
+            ]);
+        }
+
+        // Default failed response
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
 }

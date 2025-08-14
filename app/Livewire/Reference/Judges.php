@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class Judges extends Component
 {
-    public $id, $judge, $nickname, $selectedCategories = [], $selectedCateg;
+    public $id, $judge, $nickname, $selectedCategories = [], $selectedCateg, $password;
     public function render()
     {
         $judges = RefJudge::all();
@@ -47,15 +47,15 @@ class Judges extends Component
 
         DB::transaction(function () {
 
+            $judge = RefJudge::findOrNew($this->id);
+            $user =  User::findOrNew($judge->user_id);
 
-            $user = $this->id ? User::find($this->id) : new User();
             $user->name  = $this->judge;
-            $user->email = str_replace(' ', $this->judge, strtolower($this->judge)) . '@example.com';
+            $user->email = $this->generateEmailFromName($this->judge);
             $user->role = 'user';
             $user->password = Hash::make('password');
             $user->save();
 
-            $judge = $this->id ? RefJudge::find($this->id) : new RefJudge();
             $judge->judge = $this->judge;
             $judge->nickname = $this->nickname;
             $judge->category = $this->selectedCategories;
@@ -64,5 +64,46 @@ class Judges extends Component
 
             return session()->flash('status', 'Sucessfully saved!');
         });
+    }
+    private static function generateEmailFromName(string $name, string $domain = 'example.com'): string
+    {
+        // Convert name to lowercase
+        $email = strtolower($name);
+
+        // Replace spaces with dots
+        $email = str_replace(' ', '.', $email);
+
+        // Remove any characters that are not alphanumeric or dots
+        $email = preg_replace('/[^a-z0-9.]/', '', $email);
+
+        // Ensure no multiple dots
+        $email = preg_replace('/\.\.+/', '.', $email);
+
+        // Trim leading/trailing dots
+        $email = trim($email, '.');
+
+        // Append the domain
+        return $email . '@' . $domain;
+    }
+    public function deleteJudge($id)
+    {
+        $this->resetValidation();
+        $this->id = $id;
+        $this->dispatch('openDeleteModal');
+    }
+    public function executeDelete()
+    {
+        $this->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $judge = RefJudge::find($this->id);
+        if ($judge) {
+            User::find($judge->user_id)->delete();
+            $judge->delete();
+            $this->password = null;
+            return session()->flash("status", "Sucessfully deleted!");
+        }
+        return session()->flash("error", "Failed to delete");
     }
 }

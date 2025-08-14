@@ -32,7 +32,7 @@
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <!-- Table with hoverable rows -->
-                                        <table class="table table-hover">
+                                        <table class="table table-hover  table-striped">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
@@ -44,22 +44,32 @@
                                             <tbody>
                                                 @foreach ($judges as $item)
                                                     <tr>
-                                                        <th scope="row">
+                                                        <td scope="row">
                                                             {{ $loop->iteration }}
-                                                        </th>
-                                                        <th scope="row">
+                                                        </td>
+                                                        <td scope="row">
                                                             {{ $item->judge }}
                                                             <span class="badge text-bg-secondary">{{ $item->nickname }}</span>
-                                                        </th>
-                                                        <th scope="row" class="text-capitalize">
+                                                        </td>
+                                                        <td scope="row" class="text-capitalize">
                                                             {{ implode(', ', $item->category) }}
-                                                        </th>
+                                                        </td>
                                                         <td>
                                                             <button class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
                                                                 <div wire:loading.remove wire:target="editJudge({{ $item->id }})">
                                                                     <i class="bi bi-pencil-square"></i>
                                                                 </div>
                                                                 <div wire:loading wire:target="editJudge({{ $item->id }})">
+                                                                    <div class="spinner-border spinner-border-sm" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                            <button wire:key="delete-{{ $item->id }}" wire:target="deleteJudge({{ $item->id }})" wire:loading.attr="disabled" wire:click="deleteJudge({{ $item->id }})" class="btn btn-danger btn-sm">
+                                                                <div wire:loading.remove wire:target="deleteJudge({{ $item->id }})">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </div>
+                                                                <div wire:loading wire:target="deleteJudge({{ $item->id }})">
                                                                     <div class="spinner-border spinner-border-sm" role="status">
                                                                         <span class="visually-hidden">Loading...</span>
                                                                     </div>
@@ -129,6 +139,28 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure to delete this deduction?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @include('layouts.message')
+                    <div class="mb-3">
+                        <label for="password" class="col-form-label">Type Password</label>
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" wire:model="password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger" wire:click="executeDelete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @script
     <script>
@@ -139,6 +171,14 @@
         window.addEventListener('hideModal', event => {
             var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
             myModal.show();
+        });
+        window.addEventListener('openDeleteModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            myModal.show();
+        });
+        window.addEventListener('hideDeleteModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            myModal.hide();
         });
     </script>
 @endscript

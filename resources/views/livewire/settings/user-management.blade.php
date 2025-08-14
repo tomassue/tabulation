@@ -45,31 +45,29 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($users as $item)
-                                                    <tr>
-                                                        <td>
-                                                            {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td>{{ $item->name }}</td>
-                                                        <td>{{ $item->email }}</td>
-                                                        <td>{{ $item->role }}</td>
-                                                        <td>
-                                                            <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
-                                                                {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <button type="button" class="btn btn-primary" wire:click="editUser({{ $item->id }})">
-                                                                    <i class="bi bi-pencil"></i>
-                                                                </button>
-                                                                <button type="button"
-                                                                    class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}"
-                                                                    wire:click="{{ $item->is_active == 1 ? 'deactivateUser('.$item->id.')' : 'activateUser('.$item->id.')' }}">
-                                                                    <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>
+                                                                {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
+                                                            </td>
+                                                            <td>{{ $item->name }}</td>
+                                                            <td>{{ $item->email }}</td>
+                                                            <td>{{ $item->role }}</td>
+                                                            <td>
+                                                                <span class="badge {{ $item->is_active == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
+                                                                    {{ $item->is_active == 1 ? 'Active' : 'Inactive' }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                                    <button wire:key="edit-{{ $item->id }}" wire:target="editUser({{ $item->id }})" wire:loading.attr="disabled" type="button" class="btn btn-primary" wire:click="editUser({{ $item->id }})">
+                                                                        <i class="bi bi-pencil"></i>
+                                                                    </button>
+                                                                    <button wire:key="reset-{{ $item->id }}" wire:target="resetOpen({{ $item->id }})" wire:loading.attr="disabled" type="button" class="btn btn-warning" wire:click="resetOpen({{ $item->id }})">
+                                                                        <i class="bi bi-arrow-clockwise"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -100,7 +98,17 @@
                             @include('layouts.message')
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" wire:model="name" id="name" placeholder="Enter name">
+                                <input type="text" class="form-control" wire:model.live="name" id="name" placeholder="Enter name">
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Email</label>
+                                <input type="text" class="form-control" wire:model="email" id="name" placeholder="Enter name">
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
@@ -111,27 +119,14 @@
                                 </select>
                             </div>
                             @if ($editMode)
-                            <div class="mb-3">
-                                <label for="is_active">Is Active?</label>
-                                <select wire:model="is_active" id="is_active" class="form-select">
-                                    <option value="">--- SELECT ---</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                            @endif
-                            @if ($role == 'user')
-                            <div class="mb-3">
-                                <label for="category">Event Judge</label>
-                                @foreach ($categories as $item)
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input w-5 h-5 text-blue-600 rounded focus:ring-blue-500" wire:model="selectedCategories" value="{{ $item->category }}">
-                                    <label for="flexCheckDefault">
-                                        {{ $item->description }}
-                                    </label>
+                                <div class="mb-3">
+                                    <label for="is_active">Is Active?</label>
+                                    <select wire:model="is_active" id="is_active" class="form-select">
+                                        <option value="">--- SELECT ---</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
                                 </div>
-                                @endforeach
-                            </div>
                             @endif
                         </div>
                         <div class="modal-footer">
@@ -151,18 +146,66 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="clear"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="password">Current Password</label>
+                                <input type="password" class="form-control @error('old_password') is-invalid @enderror" id="old_password" wire:model="old_password">
+                                @error('old_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <hr class="my-4" />
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" wire:model="password">
+                                @error('password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-12 mb-3">
+                                <label for="password_confirmation">Confirm Password</label>
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" wire:model="password_confirmation">
+                                @error('password_confirmation')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" wire:click="clear">Close</button>
+                                <button type="submit" wire:click="savePassword()" class="btn btn-primary">Change password</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     @script
-    <script>
-        window.addEventListener('openModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('userModal'));
-            myModal.show();
-        });
+        <script>
+            window.addEventListener('openModal', event => {
+                var myModal = new bootstrap.Modal(document.getElementById('userModal'));
+                myModal.show();
+            });
 
-        window.addEventListener('hideModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('userModal'));
-            myModal.hide();
-        });
-    </script>
+            window.addEventListener('hideModal', event => {
+                var myModal = new bootstrap.Modal(document.getElementById('userModal'));
+                myModal.hide();
+            });
+            window.addEventListener('openResetModal', event => {
+                var myModal = new bootstrap.Modal(document.getElementById('resetModal'));
+                myModal.show();
+            });
+            window.addEventListener('hideResetModal', event => {
+                var myModal = new bootstrap.Modal(document.getElementById('resetModal'));
+                myModal.hide();
+            });
+        </script>
     @endscript
 </div>

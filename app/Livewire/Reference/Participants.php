@@ -13,7 +13,7 @@ class Participants extends Component
     use WithFileUploads;
 
     public $poster_file;
-    public $id, $participant, $school, $participant_no, $participant_id, $selectedCateg;
+    public $id, $participant, $school, $participant_no, $participant_id, $selectedCateg, $password;
     public $selectedCategories = [];
     public $poster_photos;
 
@@ -113,6 +113,10 @@ class Participants extends Component
     }
     public function executeDeleteParticipant()
     {
+        $this->validate([
+            'password' => 'required|current_password',
+        ]);
+
         $participant = RefParticipant::find($this->id);
         if ($participant) {
             $participant->delete();

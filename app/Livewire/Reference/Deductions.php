@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class Deductions extends Component
 {
-    public $id, $deduction_name, $deduction, $category, $selectedCateg;
+    public $id, $deduction_name, $deduction, $category, $selectedCateg, $password;
 
     public function render()
     {
@@ -46,5 +46,25 @@ class Deductions extends Component
         $deduction->save();
 
         return session()->flash('status', 'Sucessfully saved!');
+    }
+    public function deleteDeduction($id)
+    {
+        $this->resetValidation();
+        $this->id = $id;
+        $this->dispatch('openDeleteModal');
+    }
+    public function executeDelete()
+    {
+        $this->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $deduction = RefDeduction::find($this->id);
+        if ($deduction) {
+            $deduction->delete();
+            $this->password = null;
+            return session()->flash("status", "Sucessfully deleted!");
+        }
+        return session()->flash("error", "Failed to delete");
     }
 }
