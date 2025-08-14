@@ -42,7 +42,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($judges as $item)
+                                                @forelse ($judges as $item)
                                                     <tr>
                                                         <td scope="row">
                                                             {{ $loop->iteration }}
@@ -77,8 +77,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
-
+                                                @empty
+                                                    <tr class="text-center">
+                                                        <td colspan="4">-- NO DATA --</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                         <!-- End Table with hoverable rows -->

@@ -13,7 +13,9 @@ use App\Http\Controllers\Reference\ParticipantsController;
 use App\Http\Controllers\Reference\RoundController;
 use App\Http\Controllers\Settings\DBImportExport;
 use App\Http\Controllers\Settings\Modules;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('auth.login');

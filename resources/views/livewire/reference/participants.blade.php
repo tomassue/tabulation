@@ -94,7 +94,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
+                                            <tr class="text-center">
                                                 <td colspan="6">-- NO DATA --</td>
                                             </tr>
                                         @endforelse
