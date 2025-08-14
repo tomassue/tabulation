@@ -7,6 +7,7 @@ use App\Models\Higalaay as ModelsHigalaay;
 use App\Models\HigalaayDeduction;
 use App\Models\Log;
 use App\Models\RefCriteria;
+use App\Models\RefDeduction;
 use App\Models\RefJudge;
 use App\Models\RefParticipant;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,15 +18,16 @@ use Livewire\Component;
 class Higalaay extends Component
 {
     public $type, $winner;
-    public $search, $selectedParticipant, $judge_id, $base64pdf = '';
+    public $search, $selectedParticipant, $judge_id, $criteria_id, $base64pdf = '';
     public $showDropdown = false;
     public $suggestions = [];
-
+    public $deduction, $refDeductions = [];
+    public $remarks, $duration, $totalDeductions = 0, $deductionSelected;
     public function render()
     {
         $selected = $this->selectedParticipant;
         $participants = RefParticipant::when(!empty($selected), function ($query) use ($selected) {
-            $query->where('participant_no', $selected);
+            $query->where('id', $selected);
         })->category($this->type)->get();
 
         $criterias = RefCriteria::where('category', $this->type)->get();
@@ -38,6 +40,7 @@ class Higalaay extends Component
 
         $jud  = RefJudge::category($this->type)->get();
         $categoryName = Category::where('category', $this->type)->pluck('description')->first();
+        $this->calculateTotals();
         return view('livewire.higalaay', compact('jud', 'judges', 'participants', 'criterias', 'categoryName'));
     }
     public function updatedSearch()
@@ -110,9 +113,11 @@ class Higalaay extends Component
 
         if (!$isAdmin) {
             $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
-            $participantsraw->where('judge_id', $judge->id);
+            $participantsraw->where('higalaays.judge_id', $judge->id);
         }
-
+        if ($this->criteria_id) {
+            $participantsraw->where('higalaays.criteria_id', $this->criteria_id);
+        }
         $participants = $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'))
             ->leftjoin('higalaays', 'ref_participants.id', '=', 'higalaays.participant_id')
             ->leftjoin('higalaay_deductions', 'ref_participants.id', '=', 'higalaay_deductions.participant_id')
@@ -121,10 +126,10 @@ class Higalaay extends Component
 
         $poster = ModelsHigalaay::all();
 
-        $criterias = RefCriteria::where('category',  $this->type)->get();
+        $criteria = RefCriteria::find($this->criteria_id);
         $categoryName = Category::where('category', $this->type)->pluck('description')->first();
 
-        $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster', 'criterias', 'judges', 'category', 'categoryName', 'winner'))->setPaper('letter', 'landscape');
+        $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster',  'judges', 'category', 'criteria', 'categoryName', 'winner'))->setPaper('folio', 'landscape');
         $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }
@@ -137,5 +142,67 @@ class Higalaay extends Component
         }
         $deduction->deduction = $score && $score != null ? $score : 0;
         $deduction->save();
+    }
+    public function showDeductionDetails($participant_id)
+    {
+        $this->deductionSelected = $participant_id;
+
+        $deduction = HigalaayDeduction::firstOrNew(['participant_id' => $participant_id]);
+        $existingDetails = $deduction->deduction_details ?? [];
+
+        // Create a lookup map for existing details [id => checked]
+        $detailMap = collect($existingDetails)->pluck('checked', 'id')->all();
+
+        // Fetch reference deductions with checked status
+        $this->refDeductions = RefDeduction::where('category', $this->type)
+            ->get()
+            ->map(function ($deduction) use ($detailMap) {
+                return [
+                    'id' => $deduction->id,
+                    'deduction_name' => $deduction->deduction_name,
+                    'deduction' => $deduction->deduction,
+                    'checked' => $detailMap[$deduction->id] ?? false,
+                    // Include other fields you need
+                ];
+            })
+            ->toArray();
+
+        $this->deduction = $deduction->deduction;
+        $this->remarks = $deduction->remarks;
+        $this->duration = $deduction->duration;
+        $this->dispatch('openDetailsModal');
+    }
+
+    public function updated()
+    {
+        $this->calculateTotals();
+    }
+    private function calculateTotals()
+    {
+        if ($this->refDeductions)
+            $this->totalDeductions =  collect($this->refDeductions)
+                ->where('checked', false)
+                ->sum('deduction');
+    }
+    public function saveCustomDeductions()
+    {
+        $this->validate([
+            'refDeductions' => 'array',
+            'remarks' => 'required',
+            'duration' => 'required'
+        ]);
+
+        $deduction = HigalaayDeduction::where('participant_id',  $this->deductionSelected)->first();
+        if (!$deduction) {
+            $deduction = new HigalaayDeduction();
+            $deduction->participant_id =  $this->deductionSelected;
+        }
+        $deduction->deduction = $this->totalDeductions != null ? $this->totalDeductions : 0;
+        $deduction->deduction_details = $this->refDeductions;
+        $deduction->remarks = $this->remarks;
+        $deduction->duration = $this->duration;
+        $deduction->save();
+
+        return session()->flash('status', 'Sucessfully updated!');
     }
 }

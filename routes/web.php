@@ -7,12 +7,15 @@ use App\Http\Controllers\OralController;
 use App\Http\Controllers\PosterController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Reference\CriteriaController;
+use App\Http\Controllers\Reference\DeductionController;
 use App\Http\Controllers\Reference\JudgesController;
 use App\Http\Controllers\Reference\ParticipantsController;
 use App\Http\Controllers\Reference\RoundController;
 use App\Http\Controllers\Settings\DBImportExport;
 use App\Http\Controllers\Settings\Modules;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -44,9 +47,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/reference/participants', [ParticipantsController::class, 'index'])->name('reference.participants');
     Route::post('/reference/save-participant', [ParticipantsController::class, 'saveParticipant'])->name('save-participant');
 
+    //DEDUCTIONS
+    Route::get('/reference/deductions', [DeductionController::class, 'index'])->name('reference.deductions');
+    Route::post('/reference/save-deductions', [DeductionController::class, 'saveParticipant'])->name('save-deductions');
+
     //ROUND
     Route::get('/reference/round', [RoundController::class, 'index'])->name('reference.round');
     Route::post('/reference/save-round', [RoundController::class, 'saveRound'])->name('save-round');
+
     /* -------------------------------- Reference ------------------------------- */
 
     /* -------------------------------- Settings -------------------------------- */

@@ -48,7 +48,7 @@ class DynamicLed extends Component
                 ->groupBy([
                     'ref_participants.id',
                     'ref_participants.participant_no',
-                    'ref_participants.participant',
+                    'ref_participants.participant', 
                     'deduction'
                 ])
                 ->select(

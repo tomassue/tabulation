@@ -55,6 +55,11 @@
                             <i class="bi bi-circle"></i><span>Participants</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('reference.deductions') }}" class="{{ Route::currentRouteName() == 'reference.deductions' ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Deductions</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
 

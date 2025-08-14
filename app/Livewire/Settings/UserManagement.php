@@ -21,13 +21,17 @@ class UserManagement extends Component
     public $name,
         $role,
         $email,
-        $is_active;
+        $is_active,
+        $password,
+        $old_password,
+        $password_confirmation;
 
     public function rules()
     {
         $rules = [
             'name' => 'required',
             'role' => 'required',
+            'email' => 'required|email|unique:users,email,' . $this->user_id,
         ];
 
         return $rules;
@@ -37,6 +41,9 @@ class UserManagement extends Component
     {
         if ($propertyName == 'selectedStatus') {
             $this->resetPage();
+        }
+        if ($propertyName == 'name') {
+            $this->email = $this->generateEmailFromName($this->name);
         }
     }
 
@@ -55,6 +62,7 @@ class UserManagement extends Component
         $this->editMode = true;
         $this->user_id = $user->id;
         $this->name = $user->name;
+        $this->email = $user->email;
         $this->role = $user->role;
         $this->is_active = $user->is_active;
 
@@ -70,14 +78,14 @@ class UserManagement extends Component
                 ['id' => $this->user_id],
                 [
                     'name' => $this->name,
-                    'email' => str_replace(' ', '', strtolower($this->name)) . '@example.com',
+                    'email' => $this->email ?? $this->generateEmailFromName($this->name),
                     'role' => $this->role,
                     'is_active' => $this->is_active,
                     'password' => Hash::make('password'),
                 ]
             );
 
-            $this->clear();
+            return session()->flash('status', 'Sucessfully saved!');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -87,7 +95,6 @@ class UserManagement extends Component
     {
         $data = [
             'users' => $this->getUsers(),
-            'categories' => $this->getCategories(),
         ];
 
         return view('livewire.settings.user-management', $data);
@@ -108,5 +115,52 @@ class UserManagement extends Component
         $categories = Category::where('is_active', 1)->get();
 
         return $categories;
+    }
+
+    public function resetOpen($id)
+    {
+        $this->user_id = $id;
+        $this->dispatch('openResetModal');
+    }
+    public function savePassword()
+    {
+        $user = User::find($this->user_id);
+        if (!$user) {
+            return session()->flash('status', 'User not found!');
+        }
+        $this->validate([
+            'old_password' => 'required|current_password',
+            'password' => 'required',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        if (!Hash::check($this->old_password, $user->password)) {
+            return session()->flash('status', 'Old password is incorrect!');
+        }
+
+        $user->password = $this->password;
+        $user->save();
+
+        return session()->flash('status', 'Sucessfully reset!');
+    }
+    private static function generateEmailFromName(string $name, string $domain = 'example.com'): string
+    {
+        // Convert name to lowercase
+        $email = strtolower($name);
+
+        // Replace spaces with dots
+        $email = str_replace(' ', '.', $email);
+
+        // Remove any characters that are not alphanumeric or dots
+        $email = preg_replace('/[^a-z0-9.]/', '', $email);
+
+        // Ensure no multiple dots
+        $email = preg_replace('/\.\.+/', '.', $email);
+
+        // Trim leading/trailing dots
+        $email = trim($email, '.');
+
+        // Append the domain
+        return $email . '@' . $domain;
     }
 }

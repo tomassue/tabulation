@@ -1,13 +1,13 @@
-<section class="section quiz">
+<section class="section deductions">
     <div class="row">
         <div class="col-lg-12">
-            <section class="section oratorical">
+            <section class="section deductions">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="col-lg-10 mx-auto">
                             <div class="card">
                                 <div class="card-header toolbar mb-3  d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title">Add Criteria</h5>
+                                    <h5 class="card-title">Add Deduction</h5>
                                     <div class="d-flex">
                                         <div class="mx-2">
                                             <select name="selectedCateg" wire:model.live="selectedCateg" class="form-select" id="selectedCateg">
@@ -17,11 +17,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-primary" wire:click="addCriteria">
-                                            <div wire:loading.remove wire:target="addCriteria">
+                                        <button type="button" class="btn btn-primary" wire:click="addDeduction">
+                                            <div wire:loading.remove wire:target="addDeduction">
                                                 <i class="bi bi-plus-circle"></i>
                                             </div>
-                                            <div wire:loading wire:target="addCriteria">
+                                            <div wire:loading wire:target="addDeduction">
                                                 <div class="spinner-border spinner-border-sm" role="status">
                                                     <span class="visually-hidden">Loading...</span>
                                                 </div>
@@ -32,47 +32,47 @@
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <!-- Table with hoverable rows -->
-                                        <table class="table table-hover table-striped">
+                                        <table class="table table-hover  table-striped">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Event</th>
-                                                    <th scope="col">Perfect Score</th>
+                                                    <th scope="col">Deduction</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($criterias as $item)
+                                                @forelse ($deductions as $item)
                                                     <tr>
                                                         <td scope="row">
                                                             {{ $loop->iteration }}
                                                         </td>
                                                         <td scope="row">
-                                                            {{ $item->criteria }}
+                                                            {{ $item->deduction_name }}
                                                         </td>
                                                         <td scope="row" class="text-capitalize">
                                                             {{ $item->category }}
                                                         </td>
                                                         <td>
-                                                            {{ $item->perfect_score }}
+                                                            {{ $item->deduction }}
                                                         </td>
                                                         <td>
-                                                            <button wire:key="edit-{{ $item->id }}" wire:target="editCriteria({{ $item->id }})" wire:loading.attr="disabled" class="btn btn-sm btn-primary" wire:click="editCriteria({{ $item->id }})">
-                                                                <div wire:loading.remove wire:target="editCriteria({{ $item->id }})">
+                                                            <button class="btn btn-sm btn-primary" wire:click="editDeduction({{ $item->id }})">
+                                                                <div wire:loading.remove wire:target="editDeduction({{ $item->id }})">
                                                                     <i class="bi bi-pencil-square"></i>
                                                                 </div>
-                                                                <div wire:loading wire:target="editCriteria({{ $item->id }})">
+                                                                <div wire:loading wire:target="editDeduction({{ $item->id }})">
                                                                     <div class="spinner-border spinner-border-sm" role="status">
                                                                         <span class="visually-hidden">Loading...</span>
                                                                     </div>
                                                                 </div>
                                                             </button>
-                                                            <button wire:key="delete-{{ $item->id }}" wire:target="deleteCriteria({{ $item->id }})" wire:loading.attr="disabled" wire:click="deleteCriteria({{ $item->id }})" class="btn btn-danger btn-sm">
-                                                                <div wire:loading.remove wire:target="deleteCriteria({{ $item->id }})">
+                                                            <button wire:key="delete-{{ $item->id }}" wire:target="deleteDeduction({{ $item->id }})" wire:loading.attr="disabled" wire:click="deleteDeduction({{ $item->id }})" class="btn btn-danger btn-sm">
+                                                                <div wire:loading.remove wire:target="deleteDeduction({{ $item->id }})">
                                                                     <i class="bi bi-trash"></i>
                                                                 </div>
-                                                                <div wire:loading wire:target="deleteCriteria({{ $item->id }})">
+                                                                <div wire:loading wire:target="deleteDeduction({{ $item->id }})">
                                                                     <div class="spinner-border spinner-border-sm" role="status">
                                                                         <span class="visually-hidden">Loading...</span>
                                                                     </div>
@@ -97,21 +97,20 @@
             </section>
         </div>
     </div>
-
     <!-- Modal -->
-    <div class="modal fade" id="criteriaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="deductionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form wire:submit.prevent="saveCriteria">
+                <form wire:submit.prevent="saveDeduction">
                     <div class="modal-body">
                         @include('layouts.message')
                         <div class="mb-3">
-                            <label for="criteria" class="form-label">Criteria Name</label>
-                            <input type="text" class="form-control" wire:model="criteria" id="criteria" placeholder="Enter criteria name">
+                            <label for="deduction_name" class="form-label">Deduction Name</label>
+                            <input type="text" class="form-control" wire:model="deduction_name" id="deduction_name" placeholder="Enter deduction name">
                         </div>
                         <div class="mb-3">
                             <label for="category">Event</label>
@@ -123,8 +122,8 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="perfect_score" class="form-label">Perfect Score</label>
-                            <input type="text" class="form-control" wire:model="perfect_score" id="perfect_score" placeholder="Enter criteria perfect score">
+                            <label for="deduction" class="form-label">Score Deduction</label>
+                            <input type="text" class="form-control" wire:model="deduction" id="deduction" placeholder="Enter score deduction">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -149,7 +148,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure to delete this criteria?</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure to delete this deduction?</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -170,12 +169,12 @@
 @script
     <script>
         window.addEventListener('openModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            var myModal = new bootstrap.Modal(document.getElementById('deductionModal'));
             myModal.show();
         });
 
         window.addEventListener('hideModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
+            var myModal = new bootstrap.Modal(document.getElementById('deductionModal'));
             myModal.hide();
         });
         window.addEventListener('openDeleteModal', event => {

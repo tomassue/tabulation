@@ -31,15 +31,17 @@ class DatabaseSeeder extends Seeder
         );
 
         $categories = [
-            ['category' => 'band', 'is_active' => 1, 'description' => 'Marching Band', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
-            ['category' => 'float', 'is_active' => 1, 'description' => 'Float Competition', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
-            ['category' => 'majorette', 'is_active' => 1, 'description' => 'Best Band Majorette', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
-            ['category' => 'major', 'is_active' => 1, 'description' => 'Best Band Major', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
-            ['category' => 'costume', 'is_active' => 1, 'description' => 'Best in Costume', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
+            ['category' => 'band', 'is_active' => 0, 'description' => 'Marching Band', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
+            ['category' => 'float', 'is_active' => 0, 'description' => 'Float Competition', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
+            ['category' => 'majorette', 'is_active' => 0, 'description' => 'Best Band Majorette', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
+            ['category' => 'major', 'is_active' => 0, 'description' => 'Best Band Major', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
+            ['category' => 'costume', 'is_active' => 0, 'description' => 'Best in Costume', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 1],
             ['category' => 'oral', 'is_active' => 0, 'description' => 'Oratorical', 'icon' => '<i class="bi bi-box-seam"></i>'],
             ['category' => 'poster', 'is_active' => 0, 'description' => 'Poster Making Contest', 'icon' => '<i class="bi bi-box-seam"></i>'],
             ['category' => 'quiz', 'is_active' => 0, 'description' => 'Quiz Bee', 'icon' => '<i class="bi bi-box-seam"></i>'],
             ['category' => 'kahigayonan', 'is_active' => 0, 'description' => 'Dance Competition', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
+            ['category' => 'street-dancing', 'is_active' => 1, 'description' => 'Street Dancing', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
+            ['category' => 'dance-showdown', 'is_active' => 1, 'description' => 'Dance Showdown', 'icon' => '<i class="bi bi-box-seam"></i>', 'winners' => 3],
         ];
 
         foreach ($categories as $category) {
