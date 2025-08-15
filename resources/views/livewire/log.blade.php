@@ -36,7 +36,9 @@
                                         <tr>
                                             <td>{{ date('F d, Y h:i A', strtotime($item->created_at)) }}</td>
                                             <td>{{ $item->user->name }}</td>
-                                            <td><span class="badge bg-success">{{ $item->activity }}</td>
+                                            <td>
+                                                <div class="text-muted">{!! $item->activity !!}</div>
+                                            </td>
                                         </tr>
                                     @endforeach
 

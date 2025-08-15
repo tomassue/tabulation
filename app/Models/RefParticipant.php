@@ -9,6 +9,9 @@ class RefParticipant extends Model
 {
     protected $fillable = [
         'category',
+        'participant_no',
+        'participant',
+        'school',
     ];
     protected $casts = [
         'category' => 'array', // Casts the 'details' column to a PHP array
