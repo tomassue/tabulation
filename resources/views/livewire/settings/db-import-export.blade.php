@@ -2,7 +2,59 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">API Database Download & Upload</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        @include('layouts.message')
+                        @if (!session('token'))
+                            <form wire:submit.prevent="login">
+                                <div class="mb-4 text-center">
+                                    <label for="" class="form-label">API Username</label>
+                                    <input type="email" class="form-control" wire:model="email" id="email" placeholder="Enter email">
+                                    @error('username')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4 text-center">
+                                    <label for="" class="form-label">API Password</label>
+                                    <input type="password" class="form-control" wire:model="password" id="password" placeholder="Enter password">
+                                    @error('username')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4 text-center">
+                                    <button type="submit" class="btn btn-primary px-4">Login</button>
+                                </div>
+                            </form>
+                        @else
+                            <div class="mb-4 text-center">
+                                <button class="btn btn-danger px-4" wire:click="logout">Re-Login Api</button>
+                            </div>
+                            <hr />
+                        @endif
+                        @if (session('token'))
+                            <div class="mb-4 text-center">
+                                <div class="mb-4 text-center">
+                                    <h6>Download Database</h6>
+                                    <button class="btn btn-success px-4" type="button" wire:click="getReference">
+                                        <i class="bi bi-download me-1"></i> Download
+                                    </button>
+                                    <div class="text-danger small">Download all reference data, not the tabulation data.</div>
+                                </div>
+                                <hr />
+                                <div class="mb-4 text-center">
+                                    <h6>Upload Database</h6>
+                                    <button class="btn btn-warning px-4" type="button" wire:click="uploadDatabase">
+                                        <i class="bi bi-upload me-1"></i> Upload
+                                    </button>
+                                    <div class="text-danger small">Upload all tabulation data to the online database.</div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <!-- Card -->
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-header bg-primary text-white text-center rounded-top-4">

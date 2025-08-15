@@ -8,6 +8,9 @@ class RefJudge extends Model
 {
     protected $fillable = [
         'category',
+        'judge',
+        'nickname',
+        'user_id',
     ];
     protected $casts = [
         'category' => 'array', // Casts the 'details' column to a PHP array
