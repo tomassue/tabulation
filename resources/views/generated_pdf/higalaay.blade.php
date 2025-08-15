@@ -63,9 +63,6 @@
 </head>
 
 <body>
-    <div id="watermark">
-        <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
-    </div>
     <div id="content">
         <table class="table">
             <tr>
@@ -161,6 +158,9 @@
                 @endforeach
             </tr>
         </table>
+        <div id="watermark">
+            <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
+        </div>
     </div>
     <div id="footer">
         <script type="text/php">
