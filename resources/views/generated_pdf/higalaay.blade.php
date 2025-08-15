@@ -59,23 +59,14 @@
             transform-origin: 50% 50%;
             opacity: .07;
         }
-
-        .page-number {
-            font-size: 8pt;
-        }
-
-        .footer .page-number:after {
-            content: counter(page);
-            font-size: 8pt;
-        }
     </style>
 </head>
 
 <body>
+    <div id="watermark">
+        <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
+    </div>
     <div id="content">
-        <div id="watermark">
-            <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
-        </div>
         <table class="table">
             <tr>
                 <td class="text-start" style="vertical-align: top;" width="30%">
@@ -171,6 +162,27 @@
             </tr>
         </table>
     </div>
+    <script type="text/php">
+        if (isset($pdf)) {
+            $pdf->page_script('
+                $text = __("Page :pageNum of :pageCount", ["pageNum" => $PAGE_NUM, "pageCount" => $PAGE_COUNT]);
+                $font = null;
+                $size = 9;
+                $color = array(0,0,0);
+                $word_space = 0.0;  //  default
+                $char_space = 0.0;  //  default
+                $angle = 0.0;   //  default
+ 
+                // Compute text width to center correctly
+                $textWidth = $fontMetrics->getTextWidth($text, $font, $size);
+ 
+                $x = ($pdf->get_width() - $textWidth) / 2;
+                $y = $pdf->get_height() - 35;
+ 
+                $pdf->text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+            ');
+        }
+    </script>
 </body>
 
 </html>
