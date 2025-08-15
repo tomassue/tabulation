@@ -162,7 +162,8 @@
             </tr>
         </table>
     </div>
-    <script type="text/php">
+    <div id="footer">
+        <script type="text/php">
         if (isset($pdf)) {
             $pdf->page_script('
                 $text = __("Page :pageNum of :pageCount", ["pageNum" => $PAGE_NUM, "pageCount" => $PAGE_COUNT]);
@@ -183,6 +184,7 @@
             ');
         }
     </script>
+    </div>
 </body>
 
 </html>
