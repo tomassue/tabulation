@@ -9,6 +9,7 @@ class HigalaayDeduction extends Model
     protected $fillable = [
         'participant_id',
         'deduction',
+        'category',
         'remarks',
         'deduction_details',
         'duration'
