@@ -75,7 +75,7 @@
                                                 <div class="progress">
                                                     <div class="progress-bar bg-success" style="width: {{ $percent }}%"></div>
                                                 </div>
-                                                <small> {{ $percent }}%</small>
+                                                <small> {{ $percent }}% complete</small>
                                             </th>
                                         @endforeach
                                     </tr>
@@ -91,7 +91,7 @@
                                                     @if (auth()->user()->role == 'admin')
                                                         <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                         @php
-                                                            $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->first();
+                                                            $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->where('category', $type)->first();
                                                         @endphp
                                                         <div class="my-2 col-12">
                                                             <label class="text-muted small">Deduction</label>
@@ -177,7 +177,7 @@
                     @include('layouts.message')
                     <div class="mb-3">
                         <label for="participant" class="form-label">Participant</label>
-                        <input type="text" readonly class="form-control-plaintext fs-3" id="participant" value="{{ $deduction?->participant?->participant }}">
+                        <input type="text" readonly class="form-control-plaintext fs-3" id="participant" value="{{ $deductionModel?->participant?->participant }}">
                     </div>
                     <div class="mb-3 card">
 
@@ -195,7 +195,7 @@
                                     <div class="col-md-4 text-center">
                                         <span>DEDUCTION</span>
                                         @if ($totalDeductions == 0)
-                                            <h1 class="text-success">{{ $totalDeductions }}</h1>
+                                            <h1 class="text-success">{{ $oldDeductions ?? 0 }}</h1>
                                         @else
                                             <h1 class="text-danger">-{{ $totalDeductions }}</h1>
                                         @endif

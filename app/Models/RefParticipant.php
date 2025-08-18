@@ -93,7 +93,7 @@ class RefParticipant extends Model
     }
     public function averageHigalaay($category, $criteria =  null)
     {
-        $deduction = $this->higalaayDeduction?->deduction;
+        $deduction =  $this->higalaayDeduction ? $this->higalaayDeduction->where('category', $category)->first()?->deduction : 0;
         $relation = $this->hasOne(Higalaay::class, 'participant_id', 'id');
         if ($criteria) {
             $relation->where('criteria_id', $criteria->id);

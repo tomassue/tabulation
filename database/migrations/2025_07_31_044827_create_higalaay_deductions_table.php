@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("participant_id")->nullable();
             $table->integer("deduction")->nullable();
+            $table->string('category')->nullable();
             $table->text("remarks")->nullable();
             $table->text("deduction_details")->nullable();
             $table->string("duration")->nullable();
