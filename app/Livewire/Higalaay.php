@@ -10,6 +10,7 @@ use App\Models\RefCriteria;
 use App\Models\RefDeduction;
 use App\Models\RefJudge;
 use App\Models\RefParticipant;
+use App\Services\ReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -98,48 +99,16 @@ class Higalaay extends Component
         $category = $this->type;
         $winner =  $this->winner;
 
-        $user = Auth::user();
-        $isAdmin = ($user->role == 'admin');
-
-        //get judges base on user role
-        if ($isAdmin) {
-            $judges = RefJudge::category($this->type)->get();
-        } else {
-            $judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
-        }
-
-        // Determine divisor for score calculation
-        $divisor = $isAdmin ? ($judges->count() ?: 1) : 1;  // Prevent division by zero
-
-        $participantsraw = RefParticipant::category($this->type);
-
-        if (!$isAdmin) {
-            $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
-            $participantsraw->where('higalaays.judge_id', $judge->id);
-        }
-        if ($this->criteria_id) {
-            $participantsraw->where('higalaays.criteria_id', $this->criteria_id);
-        }
-        $participants = $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'))
-            ->leftJoin('higalaays', function ($join) {
-                $join->on('ref_participants.id', '=', 'higalaays.participant_id')
-                    ->where('higalaays.category', $this->type);
-            })
-            ->leftJoin('higalaay_deductions', function ($join) {
-                $join->on('ref_participants.id', '=', 'higalaay_deductions.participant_id')
-                    ->where('higalaay_deductions.category', $this->type);
-            })
-            ->groupBy('ref_participants.id', 'deduction')
-            ->get();
-
-        $poster = ModelsHigalaay::all();
+        $service = new ReportService($category, $this->criteria_id);
+        $participants = $service->generateTopParticipants();
+        $judges =  $service->judges;
 
         $criteria = RefCriteria::find($this->criteria_id);
         $categoryName = Category::where('category', $this->type)->pluck('description')->first();
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.higalaay', compact('participants', 'poster',  'judges', 'category', 'criteria', 'categoryName', 'winner'))->render();
+        $htmlContent = view('generated_pdf.higalaay', compact('participants', 'judges', 'category', 'criteria', 'categoryName', 'winner'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
         $dompdf->setPaper('folio', 'landscape');
@@ -159,8 +128,6 @@ class Higalaay extends Component
         );
 
         $this->base64pdf = base64_encode($dompdf->output());
-        // $pdf = Pdf::loadView('generated_pdf.higalaay', compact('participants', 'poster',  'judges', 'category', 'criteria', 'categoryName', 'winner'))->setPaper('folio', 'landscape');
-        // $this->base64pdf = base64_encode($pdf->output());
         $this->dispatch('openModal');
     }
     public function saveDeduction($participant_id, $score)
