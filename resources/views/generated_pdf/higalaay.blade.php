@@ -182,7 +182,7 @@
                             @endforeach
                             @if (auth()->user()->role == 'admin')
                                 @php
-                                    $deducted = $item->higalaayDeduction ? $item->higalaayDeduction->where('category', $category)->first() : null;
+                                    $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category)->first();
                                 @endphp
                                 <td class="text-center {{ $class }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
                                 <td class="text-center {{ $class }}">{{ $deducted?->duration ?? '-' }}</td>
