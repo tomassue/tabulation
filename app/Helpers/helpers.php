@@ -32,3 +32,21 @@ if (! function_exists('bong_ordinal')) {
             return $number . $ends[$number % 10];
     }
 }
+if (! function_exists('bong_ordinal_new')) {
+    function bong_ordinal_new($number): String
+    {
+        if ($number == 1) {
+            return "GRAND CHAMPION";
+        } else if ($number == 2) {
+            return "1ST RUNNER UP";
+        } else if ($number == 3) {
+            return "2ND RUNNER UP";
+        }
+
+        $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+        if ((($number % 100) >= 11) && (($number % 100) <= 13))
+            return $number . 'th';
+        else
+            return $number . $ends[$number % 10];
+    }
+}
