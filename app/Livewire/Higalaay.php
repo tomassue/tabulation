@@ -118,13 +118,15 @@ class Higalaay extends Component
             $participantsraw->where('higalaays.judge_id', $judge->id);
         }
         if ($this->criteria_id) {
-            $participantsraw->where('higalaays.criteria_id', $this->criteria_id);
+            $participantsraw->where('higalaays.criteria_id', $this->criteria_id)
+                ->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ') DESC) as current_rank'));
+        } else {
+            $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'));
         }
-        $participants = $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank'))
-            ->leftJoin('higalaays', function ($join) {
-                $join->on('ref_participants.id', '=', 'higalaays.participant_id')
-                    ->where('higalaays.category', $this->type);
-            })
+        $participants = $participantsraw->leftJoin('higalaays', function ($join) {
+            $join->on('ref_participants.id', '=', 'higalaays.participant_id')
+                ->where('higalaays.category', $this->type);
+        })
             ->leftJoin('higalaay_deductions', function ($join) {
                 $join->on('ref_participants.id', '=', 'higalaay_deductions.participant_id')
                     ->where('higalaay_deductions.category', $this->type);

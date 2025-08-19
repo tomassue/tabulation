@@ -15,7 +15,11 @@ if (! function_exists('convert_image')) {
 if (! function_exists('bong_format')) {
     function bong_format($value): String
     {
-        return number_format($value, 2);
+        $number = number_format($value, 2);
+        if (fmod($value, 1) == 0) {
+            return number_format($value);
+        }
+        return  $number;
     }
 }
 if (! function_exists('bong_ordinal')) {
