@@ -93,8 +93,8 @@ class RefParticipant extends Model
     }
     public function averageHigalaay($category, $criteria =  null)
     {
-        $deduction =  $this->higalaayDeduction ? $this->higalaayDeduction->where('category', $category)->first()?->deduction : 0;
-        $relation = $this->hasOne(Higalaay::class, 'participant_id', 'id');
+        $deduction =  $this->higalaayDeduction($category) ? $this->higalaayDeduction($category)->deduction : 0;
+        $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id');
         if ($criteria) {
             $relation->where('criteria_id', $criteria->id);
         }
@@ -117,8 +117,8 @@ class RefParticipant extends Model
         }
         return $relation->where('category', $category)->where('judge_id', $judge_id)->sum('score');
     }
-    public function higalaayDeduction()
+    public function higalaayDeduction($category)
     {
-        return $this->hasOne(HigalaayDeduction::class, 'participant_id', 'id');
+        return $this->hasOne(HigalaayDeduction::class, 'participant_id', 'id')->where('category', $category)->first();
     }
 }

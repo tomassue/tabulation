@@ -229,11 +229,7 @@ class Higalaay extends Component
             $deduction = new HigalaayDeduction();
             $deduction->participant_id =  $this->deductionSelected;
         }
-
-        if ($this->totalDeductions != null) {
-            $deduction->deduction = $this->totalDeductions;
-        }
-
+        $deduction->deduction = $this->totalDeductions ? $this->totalDeductions : 0;
         $deduction->deduction_details = $this->refDeductions;
         $deduction->category = $this->type;
         $deduction->remarks = $this->remarks;
