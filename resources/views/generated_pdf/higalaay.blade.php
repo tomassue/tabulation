@@ -193,21 +193,26 @@
                     @endforeach
                 </table>
             </div>
-            <table class="table" style="padding-top: 200px;">
+            <table class="table" style="padding-top: 100px;">
                 <tr>
                     @foreach ($judges as $judge)
                         <td style="text-align: right; vertical-align: top;">
-                            <label for="">JUDGE:</label>&nbsp;
+                            &nbsp;
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center;height: 120px;width: 300px">
                             <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
                             <div class="text-center p-2" style="border-top: 1px solid black;">
-                                Signature over printed name
+                                <i>Signature over printed name</i>
                             </div>
+                            <span>JUDGE</span>
                         </td>
                         <td width="20px;">
                             &nbsp;
                         </td>
+                        @if ($loop->iteration % 3 == 0)
+                </tr>
+                <tr>
+                    @endif
                     @endforeach
                 </tr>
             </table>
