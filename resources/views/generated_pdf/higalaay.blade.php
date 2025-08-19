@@ -6,10 +6,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Score Report</title>
     <style>
-        @page {
-            margin-bottom: 60px;
-        }
-
         * {
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -146,7 +142,7 @@
                     <thead>
                         <tr>
                             <th class="text-center p-2 bold" style="font-size:10pt;width: 5%;">RANK</th>
-                            <th class="text-center  p-2 bold" style="font-size:10pt;">CONTESTANT</th>
+                            <th class="text-center  p-2 bold" style="font-size:10pt;width: 20%;">CONTESTANT</th>
                             <th class="text-center p-2 bold" style="font-size:10pt;width: 10%;">NUMBER</th>
                             @foreach ($judges as $judge)
                                 <th class="text-center  p-2 bold" style="font-size:10pt;width: 10%;">

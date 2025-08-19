@@ -119,7 +119,7 @@
                                                                     oninput="
                                                                     const max = {{ $criteria->perfect_score }};
                                                                     const value = parseFloat(this.value) || 0;
-                                                                    const correctedValue = value > max ? max : value;
+                                                                    const correctedValue = value > max || value < 0 ? max : value;
                                                                     
                                                                     if (value !== correctedValue) {
                                                                         this.value = correctedValue;
@@ -179,10 +179,9 @@
                         <label for="participant" class="form-label">Participant</label>
                         <input type="text" readonly class="form-control-plaintext fs-3" id="participant" value="{{ $deductionModel?->participant?->participant }}">
                     </div>
-                    <div class="mb-3 card">
-
-                        <div class="card-body">
-                            @isset($refDeductions)
+                    @if ($refDeductions && count($refDeductions) > 0)
+                        <div class="mb-3 card">
+                            <div class="card-body">
                                 <div class="row p-3">
                                     <div class="col-md-8">
                                         @foreach ($refDeductions as $index => $item)
@@ -195,16 +194,15 @@
                                     <div class="col-md-4 text-center">
                                         <span>DEDUCTION</span>
                                         @if ($totalDeductions == 0)
-                                            <h1 class="text-success">{{ $oldDeductions ?? 0 }}</h1>
+                                            <h1 class="text-success">{{ $totalDeductions }}</h1>
                                         @else
                                             <h1 class="text-danger">-{{ $totalDeductions }}</h1>
                                         @endif
-
                                     </div>
                                 </div>
-                            @endisset
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="mb-3">
                         <label for="participant" class="form-label">Duration in minutes</label>
                         <input type="text" wire:model.live="duration" class="form-control @error('duration') is-invalid @enderror" id="participant">
