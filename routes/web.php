@@ -34,6 +34,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/oral', [OralController::class, 'index'])->name('oral');
     Route::get('/poster', [PosterController::class, 'index'])->name('poster');
 
+    Route::view('/report-generator', 'reports.report-generator')->name('report-generator');
+
     /* -------------------------------- Reference ------------------------------- */
     //CRITERIA
     Route::get('/reference/criteria', [CriteriaController::class, 'index'])->name('reference.criteria');

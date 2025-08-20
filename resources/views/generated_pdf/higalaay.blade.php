@@ -141,18 +141,20 @@
                 <table class="table bordered" style="padding-top: 20px;">
                     <thead>
                         <tr>
-                            <th class="text-center p-2 bold" style="font-size:10pt;width: 5%;">RANK</th>
+                            <th class="text-center p-2 bold" style="font-size:10pt;width: 10%;">SEQUENCE NUMBER</th>
                             <th class="text-center  p-2 bold" style="font-size:10pt;width: 20%;">CONTESTANT</th>
-                            <th class="text-center p-2 bold" style="font-size:10pt;width: 10%;">NUMBER</th>
+                            <th class="text-center p-2 bold" style="font-size:10pt;width: 5%;">RANK</th>
                             @foreach ($judges as $judge)
                                 <th class="text-center  p-2 bold" style="font-size:10pt;width: 10%;">
                                     {{ $judge->judge }}
                                 </th>
                             @endforeach
                             @if (auth()->user()->role == 'admin')
-                                <th class="text-center  p-2 bold"style="font-size:10pt;width: 10%;">DEDUCTION</th>
-                                <th class="text-center  p-2 bold"style="font-size:10pt;width: 10%;">TIME</th>
-                                <th class="text-center  p-2 bold"style="font-size:10pt;">REMARKS</th>
+                                @if (!$criteria)
+                                    <th class="text-center  p-2 bold"style="font-size:10pt;width: 10%;">DEDUCTION</th>
+                                    <th class="text-center  p-2 bold"style="font-size:10pt;width: 10%;">TIME</th>
+                                    <th class="text-center  p-2 bold"style="font-size:10pt;">REMARKS</th>
+                                @endif
                                 <th class="text-center  p-2 bold"style="font-size:10pt;width: 10%;">TOTAL</th>
                             @endif
                         </tr>
@@ -168,42 +170,49 @@
                                     $class = 'rest';
                                 @endphp
                             @endif
+                            <td class="text-center  {{ $class }}" style="padding:5px;">{{ $item->participant_no }}</td>
+                            <td class="text-start  {{ $class }}" style="padding:5px;min-height: 40px;height: 40px;font-weight: bold;">{{ $item->participant }}</td>
                             <td class="text-center {{ $class }}">
                                 <span>{{ bong_ordinal($item->current_rank) }}</span>
                             </td>
-                            <td class="text-start  {{ $class }}" style="padding:5px;min-height: 40px;height: 40px;font-weight: bold;">{{ $item->participant }}</td>
-                            <td class="text-center  {{ $class }}" style="padding:5px;">{{ $item->participant_no }}</td>
                             @foreach ($judges as $judge)
-                                <td class="text-center  {{ $class }}" style="padding:5px;">{{ $item->getHigalaayScoreByJudge($judge->id, $category, $criteria) }}</td>
+                                <td class="text-center  {{ $class }}" style="padding:5px;">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category, $criteria)) }}</td>
                             @endforeach
                             @if (auth()->user()->role == 'admin')
-                                @php
-                                    $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category)->first();
-                                @endphp
-                                <td class="text-center {{ $class }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
-                                <td class="text-center {{ $class }}">{{ $deducted?->duration ?? '-' }}</td>
-                                <td class="text-start {{ $class }}" style="padding:5px;">{{ $deducted?->remarks }}</td>
+                                @if (!$criteria)
+                                    @php
+                                        $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category)->first();
+                                    @endphp
+                                    <td class="text-center {{ $class }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                                    <td class="text-center {{ $class }}">{{ $deducted?->duration ?? '-' }}</td>
+                                    <td class="text-start {{ $class }}" style="padding:5px;">{{ $deducted?->remarks }}</td>
+                                @endif
                                 <td class="text-center {{ $class }}">{{ bong_format($item->averageHigalaay($category, $criteria)) }}</td>
                             @endif
                         </tr>
                     @endforeach
                 </table>
             </div>
-            <table class="table" style="padding-top: 200px;">
+            <table class="table" style="padding-top: 100px;">
                 <tr>
                     @foreach ($judges as $judge)
                         <td style="text-align: right; vertical-align: top;">
-                            <label for="">JUDGE:</label>&nbsp;
+                            &nbsp;
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center;height: 120px;width: 300px">
                             <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
                             <div class="text-center p-2" style="border-top: 1px solid black;">
-                                Signature over printed name
+                                <i>Signature over printed name</i>
                             </div>
+                            <span>JUDGE</span>
                         </td>
                         <td width="20px;">
                             &nbsp;
                         </td>
+                        @if ($loop->iteration % 3 == 0)
+                </tr>
+                <tr>
+                    @endif
                     @endforeach
                 </tr>
             </table>

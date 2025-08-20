@@ -97,6 +97,7 @@ class RefParticipant extends Model
         $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id');
         if ($criteria) {
             $relation->where('criteria_id', $criteria->id);
+            $deduction = 0;
         }
         if (Auth::user()->role == 'admin') {
             $judges = RefJudge::category($category)->count();
