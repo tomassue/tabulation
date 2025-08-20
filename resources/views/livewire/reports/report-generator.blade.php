@@ -16,7 +16,7 @@
                                 <!-- Initial participant row -->
                                 <div class="row mb-3 participant-row g-2">
                                     <div class="col-sm-12 row g-2">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <label for="" class="form-label">Report</label>
                                             <select class="form-select" wire:model="reportType" required>
                                                 <option value="">-- Select report --</option>
@@ -27,7 +27,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <label for="" class="form-label">Category</label>
                                             <select class="form-select" wire:model="selectedCategory" required>
                                                 <option value="">-- Select category --</option>
@@ -39,18 +39,17 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <label for="" class="form-label">Type</label>
                                             <select class="form-select" wire:model="selectedType" required>
                                                 <option value="">ALL</option>
                                                 <option value="1">Champion Only</option>
                                                 <option value="2">To 1st Runner Up</option>
                                                 <option value="3">To 2nd Runner Up</option>
+                                                @for ($i = 4; $i < 10; $i++)
+                                                    <option value="{{ $i }}">{{ bong_ordinal($i - 1) }}</option>
+                                                @endfor
                                             </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label for="" class="form-label">Runner-Ups</label>
-                                            <input type="number" class="form-control" wire:model="runnerups" placeholder="Name" required>
                                         </div>
                                     </div>
                                 </div>
