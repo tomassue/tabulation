@@ -186,9 +186,40 @@
                         @break
                     @endif
                     @if ($loop->iteration == 3)
+                        @if ($category->category == 'band')
+                            @php
+                                $service = new App\Services\ReportService('majorette');
+                                $majorette = $service->generateTopParticipants()->first();
+                                $service1 = new App\Services\ReportService('major');
+                                $major = $service1->generateTopParticipants()->first();
+                                $service2 = new App\Services\ReportService('costume');
+                                $costume = $service2->generateTopParticipants()->first();
+                            @endphp
+                            <tr>
+                                <td colspan="3" style="text-align: center;padding-top: 10px;padding-bottom: 10px;">
+                                    <span style="color: orange; font-weight: bold;">SPECIAL AWARDS</span>
+                                    <div style="border-style: dotted;border-width: 1px;border-color: black;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best Band Majorette</td>
+                                <td style="color: rgb(38, 38, 224);">{{ $majorette?->participant }}</td>
+                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($majorette?->averageHigalaay('majorette')) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best Band Major</td>
+                                <td style="color: rgb(38, 38, 224);">{{ $major?->participant }}</td>
+                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($major?->averageHigalaay('major')) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best in Costume</td>
+                                <td style="color: rgb(38, 38, 224);">{{ $costume?->participant }}</td>
+                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($costume?->averageHigalaay('costume')) }}</td>
+                            </tr>
+                        @endif
                         <tr>
-                            <td colspan="3" style="text-align: center;padding-top: 10px;">
-                                <span style="color:red;">RUNNER-UPS</span>
+                            <td colspan="3" style="text-align: center;padding-top: 10px;padding-bottom: 10px;">
+                                <span style="color:red; font-weight: bold;">RUNNER-UPS</span>
                                 <div style="border-style: dotted;border-width: 1px;border-color: black;"></div>
                             </td>
                         </tr>
