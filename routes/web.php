@@ -89,6 +89,11 @@ Route::get('/display_poster_output/{id}', [App\Http\Controllers\DisplayPosterCon
 //LED WALL DISPLAY
 Route::view('/display_led', 'led_display.dynamic_led')->name('display_led');
 
+//HIGALAAY STREET DANCING DISPLAY
+Route::get('/display_street', [App\Http\Controllers\StreetDancingLedController::class, 'index'])->name('display_street');
+
+
+
 /* ----------------------------- Livewire Route ----------------------------- */
 
 Livewire::setScriptRoute(function ($handle) {
