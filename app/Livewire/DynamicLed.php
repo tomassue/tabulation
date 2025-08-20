@@ -13,6 +13,7 @@ class DynamicLed extends Component
     public function render()
     {
         $led = LedManagement::first();
+        if (!$led) return abort(404);
         $participants = [];
         $position = null;
         $participantsRaw = RefParticipant::groupBy('ref_participants.id')->category($led->category)->limit(3);
@@ -48,7 +49,7 @@ class DynamicLed extends Component
                 ->groupBy([
                     'ref_participants.id',
                     'ref_participants.participant_no',
-                    'ref_participants.participant', 
+                    'ref_participants.participant',
                     'deduction'
                 ])
                 ->select(
