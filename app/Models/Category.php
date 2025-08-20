@@ -15,6 +15,7 @@ class Category extends Model
         'category',
         'description',
         'winners',
+        'display_participant',
         'is_active',
         'icon'
     ];
