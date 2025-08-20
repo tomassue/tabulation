@@ -175,7 +175,7 @@
                                 <span style="text-transform: uppercase;">{{ $category->description }}</span>
                             @else
                                 <span>
-                                    {{ bong_ordinal_new($item->current_rank) }}
+                                    {{ bong_ordinal_new($item->current_rank) }} {{ $item->current_rank }}
                                 </span>
                             @endif
 
@@ -186,9 +186,6 @@
                         <td class="{{ $class }}" style="text-align: right;{{ $style }}">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
                     </tr>
                     @if ($type == $item->current_rank)
-                        @break
-                    @endif
-                    @if ($runnerups + 3 == $loop->iteration)
                         @break
                     @endif
                     @if ($item->current_rank == 3)
