@@ -153,7 +153,7 @@
             </tr>
         </table>
         <div style="text-align: center;padding-top:50px;">
-            <h1 style="text-transform: uppercase">{{ $category->description }} WINNERS</h1>
+            <h2 style="text-transform: uppercase">{{ $category->description }} WINNERS</h2>
         </div>
         <table class="table">
             <tbody>
@@ -179,13 +179,13 @@
                         <td class="{{ $class }}">{{ $item->participant }}</td>
                         <td class="{{ $class }}" style="text-align: right;">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
                     </tr>
-                    @if ($type == $loop->iteration)
+                    @if ($type == $item->current_rank)
                         @break
                     @endif
                     @if ($runnerups + 3 == $loop->iteration)
                         @break
                     @endif
-                    @if ($loop->iteration == 3)
+                    @if ($item->current_rank == 3)
                         @if ($category->category == 'band')
                             @php
                                 $service = new App\Services\ReportService('majorette');
