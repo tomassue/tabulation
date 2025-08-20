@@ -6,7 +6,7 @@
     @elseif ($led->category == 'oral')
         @include('led_display.oral')
     @else
-        @include('led_display.higalaay')
+        @include('led_display.streetDancing')
     @endif
     {{-- <script>
         const refreshInterval = 2000;

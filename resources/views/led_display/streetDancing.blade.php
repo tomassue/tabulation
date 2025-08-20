@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Street Dancing</title>
     <style>
         body {
@@ -82,8 +81,7 @@
 
     <div class="wrapper">
         @for ($i = 0; $i < 150; $i++)
-            <div class="confetti"
-                style="
+            <div class="confetti" style="
                 left: {{ rand(0, 100) }}%;
                 width: {{ rand(10, 16) }}px; 
                 height: {{ rand(4, 8) }}px;   
@@ -109,8 +107,44 @@
             </div>
 
             <div class="row mt-5">
-                <div class="d-flex justify-content-center align-items-center gap-3">
-                    <img src="{{ asset('img/congrats.png') }}" alt="Grand" class="img-fluid">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <div class="container">
+                        @php
+                            $image = ['img/1st.png', 'img/2nd.png', 'img/3rd.png'];
+                            $color = ['#ebba64', '#aaaaaa', '#5d412d'];
+                            $font = ['70px', '60px', '50px'];
+                        @endphp
+                        @if (isset($position) && $position && $position != null)
+                            @php
+                                $position = $position - 1;
+                                $image = [$image[$position]];
+                                $font = [$font[$position]];
+                                $color = [$color[$position]];
+                            @endphp
+                        @endif
+                        <div style="height: 100%;">
+                            @foreach ($participants as $index => $item)
+                                <div class="row mb-3 justify-content-center align-items-center bg-white rounded" style="min-height: 200px;">
+                                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                        <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
+                                    </div>
+                                    <div class="col-md-10 d-flex align-items-center">
+                                        <div class="col-md-2 fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
+                                            #{{ $item->participant_no }}
+                                        </div>
+                                        <div class="col-md-7 fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
+                                            <div style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{ $font[$index] }};">
+                                                <i>{{ $item->participant }}</i>
+                                            </div>
+                                        </div>
+                                        <div class="col fw-bold" style="font-size: {{ $font[$index] }}; color:{{ $color[$index] }};">
+                                            {{ bong_format($item->averageHigalaay($led?->category)) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
