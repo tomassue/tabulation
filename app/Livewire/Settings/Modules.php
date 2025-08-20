@@ -18,6 +18,7 @@ class Modules extends Component
     public $category_id;
     public $category,
         $description,
+        $display_participant,
         $is_active,
         $winners;
 
@@ -28,6 +29,7 @@ class Modules extends Component
             'description' => 'required',
             'winners' => 'required',
             'is_active' => 'required',
+            'display_participant' => 'required',
         ];
     }
 
@@ -81,6 +83,7 @@ class Modules extends Component
                     'winners' => $this->winners,
                     'is_active' => $this->is_active,
                     'winners' => $this->winners,
+                    'display_participant' => $this->display_participant,
                     'icon' => '<i class="bi bi-box-seam"></i>'
                 ]
             );
@@ -98,6 +101,7 @@ class Modules extends Component
         $this->winners = Category::find($id)->winners;
         $this->is_active = Category::find($id)->is_active;
         $this->winners = Category::find($id)->winners;
+        $this->display_participant = Category::find($id)->display_participant;
 
         $this->dispatch('openModal');
     }

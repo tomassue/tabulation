@@ -42,7 +42,8 @@ class Higalaay extends Component
         }
 
         $jud  = RefJudge::category($this->type)->get();
-        $categoryName = Category::where('category', $this->type)->pluck('description')->first();
+        $categoryName = Category::where('category', $this->type)->select('description', 'display_participant')->first();
+
         $this->calculateTotals();
         return view('livewire.higalaay', compact('jud', 'judges', 'participants', 'criterias', 'categoryName'));
     }
