@@ -176,7 +176,7 @@
                                 <span>{{ bong_ordinal($item->current_rank) }}</span>
                             </td>
                             @foreach ($judges as $judge)
-                                <td class="text-center  {{ $class }}" style="padding:5px;">{{ $item->getHigalaayScoreByJudge($judge->id, $category, $criteria) }}</td>
+                                <td class="text-center  {{ $class }}" style="padding:5px;">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category, $criteria)) }}</td>
                             @endforeach
                             @if (auth()->user()->role == 'admin')
                                 @if (!$criteria)

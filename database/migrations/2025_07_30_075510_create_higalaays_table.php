@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('higalaays', function (Blueprint $table) {
             $table->id();
             $table->integer("participant_id")->nullable();
-            $table->integer("score")->nullable();
+            $table->float("score")->nullable();
             $table->string('category')->nullable();
             $table->integer("criteria_id")->nullable();
             $table->integer("judge_id")->nullable();
