@@ -161,23 +161,29 @@
                     @if ($item->current_rank <= $category->winners)
                         @php
                             $class = 'top3';
+                            $style = 'font-size: ' . (18 - $item->current_rank) . 'pt;';
                         @endphp
                     @else
                         @php
+                            $style = '';
                             $class = 'rest';
                         @endphp
                     @endif
                     <tr>
-                        <td class="{{ $class }}" style="text-align: center;">
+                        <td class="{{ $class }}" style="text-align: center; {{ $style }}">
                             @if ($reportType == 2)
                                 <span style="text-transform: uppercase;">{{ $category->description }}</span>
                             @else
-                                <span></span>{{ bong_ordinal_new($item->current_rank) }}
+                                <span>
+                                    {{ bong_ordinal_new($item->current_rank) }}
+                                </span>
                             @endif
 
                         </td>
-                        <td class="{{ $class }}">{{ $item->participant }}</td>
-                        <td class="{{ $class }}" style="text-align: right;">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
+                        <td class="{{ $class }}" style="{{ $style }}">
+                            {{ $item->participant }}
+                        </td>
+                        <td class="{{ $class }}" style="text-align: right;{{ $style }}">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
                     </tr>
                     @if ($type == $item->current_rank)
                         @break

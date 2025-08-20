@@ -42,7 +42,7 @@ if (! function_exists('bong_ordinal_new')) {
         } else if ($number == 3) {
             return "2ND RUNNER UP";
         }
-
+        $number -= 1;
         $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
         if ((($number % 100) >= 11) && (($number % 100) <= 13))
             return $number . 'th';
