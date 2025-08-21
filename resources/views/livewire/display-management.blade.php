@@ -4,6 +4,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Display Configuration</h5>
+                    <a href="{{ route('display_led') }}" target="_blank" class="btn btn-sm btn-light">LED Display&nbsp;<i class="bi bi-box-arrow-in-up-right"></i></a>
                 </div>
                 <div class="card-body table-responsive">
                     <table class="table table-bordered table-striped align-middle text-center mt-4">
