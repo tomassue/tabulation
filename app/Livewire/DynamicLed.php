@@ -45,47 +45,41 @@ class DynamicLed extends Component
                 ->select('ref_participants.*',  DB::raw('SUM(posters.score) / 3 as total_score'))
                 ->orderBy('total_score', 'DESC');
         } else {
-            $judges = RefJudge::category($led->category)->get();
-            $participantsRaw =  $participantsRaw->leftJoin('higalaays', function ($join) use ($led) {
-                $join->on('ref_participants.id', '=', 'higalaays.participant_id')
-                    ->where('higalaays.category', $led->category);
-            })
-                ->leftJoin('higalaay_deductions', function ($join) use ($led) {
-                    $join->on('ref_participants.id', '=', 'higalaay_deductions.participant_id')
-                        ->where('higalaay_deductions.category', $led->type);
-                })
-                ->groupBy([
-                    'ref_participants.id',
-                    'ref_participants.participant_no',
-                    'ref_participants.participant',
-                    'deduction'
-                ])
-                ->select(
-                    'ref_participants.*',
-                    DB::raw('SUM(higalaays.score) as total_score'),
-                    DB::raw('COALESCE(higalaay_deductions.deduction, 0) as deduction'),
-                    DB::raw('(SUM(higalaays.score) / ' . count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) as final_score'),
-                    DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' .  count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank')
-                )
-                ->orderBy('final_score', 'DESC');
+            $service = new ReportService($led->category);
+            $participantsraw = $service->generateTopParticipants();
         }
 
 
         // Check which position to show with priority order
+        $top = [];
+        $winners = '';
         if ($led->show_third) {
-            $participants = $participantsRaw->skip(2)->take(1)->get();
+            $participants = $participantsraw->where('current_rank',  3);
             $position = 3;
         } elseif ($led->show_second) {
-            $participants = $participantsRaw->skip(1)->take(1)->get();
+            $participants = $participantsraw->where('current_rank',  2);
             $position = 2;
         } elseif ($led->show_first) {
-            $participants = $participantsRaw->take(1)->get();
+            $participants = $participantsraw->where('current_rank',  1);
             $position = 1;
-        } elseif ($led->show_all) {
-            $participants = $participantsRaw->get();
         } else {
             $participants = [];
         }
-        return view('livewire.dynamic-led', compact('led', 'participants', 'position'));
+
+        if ($led->show_all) {
+            foreach ($participantsraw as $participant) {
+                if ($participant->current_rank == 4) {
+                    break;
+                }
+                $top[] = $participant->participant . ' - ' . bong_ordinal_new($participant->current_rank);
+            }
+            $winners = implode(' <br/> ', $top);
+        } else {
+            foreach ($participants as $participant) {
+                $top[] = $participant->participant;
+            }
+            $winners = implode(' & ', $top);
+        }
+        return view('livewire.dynamic-led', compact('led', 'winners', 'position'));
     }
 }

@@ -50,3 +50,18 @@ if (! function_exists('bong_ordinal_new')) {
             return $number . $ends[$number % 10];
     }
 }
+if (! function_exists('bong_font_changer')) {
+    function bong_font_changer($participants): String
+    {
+        if (strlen($participants) <= 16) {
+            $font = '11rem';
+        } elseif (strlen($participants) > 16 && strlen($participants) <= 30) {
+            $font = '8rem';
+        } elseif (strlen($participants) > 30 && strlen($participants) <= 40) {
+            $font = '6rem';
+        } else {
+            $font = '4rem';
+        }
+        return $font;
+    }
+}
