@@ -45,8 +45,8 @@
 
 <body>
     @auth
-    @include('layouts.header')
-    @include('layouts.sidebar')
+        @include('layouts.header')
+        @include('layouts.sidebar')
     @endauth
 
     <!-- Animated Particles Background -->

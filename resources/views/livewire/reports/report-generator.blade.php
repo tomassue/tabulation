@@ -16,7 +16,7 @@
                                 <!-- Initial participant row -->
                                 <div class="row mb-3 participant-row g-2">
                                     <div class="col-sm-12 row g-2">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label for="" class="form-label">Report</label>
                                             <select class="form-select" wire:model="reportType" required>
                                                 <option value="">-- Select report --</option>
@@ -27,7 +27,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label for="" class="form-label">Category</label>
                                             <select class="form-select" wire:model="selectedCategory" required>
                                                 <option value="">-- Select category --</option>
@@ -39,7 +39,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label for="" class="form-label">Type</label>
                                             <select class="form-select" wire:model="selectedType" required>
                                                 <option value="">ALL</option>
@@ -50,6 +50,10 @@
                                                     <option value="{{ $i }}">{{ bong_ordinal($i - 1) }}</option>
                                                 @endfor
                                             </select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="runnerups" class="form-label">Winners up to?</label>
+                                            <input type="number" class="form-control" wire:model="runnerups" id="runnerups" placeholder="Enter custom count">
                                         </div>
                                     </div>
                                 </div>
