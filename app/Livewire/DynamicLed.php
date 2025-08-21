@@ -5,8 +5,10 @@ namespace App\Livewire;
 use App\Models\LedManagement;
 use App\Models\RefJudge;
 use App\Models\RefParticipant;
+use App\Services\ReportService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 class DynamicLed extends Component
 {
@@ -44,8 +46,14 @@ class DynamicLed extends Component
                 ->orderBy('total_score', 'DESC');
         } else {
             $judges = RefJudge::category($led->category)->get();
-            $participantsRaw =  $participantsRaw->leftjoin('higalaays', 'ref_participants.id', '=', 'higalaays.participant_id')
-                ->leftjoin('higalaay_deductions', 'ref_participants.id', '=', 'higalaay_deductions.participant_id')
+            $participantsRaw =  $participantsRaw->leftJoin('higalaays', function ($join) use ($led) {
+                $join->on('ref_participants.id', '=', 'higalaays.participant_id')
+                    ->where('higalaays.category', $led->category);
+            })
+                ->leftJoin('higalaay_deductions', function ($join) use ($led) {
+                    $join->on('ref_participants.id', '=', 'higalaay_deductions.participant_id')
+                        ->where('higalaay_deductions.category', $led->type);
+                })
                 ->groupBy([
                     'ref_participants.id',
                     'ref_participants.participant_no',
@@ -56,7 +64,8 @@ class DynamicLed extends Component
                     'ref_participants.*',
                     DB::raw('SUM(higalaays.score) as total_score'),
                     DB::raw('COALESCE(higalaay_deductions.deduction, 0) as deduction'),
-                    DB::raw('(SUM(higalaays.score) / ' . count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) as final_score')
+                    DB::raw('(SUM(higalaays.score) / ' . count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) as final_score'),
+                    DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' .  count($judges) . ' - COALESCE(higalaay_deductions.deduction, 0)) DESC) as current_rank')
                 )
                 ->orderBy('final_score', 'DESC');
         }
@@ -74,6 +83,8 @@ class DynamicLed extends Component
             $position = 1;
         } elseif ($led->show_all) {
             $participants = $participantsRaw->get();
+        } else {
+            $participants = [];
         }
         return view('livewire.dynamic-led', compact('led', 'participants', 'position'));
     }

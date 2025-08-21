@@ -5,7 +5,7 @@
                 <div class="card" wire:loading.class="opacity-50 pe-none">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h5 class="text-uppercase">{{ $categoryName }} SCORE TABLE</h5>
+                            <h5 class="text-uppercase">{{ $categoryName?->description }} SCORE TABLE</h5>
                             <div>
                                 <div class="input-group">
                                     <select name="criteria_id" wire:model.live="criteria_id" class="form-select" id="criteria_id">
@@ -86,8 +86,10 @@
                                             <th data-content="#">{{ $loop->iteration }}</th>
                                             <th data-content="Participant">
                                                 <div class="row">
-                                                    <h5 class="col-12 fs-6">Participant #{{ $participant->participant_no }}</h5>
-                                                    <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
+                                                    <h3 class="col-12 fs-6 fw-bold">Participant #{{ $participant->participant_no }}</h3>
+                                                    @if ($categoryName?->display_participant || auth()->user()->role == 'admin')
+                                                        <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
+                                                    @endif
                                                     @if (auth()->user()->role == 'admin')
                                                         <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                         @php
