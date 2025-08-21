@@ -175,7 +175,7 @@
                                 <span style="text-transform: uppercase;">{{ $category->description }}</span>
                             @else
                                 <span>
-                                    {{ bong_ordinal_new($item->current_rank) }} {{ $item->current_rank }}
+                                    {{ bong_ordinal_new($item->current_rank) }}
                                 </span>
                             @endif
 
