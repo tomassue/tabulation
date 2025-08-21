@@ -6,6 +6,7 @@ use App\Models\LedManagement;
 use App\Models\RefJudge;
 use App\Models\RefParticipant;
 use App\Services\ReportService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use SebastianBergmann\CodeCoverage\Report\Xml\Report;
@@ -14,6 +15,8 @@ class DynamicLed extends Component
 {
     public function render()
     {
+        if (Auth::guest()) return abort(404);
+
         $led = LedManagement::first();
         if (!$led) return abort(404);
         $participants = [];
