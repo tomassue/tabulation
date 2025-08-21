@@ -51,7 +51,8 @@ class DisplayManagement extends Component
         LedManagement::where('category', $this->category)->update([
             'show_first' => !$this->show_first,
             'show_third' => 0,
-            'show_second' => 0
+            'show_second' => 0,
+            'show_all' => 0
         ]);
     }
     public function changeSecond()
@@ -59,7 +60,8 @@ class DisplayManagement extends Component
         LedManagement::where('category', $this->category)->update([
             'show_second' => !$this->show_second,
             'show_third' => 0,
-            'show_first' => 0
+            'show_first' => 0,
+            'show_all' => 0
         ]);
     }
     public function changeThird()
@@ -67,7 +69,8 @@ class DisplayManagement extends Component
         LedManagement::where('category', $this->category)->update([
             'show_third' =>  !$this->show_third,
             'show_second' => 0,
-            'show_first' => 0
+            'show_first' => 0,
+            'show_all' => 0
         ]);
     }
     public function changeAll()

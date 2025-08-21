@@ -188,6 +188,9 @@
                     @if ($type == $item->current_rank)
                         @break
                     @endif
+                    @if ($runnerups == $loop->iteration)
+                        @break
+                    @endif
                     @if ($item->current_rank == 3)
                         @if ($category->category == 'band')
                             @php

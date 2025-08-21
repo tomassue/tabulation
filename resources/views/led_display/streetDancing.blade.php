@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <title>Street Dancing</title>
     <style>
@@ -110,12 +109,11 @@
     <!-- Top Right -->
     <img src="{{ asset('img/confettir.png') }}" class="corner-img position-fixed" style="top: 10px; right: 10px;"> --}}
 
-    @if ($participants && $participants->count() > 0)
+    @if ($winners && $winners != '')
 
         <div class="wrapper">
             @for ($i = 0; $i < 150; $i++)
-                <div class="confetti"
-                    style="
+                <div class="confetti" style="
                 left: {{ rand(0, 100) }}%;
                 width: {{ rand(10, 16) }}px; 
                 height: {{ rand(4, 8) }}px;   
@@ -135,76 +133,43 @@
         <div class="content">
             @php
                 $image = ['img/grandchamp.png', 'img/1runner-up.png', 'img/2runner-up.png'];
-
             @endphp
-            @if (isset($position) && $position && $position != null)
-                @php
-                    $position = $position - 1;
-                    $image = [$image[$position]];
-
-                @endphp
-            @endif
-
-
             <div class="row">
                 <div class="d-flex justify-content-center align-items-center gap-3">
                     <img src="{{ asset('img/cdo-seal.png') }}" alt="CDO Seal" class="img-fluid logo">
                     <img src="{{ asset('img/logo1.png') }}" alt="Logo 1" class="img-fluid logo">
-                    <img src="{{ asset('img/higalaay2025.gif') }}" alt="Higalaay 2025"
-                        class="img-fluid logo higalaay-logo">
+                    <img src="{{ asset('img/higalaay2025.gif') }}" alt="Higalaay 2025" class="img-fluid logo higalaay-logo">
                     <img src="{{ asset('img/risedako.png') }}" alt="Rise Big" class="img-fluid logo rise-logo">
                 </div>
             </div>
-            {{-- <div class="row mt-2">
-                <div class="d-flex justify-content-center align-items-center gap-3">
-                    <img src="{{ asset('img/congrats.png') }}" alt="CDO Seal" class="img-fluid logo"
-                        style="height: 90px; width: auto;">
-                </div>
-            </div> --}}
-
-
-
             <div class="row mt-3">
                 <div class="card-body d-flex align-items-center justify-content-center">
                     <div class="container-fluid">
 
                         <div style="height: 100%;">
-                            @foreach ($participants as $index => $item)
-                                <div class="row mt-2">
+                            <div class="row mt-2">
+                                @if (isset($position) && $position && $position != null)
                                     <div class="d-flex justify-content-center align-items-center gap-3">
-                                        <img src="{{ $image[$index] }}" alt="CDO Seal" class="img-fluid logo"
-                                            style="height: 130px; width: auto;">
+                                        <img src="{{ $image[$position - 1] }}" alt="CDO Seal" class="img-fluid logo" style="height: 130px; width: auto;">
+                                    </div>
+                                @endif
+
+                            </div>
+                            <div class="row mb-3 justify-content-center">
+                                <div class="col-md-10 d-flex flex-column justify-content-center align-items-center rounded" style="min-height: 200px; text-align: center;">
+                                    <div class="fw-bold" style="font-size: {{ bong_font_changer($winners) }}; color: #033A62;  font-family: 'Anton'; text-shadow: 8px 8px #c4c1c1;">
+                                        {!! $winners !!}
                                     </div>
                                 </div>
-                                <div class="row mb-3 justify-content-center">
-                                    <div class="col-md-10 d-flex flex-column justify-content-center align-items-center rounded"
-                                        style="min-height: 200px; text-align: center;">
-
-                                        <div class="fw-bold"
-                                            style="font-size: 11rem; color: #033A62; line-height:240px; font-family: 'Anton'; text-shadow: 8px 8px #c4c1c1;">
-                                            {{ $item->participant }}
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            @endforeach
+                            </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
-
             <img src="{{ asset('img/footer-left.png') }}" alt="CDO Seal" class="img-fluid footer-logo footer-left">
-
             <img src="{{ asset('img/footer-right.png') }}" alt="CDO Seal" class="img-fluid footer-logo footer-right">
-
         </div>
     </div>
-
-
 </body>
 
 </html>

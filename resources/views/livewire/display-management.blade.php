@@ -10,10 +10,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 25%">Category</th>
-                                <th>All</th>
-                                <th>First</th>
-                                <th>Second</th>
-                                <th>Third</th>
+                                <th style="width: 20%;">All</th>
+                                <th style="width: 20%;">Champion</th>
+                                <th style="width: 20%;">First Runner-up</th>
+                                <th style="width: 20%;">Second Runner-up</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,19 +28,19 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $led?->show_all ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{!! $led?->show_all ? '<span class="text-success">Shown</span>' : '<span class="text-danger">Hidden</span>' !!}</div>
                                     <button class="btn btn-outline-primary btn-sm" wire:click="changeAll">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $led?->show_first ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{!! $led?->show_first ? '<span class="text-success">Shown</span>' : '<span class="text-danger">Hidden</span>' !!}</div>
                                     <button class="btn btn-outline-success btn-sm" wire:click="changeFirst">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $led?->show_second ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{!! $led?->show_second ? '<span class="text-success">Shown</span>' : '<span class="text-danger">Hidden</span>' !!}</div>
                                     <button class="btn btn-outline-warning btn-sm" wire:click="changeSecond">Update</button>
                                 </td>
                                 <td>
-                                    <div class="mb-1">{{ $led?->show_third ? 'Shown' : 'Hidden' }}</div>
+                                    <div class="mb-1">{!! $led?->show_third ? '<span class="text-success">Shown</span>' : '<span class="text-danger">Hidden</span>' !!}</div>
                                     <button class="btn btn-outline-danger btn-sm" wire:click="changeThird">Update</button>
                                 </td>
                             </tr>
