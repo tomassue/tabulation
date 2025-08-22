@@ -86,12 +86,12 @@
                                             <th data-content="#">{{ $loop->iteration }}</th>
                                             <th data-content="Participant">
                                                 <div class="row">
-                                                    <h3 class="col-12 fs-6 fw-bold">Participant #{{ $participant->participant_no }}</h3>
+                                                    <h3 class="col-12 fs-6 fw-bold participant-no">Participant #{{ $participant->participant_no }}</h3>
                                                     @if ($categoryName?->display_participant || auth()->user()->role == 'admin')
                                                         <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
                                                     @endif
                                                     @if (auth()->user()->role == 'admin')
-                                                        <div class="col-12 text-success fw-bold">{{ bong_format($participant->averageHigalaay($type)) }}</div>
+                                                        <div class="col-12 text-success fw-bold total-score">{{ bong_format($participant->averageHigalaay($type)) }}</div>
                                                         @php
                                                             $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->where('category', $type)->first();
                                                         @endphp
@@ -103,20 +103,20 @@
                                                             </div>
                                                         </div>
                                                     @else
-                                                        <div class="col-12 text-success fw-bold">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</div>
+                                                        <div class="col-12 text-success fw-bold total-score">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</div>
                                                     @endif
                                                 </div>
                                             </th>
                                             @foreach ($judges as $judge)
-                                                <td data-content="{{ $judge->judge }}">
-                                                    <div class="row w-100">
+                                                <td data-content="{{ $judge->judge }}" class="participant-td">
+                                                    <div class="row w-100 score-div">
                                                         @foreach ($criterias as $criteria)
                                                             @php
                                                                 $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
                                                             @endphp
 
                                                             <div class="col-12 mb-2">
-                                                                <label for="" class="text-muted small">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
+                                                                <label for="" class="text-muted small criteria-label">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
                                                                 <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="your score..." min="0" max="{{ $criteria->perfect_score }}"
                                                                     oninput="
                                                                     const max = {{ $criteria->perfect_score }};
@@ -265,6 +265,29 @@
             -ms-appearance: none;
             appearance: none;
             margin: -10px;
+        }
+
+        @media only screen and (max-width: 1075px) {
+            .criteria-label {
+                font-size: 12pt;
+            }
+
+            .score-div {
+                margin-top: 25px;
+            }
+
+            .participant-td {
+                font-size: 12pt !important;
+            }
+
+            .participant-no {
+                font-size: 20pt !important;
+                color: green;
+            }
+
+            .total-score {
+                font-size: 20pt !important;
+            }
         }
     </style>
 </section>

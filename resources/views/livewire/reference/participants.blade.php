@@ -60,7 +60,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                                        <button class="btn btn-sm btn-primary" wire:click="editParticipant({{ $item->id }})">
+                                                        <button wire:key="edit-{{ $item->id }}" wire:loading.attr="disabled" wire:target="editParticipant({{ $item->id }})" class="btn btn-sm btn-primary" wire:click="editParticipant({{ $item->id }})">
                                                             <div wire:loading.remove wire:target="editParticipant({{ $item->id }})">
                                                                 <i class="bi bi-pencil-square"></i>
                                                             </div>
@@ -70,7 +70,7 @@
                                                                 </div>
                                                             </div>
                                                         </button>
-                                                        <button class="btn btn-sm btn-warning" wire:click="addPoster({{ $item->id }})" style="display: {{ $item->category == 'poster' ? '' : 'none' }};">
+                                                        <button class="btn btn-sm btn-warning" wire:loading.attr="disabled" wire:target="addPoster({{ $item->id }})" wire:click="addPoster({{ $item->id }})" style="display: {{ $item->category == 'poster' ? '' : 'none' }};">
                                                             <div wire:loading.remove wire:target="addPoster({{ $item->id }})">
                                                                 <i class="bi bi-upload"></i>
                                                             </div>
@@ -101,6 +101,9 @@
                                     </tbody>
                                 </table>
                                 <!-- End Table with hoverable rows -->
+                                <div>
+                                    {{ $participants->links() }}
+                                </div>
                             </div>
                         </div>
                     </div>

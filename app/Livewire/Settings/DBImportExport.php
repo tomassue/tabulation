@@ -147,4 +147,51 @@ class DBImportExport extends Component
             return session()->flash('error', 'Server error:' . $response->json()['message']);
         }
     }
+    public function downloadDatabase()
+    {
+        $countData = 0;
+        $countDeductions = 0;
+        $token = session('token');
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'X-Custom-Header' => 'MyValue',
+        ])->withToken($token)->get(config('settings.api_url') . '/download-database');
+        if ($response->successful()) {
+            $body = $response->json();
+            if (isset($body['higalaays'])) {
+                $higalaays = $body['higalaays'];
+                foreach ($higalaays as  $value) {
+                    $countData += ModelsHigalaay::updateOrCreate(
+                        [
+                            'participant_id' => $value['participant_id'],
+                            'criteria_id' => $value['criteria_id'],
+                            'judge_id' => $value['judge_id'],
+                            'category' => $value['category'],
+                        ],
+                        $value
+                    )->wasChanged() ? 1 : 0;
+                }
+            }
+            if (isset($body['higalaay_deductions'])) {
+                $higalaay_deductions = $body['higalaay_deductions'];
+                foreach ($higalaay_deductions as $value) {
+                    $countDeductions += HigalaayDeduction::updateOrCreate(
+                        [
+                            'participant_id' => $value['participant_id'],
+                            'category' => $value['category'],
+                        ],
+                        $value
+                    )->wasChanged() ? 1 : 0;
+                }
+            }
+            // Request was successful (2xx status code)
+            return session()->flash('status', 'Data Affected: ' . $countData . ', Deductions Affected: ' . $countDeductions);
+        } elseif ($response->clientError()) {
+            // Client error (4xx status code)
+            return session()->flash('error', 'Client error:' . $response->json()['message']);
+        } elseif ($response->serverError()) {
+            // Server error (5xx status code)
+            return session()->flash('error', 'Server error:' . $response->json()['message']);
+        }
+    }
 }

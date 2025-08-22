@@ -87,4 +87,14 @@ class ApiController extends Controller
             "users" => $users
         ]);
     }
+    public function downloadDatabase()
+    {
+        $higalaays = Higalaay::get();
+        $higalaay_deductions = HigalaayDeduction::get();
+
+        return response()->json([
+            "higalaays" => $higalaays,
+            "higalaay_deductions" => $higalaay_deductions,
+        ]);
+    }
 }

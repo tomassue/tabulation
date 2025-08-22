@@ -7,10 +7,11 @@ use App\Models\PosterOutput;
 use Livewire\Component;
 use App\Models\RefParticipant;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class Participants extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public $poster_file;
     public $id, $participant, $school, $participant_no, $participant_id, $selectedCateg, $password;
@@ -29,12 +30,15 @@ class Participants extends Component
 
     public function render()
     {
-        $participants = RefParticipant::orderBy('category', 'asc')->get();
+        $participants = RefParticipant::orderBy('category', 'asc')->paginate(10,  pageName: 'participant-page');
         if ($this->selectedCateg) {
-            $participants = RefParticipant::whereJsonContains('category', $this->selectedCateg)->orderBy('category', 'asc')->get();
+            $participants = RefParticipant::whereJsonContains('category', $this->selectedCateg)->orderBy('category', 'asc')->paginate(10,  pageName: 'participant-page');
         }
         $categories = Category::where('is_active', 1)->get();
-        return view('livewire.reference.participants', compact('participants', 'categories'));
+        return view('livewire.reference.participants', [
+            'participants' => $participants,
+            'categories' => $categories
+        ]);
     }
 
     public function saveParticipant()

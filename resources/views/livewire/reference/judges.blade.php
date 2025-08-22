@@ -55,7 +55,7 @@
                                                             {{ implode(', ', $item->category) }}
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
+                                                            <button wire:key="edit-{{ $item->id }}" wire:target="editJudge({{ $item->id }})" wire:loading.attr="disabled" class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
                                                                 <div wire:loading.remove wire:target="editJudge({{ $item->id }})">
                                                                     <i class="bi bi-pencil-square"></i>
                                                                 </div>
@@ -85,6 +85,9 @@
                                             </tbody>
                                         </table>
                                         <!-- End Table with hoverable rows -->
+                                        <div>
+                                            {{ $judges->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
