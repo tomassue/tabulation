@@ -37,7 +37,7 @@
                         @if (session('token'))
                             <div class="mb-4 text-center">
                                 <div class="mb-4 text-center">
-                                    <h6>Download Database</h6>
+                                    <h6>Download Reference</h6>
                                     <button class="btn btn-success px-4" type="button" wire:click="getReference">
                                         <i class="bi bi-download me-1"></i> Download
                                     </button>
@@ -51,6 +51,14 @@
                                     </button>
                                     <div class="text-danger small">Upload all tabulation data to the online database.</div>
                                 </div>
+                                <hr />
+                                {{-- <div class="mb-4 text-center">
+                                    <h6>Download Database</h6>
+                                    <button class="btn btn-primary px-4" type="button" wire:click="downloadDatabase">
+                                        <i class="bi bi-download me-1"></i> Download
+                                    </button>
+                                    <div class="text-danger small">Download online tabulation data to the local database.</div>
+                                </div> --}}
                             </div>
                         @endif
                     </div>

@@ -88,6 +88,9 @@
                                             </tbody>
                                         </table>
                                         <!-- End Table with hoverable rows -->
+                                        <div>
+                                            {{ $criterias->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -8,4 +8,5 @@ Route::post('login', [ApiController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/upload-database', [ApiController::class, 'saveData']);
     Route::get('/get-reference', [ApiController::class, 'getReference']);
+    Route::get('/download-database', [ApiController::class, 'downloadDatabase']);
 });

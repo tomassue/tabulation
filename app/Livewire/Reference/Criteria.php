@@ -5,13 +5,16 @@ namespace App\Livewire\Reference;
 use App\Models\Category;
 use Livewire\Component;
 use App\Models\RefCriteria;
+use Livewire\WithPagination;
 
 class Criteria extends Component
 {
+    use WithPagination;
+
     public $id, $criteria, $perfect_score, $category, $selectedCateg, $password;
     public function render()
     {
-        $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->get();
+        $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->paginate(10);
         $categories = Category::where('is_active', 1)->get();
         return view('livewire.reference.criteria', compact('criterias', 'categories'));
     }
