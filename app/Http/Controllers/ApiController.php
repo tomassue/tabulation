@@ -32,14 +32,16 @@ class ApiController extends Controller
     }
     public function saveData(Request $request)
     {
-        $countData = 0;
+        $higalaayInsertedData = 0;
+        $higalaayUpdatedData = 0;
+        $higalaayInsertedDeductionData = 0;
+        $higalaayUpdatedDeductionData = 0;
         $data = '';
-        $countDeductions = 0;
         if (isset($request->higalaay)) {
             $higalaay = $request->higalaay;
             foreach ($higalaay as  $value) {
 
-                $countData += Higalaay::updateOrCreate(
+                $hig = Higalaay::updateOrCreate(
                     [
                         'participant_id' => $value['participant_id'],
                         'criteria_id' => $value['criteria_id'],
@@ -47,27 +49,46 @@ class ApiController extends Controller
                         'category' => $value['category'],
                     ],
                     $value
-                )->wasChanged() ? 1 : 0;
-                $data .=  '<br/><b>[ changed: ' . $countData . ' participant_id:' . $value['participant_id'] . ', criteria_id: ' . $value['criteria_id'] . ', judge_id:' . $value['judge_id'] . ',category: ' . $value['category'] . ', score:' . $value['score'] . ']<b>';
+                );
+                $details = $value['participant_id'] . ', criteria_id: ' . $value['criteria_id'] . ', judge_id:' . $value['judge_id'] . ',category: ' . $value['category'] . ', score:' . $value['score'];
+                if ($hig->wasRecentlyCreated) {
+                    $higalaayInsertedData += 1;
+                    $data .=  '<br/><b>[ Inserted: participant_id:' . $details . ']<b>';
+                } else {
+                    if ($hig->wasChanged()) {
+                        $higalaayUpdatedData += 1;
+                        $data .=  '<br/><b>[ Updated: participant_id:' . $details . ']<b>';
+                    }
+                }
             }
         }
         if (isset($request->deductions)) {
             $deductions = $request->deductions;
             foreach ($deductions as $value) {
-                $countDeductions += HigalaayDeduction::updateOrCreate(
+                $deduct = HigalaayDeduction::updateOrCreate(
                     [
                         'participant_id' => $value['participant_id'],
+                        'category' => $value['category'],
                     ],
                     $value
-                )->wasChanged() ? 1 : 0;
+                );
+                if ($deduct->wasRecentlyCreated) {
+                    $higalaayInsertedDeductionData += 1;
+                    $data .=  '<br/><b>[Deduction Inserted: participant_id:' . $value['participant_id'] . ', category: ' . $value['category'] . ']<b>';
+                } else {
+                    if ($deduct->wasChanged()) {
+                        $higalaayUpdatedDeductionData += 1;
+                        $data .=  '<br/><b>[Deduction Updated: participant_id:' . $value['participant_id'] . ', category: ' . $value['category'] . ']<b>';
+                    }
+                }
             }
         }
         Log::create([
             'user_id' => Auth::user()->id,
-            'activity' =>  '(API Update) Event Data Affected: ' . $countData . ', Deductions Affected: ' . $countDeductions . ' | ' . $data,
+            'activity' =>  '(API Update) Event Data Affected: ' . $higalaayInsertedData + $higalaayUpdatedData . ', Deductions Affected: ' . $higalaayInsertedDeductionData + $higalaayUpdatedDeductionData . ' | ' . $data,
         ]);
         return response()->json([
-            'message' => 'Data Affected: ' . $countData . ', Deductions Affected: ' . $countDeductions,
+            'message' => 'Data Affected: Inserted(' . $higalaayInsertedData . '), Updated(' . $higalaayUpdatedData . '), Inserted Deductions(' . $higalaayInsertedDeductionData . '), Updated Deductions(' . $higalaayUpdatedDeductionData . ')',
         ]);
     }
     public function getReference()
