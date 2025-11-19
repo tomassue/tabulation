@@ -2,42 +2,34 @@
 
 namespace App\Livewire\Reports\Component;
 
-use Livewire\Component;
 use App\Models\Category;
+use App\Services\ReportService;
+use Livewire\Component;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use App\Services\ReportService;
 
-class EventAverageReport extends Component
+class EventRankingByJudge extends Component
 {
-    public $event1, $event2, $base64pdf;
-    public function mount()
-    {
-        $this->event1 = null;
-        $this->event2 = null;
-    }
-
+    public $selectedCategory,  $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
-        return view('livewire.reports.component.event-average-report', compact('categories'));
+        return view('livewire.reports.component.event-ranking-by-judge', compact('categories'));
     }
     public function generateReport()
     {
         $this->validate([
-            'event1' => 'required',
-            'event2' => 'required',
+            'selectedCategory' => 'required',
         ]);
 
-        $category1 = Category::find($this->event1);
-        $category2 = Category::find($this->event2);
-        $service = new ReportService($category1->category);
+        $category = Category::where('category', $this->selectedCategory)->first();
+        $service = new ReportService($this->selectedCategory);
         $participants = $service->generateTopParticipants();
         $judges =  $service->judges;
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.multiple-summary', compact('category1', 'category2', 'judges'))->render();
+        $htmlContent = view('generated_pdf.judge-ranking-summary', compact('category', 'participants', 'judges'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
         $dompdf->setPaper('folio', 'landscape');
@@ -48,8 +40,8 @@ class EventAverageReport extends Component
         $font = $fontMetrics->getFont("Arial", "normal");
         $size = 10;
         $canvas->page_text(
-            830,                 // X position
-            570,                 // Y position
+            850,                 // X position
+            10,                 // Y position
             "Page {PAGE_NUM} of {PAGE_COUNT}",
             $font,
             $size,
@@ -57,6 +49,6 @@ class EventAverageReport extends Component
         );
 
         $this->base64pdf = base64_encode($dompdf->output());
-        $this->dispatch('openAverageModal');
+        $this->dispatch('openRankingModal');
     }
 }

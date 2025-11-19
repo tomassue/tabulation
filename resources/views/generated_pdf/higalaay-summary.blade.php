@@ -130,7 +130,7 @@
         </table>
     </footer>
     <div id="watermark">
-        <img src="{{ convert_image(public_path() . '/img/watermark.png') }}" width="50%">
+        <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="70%">
     </div>
     <main>
         <table class="table">
@@ -141,13 +141,13 @@
 
                 </td>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;">HIGALAAY FESTIVAL</div>
-                    <div style="font-size: 12pt;font-weight:bold;color: #26a75c;">CAGAYAN DE ORO at 75</div>
-                    <div style="font-size: 10pt;">Proud of our Roots. Bold in our Dreams</div>
-                    <div style="font-size: 10pt;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 20pt;font-weight:bold;">Pasko de Oro 2025</div>
+                    <div style="font-size: 15pt;font-weight:bold;color: #26a75c;">Beyond Higala</div>
+                    <div style="font-size: 13pt;">...Pamilya</div>
+                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
                 </td>
                 <td class="text-end" width="30%">
-                    <img src="{{ convert_image(public_path() . '/img/higalaay_email.png') }}" width="100">
+                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="60">
                     <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="60">
                 </td>
             </tr>
