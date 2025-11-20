@@ -152,7 +152,7 @@
             <tr>
                 <td colspan="3">
                     <div style="text-align: center;padding-top:20px;">
-                        <div style="font-size: 15pt;font-weight:bold;">Scoring Sheet </div>
+                        <div style="font-size: 15pt;font-weight:bold;"><i>Scoring Sheet</i></div>
                         <div style="font-size: 25pt;text-transform: uppercase;color: red;font-weight:bold;">FINAL TABULATION </div>
                         <div><i>(Percentage Ranking)</i></div>
                     </div>
@@ -275,6 +275,7 @@
                 </td>
             </tr>
         </table>
+        <div style="text-align: right;font-weight: bold;opacity: 0.5;margin-top: 20px;"><i>CMISID Tabulation System</i></div>
     </main>
 </body>
 

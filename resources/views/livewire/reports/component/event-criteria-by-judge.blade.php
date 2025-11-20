@@ -1,12 +1,12 @@
 <div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Judge Ranking Report Content (Single Events)</h5>
+            <h5 class="card-title">Judge Criteria Report Content (Single Events)</h5>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="event">Category 1</label>
-                        <select wire:model="selectedCategory" id="selectedCategory" class="form-select">
+                        <label for="event">Category</label>
+                        <select wire:model.live="selectedCategory" id="selectedCategory" class="form-select">
                             <option value="">--- SELECT ---</option>
                             @foreach ($categories as $item)
                                 <option value="{{ $item->category }}">{{ $loop->iteration }} - {{ $item->description }}</option>
@@ -19,9 +19,14 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="event">Percentage</label>
-                        <input type="number" class="form-control" wire:model="percentage" id="percentage" placeholder="Enter percentage">
-                        @error('percentage')
+                        <label for="event">Judge</label>
+                        <select wire:model="selectedJudge" id="selectedJudge" class="form-select">
+                            <option value="">--- SELECT ---</option>
+                            @foreach ($judges as $item)
+                                <option value="{{ $item->user_id }}">{{ $loop->iteration }} - {{ $item->judge }}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedCategory')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -47,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="reportRankingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="reportCriteriaModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -72,8 +77,8 @@
 </div>
 @script
     <script>
-        window.addEventListener('openRankingModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('reportRankingModal'));
+        window.addEventListener('openCriteriaModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('reportCriteriaModal'));
             myModal.show();
         });
     </script>

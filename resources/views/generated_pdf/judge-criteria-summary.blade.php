@@ -114,6 +114,25 @@
             padding: 0 10px;
             /* Adds padding around the text */
         }
+
+        /* Style for the header row */
+        .bordered thead th {
+            background-color: #26a75c;
+            /* Example header color */
+            color: white;
+        }
+
+        /* Apply background color to every even row in the table body */
+        .bordered tbody tr:nth-child(even) {
+            background-color: #d4d0d0;
+            /* Light gray stripe */
+        }
+
+        /* Apply a different background color to odd rows if desired */
+        .bordered tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+            /* White stripe */
+        }
     </style>
 </head>
 
@@ -134,7 +153,7 @@
                 </td>
                 <td></td>
                 <td class="text-end">
-                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="150">
+                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="150" style="z-index: 1000;">
                 </td>
             </tr>
         </table>
@@ -149,69 +168,57 @@
         </table>
         <table class="table">
             <tr>
-                <td style="vertical-align: bottom;" width="20%">
+                <td style="vertical-align: middle;" width="25%">
                     <div>
-                        @forelse ($judges as $index => $judge)
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
-                            <div style="text-align: center; height: 100px;width: 200px">
-
-                                <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">{{ $judge->judge }}</span>
-                                <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                                    <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-
-                                    <div>Time: _______________</div>
-                                </div>
+                        <div style="margin-bottom:30px;">
+                            <div style="margin-bottom: 10px;font-weight: bold;">CRITERIAS</div>
+                            <div>
+                                @foreach ($criterias as $criteria)
+                                    <div><b>C{{ $loop->iteration }}</b>:{{ $criteria->criteria }}</div>
+                                @endforeach
                             </div>
-                        @empty
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">NO JUDGES</div>
-                        @endforelse
+                        </div>
+                        <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
+                        <div style="text-align: center; height: 100px;width: 270px">
+                            <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">{{ $judge->judge }}</span>
+                            <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
+                                <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
+
+                                <div>Time: _______________</div>
+                            </div>
+                        </div>
+
                     </div>
                 </td>
-                <td style="vertical-align: top;" width="85%">
+                <td style="vertical-align: top;" width="75%">
                     <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
                         <div style="font-size: 15pt;"><i>Scoring Sheet</i></div>
-                        <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}
-                            @if ($percentage)
-                                (<span style="color: red;">{{ $percentage }}%</span>)
-                            @endif
-                        </div>
+                        <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}</div>
                     </div>
                     <table class="table bordered">
                         <thead>
                             <tr>
-                                <th width="30%" style="font-size: 9pt;">CONTINGENT</th>
-                                @foreach ($judges as $judge)
-                                    <th>J{{ $judge->nickname }}</th>
+                                <th style="font-size: 13pt;">CONTINGENT</th>
+                                @foreach ($criterias as $criteria)
+                                    <th width="10%" style="font-size: 13pt;text-transform: uppercase;">C{{ $loop->iteration }}</th>
                                 @endforeach
-                                <th width="10%" style="font-size: 9pt;">TOTAL</th>
-                                <th width="10%" style="font-size: 9pt;">
-                                    DEMERIT <div style="color:red;font-size: 8pt;">(5 Points per deduction / violation)</div>
-                                </th>
-                                <th width="10%" style="font-size: 9pt;">HIGHEST POINTS</th>
-                                <th width="10%" style="font-size: 9pt;">AVERAGE SCORE</th>
-                                <th width="10%" style="font-size: 9pt;">PERCENTAGE <div style="color:red;">(Ranking)</div>
-                                </th>
+                                <th width="10%" style="font-size: 13pt;">TOTAL</th>
+                                <th width="10%" style="font-size: 13pt;">RANKING</div>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($participants as $item)
                                 <tr>
                                     <td style="font-size: 10pt;font-weight: bold">{{ $item['participant'] }}</td>
-                                    @foreach ($judges as $judge)
-                                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
+                                    @foreach ($criterias as $criteria)
+                                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria)) }}</td>
                                     @endforeach
-                                    <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
-                                    @php
-                                        $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
-                                    @endphp
-                                    <td class="text-center" style="font-weight: bold">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_format($item->geTheHighestPoints($category->category)) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_ordinal($item->current_rank) }}</td>
+                                    <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
+                                    <td class="text-center" style="font-weight: bold;">{{ bong_ordinal($item->current_rank) }}</td>
                                 </tr>
                             @empty
                                 @php
-                                    $count = $judges->count() + 6;
+                                    $count = $criterias->count() + 3;
                                 @endphp
                                 <tr>
                                     <td colspan="{{ $count }}" class="text-center">No Data</td>

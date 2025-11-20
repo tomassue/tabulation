@@ -11,4 +11,9 @@ class RefCriteria extends Model
         'perfect_score',
         'category',
     ];
+
+    public function scopeCategory($query, $category)
+    {
+        return $query->where('ref_criterias.category', $category);
+    }
 }

@@ -86,6 +86,9 @@
             <div class="col-lg-12">
                 @livewire('reports.component.event-ranking-by-judge')
             </div>
+            <div class="col-lg-12">
+                @livewire('reports.component.event-criteria-by-judge')
+            </div>
         </div>
     </section>
     <div class="modal fade" id="reportModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>

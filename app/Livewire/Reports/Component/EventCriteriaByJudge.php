@@ -3,34 +3,39 @@
 namespace App\Livewire\Reports\Component;
 
 use App\Models\Category;
+use App\Models\RefCriteria;
+use App\Models\RefJudge;
 use App\Services\ReportService;
 use Livewire\Component;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-class EventRankingByJudge extends Component
+class EventCriteriaByJudge extends Component
 {
-    public $selectedCategory, $percentage,  $base64pdf;
+    public $selectedCategory, $selectedJudge,  $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
-        return view('livewire.reports.component.event-ranking-by-judge', compact('categories'));
+        $judges = RefJudge::category($this->selectedCategory)->get();
+        return view('livewire.reports.component.event-criteria-by-judge', compact('categories', 'judges'));
     }
     public function generateReport()
     {
         $this->validate([
             'selectedCategory' => 'required',
+            'selectedJudge' => 'required',
         ]);
 
         $category = Category::where('category', $this->selectedCategory)->first();
-        $service = new ReportService($this->selectedCategory);
+        $service = new ReportService($this->selectedCategory, null, $this->selectedJudge);
         $participants = $service->generateTopParticipants();
-        $judges =  $service->judges;
-        $percentage = $this->percentage;
+
+        $judge =  RefJudge::where('user_id', $this->selectedJudge)->first();
+        $criterias = RefCriteria::category($this->selectedCategory)->get();
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.judge-ranking-summary', compact('category', 'participants', 'judges', 'percentage'))->render();
+        $htmlContent = view('generated_pdf.judge-criteria-summary', compact('category', 'participants', 'judge', 'criterias'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
         $dompdf->setPaper('folio', 'landscape');
@@ -50,6 +55,6 @@ class EventRankingByJudge extends Component
         );
 
         $this->base64pdf = base64_encode($dompdf->output());
-        $this->dispatch('openRankingModal');
+        $this->dispatch('openCriteriaModal');
     }
 }
