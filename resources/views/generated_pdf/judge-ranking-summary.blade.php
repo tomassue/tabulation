@@ -141,7 +141,7 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPITITION 2025</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
                     <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
                     <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
                 </td>

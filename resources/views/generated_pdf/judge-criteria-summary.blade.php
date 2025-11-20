@@ -115,13 +115,6 @@
             /* Adds padding around the text */
         }
 
-        /* Style for the header row */
-        .bordered thead th {
-            background-color: #26a75c;
-            /* Example header color */
-            color: white;
-        }
-
         /* Apply background color to every even row in the table body */
         .bordered tbody tr:nth-child(even) {
             background-color: #d4d0d0;
@@ -160,7 +153,7 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPITITION 2025</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
                     <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
                     <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
                 </td>
@@ -200,7 +193,7 @@
                             <tr>
                                 <th style="font-size: 13pt;">CONTINGENT</th>
                                 @foreach ($criterias as $criteria)
-                                    <th width="10%" style="font-size: 13pt;text-transform: uppercase;">C{{ $loop->iteration }}</th>
+                                    <th width="10%" style="font-size: 10pt;text-transform: uppercase;">(<span style="color: red;">{{ $criteria->perfect_score }} Points</span> ) <br />C{{ $loop->iteration }}</th>
                                 @endforeach
                                 <th width="10%" style="font-size: 13pt;">TOTAL</th>
                                 <th width="10%" style="font-size: 13pt;">RANKING</div>
