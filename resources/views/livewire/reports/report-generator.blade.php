@@ -6,7 +6,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Report Content</h5>
+                        <h5 class="card-title">Report Content (Single Event)</h5>
 
                         <form id="reportForm">
 
@@ -79,6 +79,15 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="col-lg-12">
+                @livewire('reports.component.event-average-report')
+            </div>
+            <div class="col-lg-12">
+                @livewire('reports.component.event-ranking-by-judge')
+            </div>
+            <div class="col-lg-12">
+                @livewire('reports.component.event-criteria-by-judge')
             </div>
         </div>
     </section>

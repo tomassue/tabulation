@@ -122,4 +122,12 @@ class RefParticipant extends Model
     {
         return $this->hasOne(HigalaayDeduction::class, 'participant_id', 'id')->where('category', $category)->first();
     }
+    public function higalaayJudgesTotalScore($category)
+    {
+        return $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category)->sum('score');
+    }
+    public function geTheHighestPoints($category)
+    {
+        return $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category)->max('score');
+    }
 }

@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
-    public $type, $judges, $criteria_id = null;
-    public function __construct($type, $criteria_id = null)
+    public $type, $judges, $criteria_id = null, $byJudge = null;
+    public function __construct($type, $criteria_id = null, $byJudge = null)
     {
         $this->type = $type;
         $this->criteria_id = $criteria_id;
+        $this->byJudge = $byJudge;
     }
     public function generateTopParticipants(): Collection
     {
@@ -23,10 +24,15 @@ class ReportService
         $isAdmin = ($user->role == 'admin');
 
         //get judges base on user role
-        if ($isAdmin) {
+        if ($isAdmin && $this->byJudge == null) {
             $this->judges = RefJudge::category($this->type)->get();
         } else {
-            $this->judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
+            //get judges base on byJudge
+            if ($this->byJudge) {
+                $this->judges = RefJudge::where('user_id', $this->byJudge)->category($this->type)->get();
+            } else {
+                $this->judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
+            }
         }
         // Determine divisor for score calculation
         $divisor = $isAdmin ? ($this->judges->count() ?: 1) : 1;  // Prevent division by zero
@@ -36,7 +42,12 @@ class ReportService
 
         // Filter participants if not admin
         if (!$isAdmin) {
-            $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
+            //get judges base on byJudge
+            if ($this->byJudge) {
+                $judge = RefJudge::where('user_id', $this->byJudge)->category($this->type)->first();
+            } else {
+                $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
+            }
             $participantsraw->where('higalaays.judge_id', $judge->id);
         }
 
