@@ -43,13 +43,14 @@ class ReportService
         // Filter participants if not admin
         if (!$isAdmin) {
             //get judges base on byJudge
-            if ($this->byJudge) {
-                $judge = RefJudge::where('user_id', $this->byJudge)->category($this->type)->first();
-            } else {
-                $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
-            }
+            $judge = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->first();
             $participantsraw->where('higalaays.judge_id', $judge->id);
         }
+        if ($this->byJudge) {
+            $judge = RefJudge::where('user_id', $this->byJudge)->category($this->type)->first();
+            $participantsraw->where('higalaays.judge_id', $judge->id);
+        }
+
 
         // Apply criteria_id filter and determine the current rank
         if ($this->criteria_id) {
