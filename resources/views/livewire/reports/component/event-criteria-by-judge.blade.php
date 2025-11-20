@@ -20,7 +20,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="event">Judge</label>
-                        <select wire:model="selectedJudge" id="selectedJudge" class="form-select">
+                        <select wire:model="selectedJudge" id="selectedJudge" class="form-select" {{ $judges->isEmpty() ? 'disabled' : '' }}>
                             <option value="">--- SELECT ---</option>
                             @foreach ($judges as $item)
                                 <option value="{{ $item->user_id }}">{{ $loop->iteration }} - {{ $item->judge }}</option>

@@ -10,7 +10,7 @@ use Dompdf\Options;
 
 class EventRankingByJudge extends Component
 {
-    public $selectedCategory, $percentage,  $base64pdf;
+    public $selectedCategory, $percentage = "50",  $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
