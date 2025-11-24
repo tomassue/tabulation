@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Services\ReportService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RefParticipant extends Model
 {
@@ -117,6 +119,12 @@ class RefParticipant extends Model
             $relation->where('criteria_id', $criteria->id);
         }
         return $relation->where('category', $category)->where('judge_id', $judge_id)->sum('score');
+    }
+    public function getRankingsByJudge($judge_id, $category, $participant_id)
+    {
+        $service = new ReportService($category, null, $judge_id);
+        $participants = $service->generateTopParticipants();
+        return $participants->where('id', $participant_id)->first()?->current_rank;
     }
     public function higalaayDeduction($category)
     {

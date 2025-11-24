@@ -53,11 +53,14 @@ class ReportService
 
 
         // Apply criteria_id filter and determine the current rank
-        if ($this->criteria_id) {
+        if ($this->criteria_id && $this->byJudge == null) {
 
             // Filter participants based on criteria_id without deduction
             $participantsraw->where('higalaays.criteria_id', $this->criteria_id)
                 ->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score) /' . $divisor . ') DESC) as current_rank'));
+        } elseif ($this->byJudge) {
+            // Filter participants based on criteria_id without deduction
+            $participantsraw->select('ref_participants.*', DB::raw('DENSE_RANK() OVER (ORDER BY (SUM(higalaays.score)) DESC) as current_rank'));
         } else {
 
             // Calculate current rank with deduction
