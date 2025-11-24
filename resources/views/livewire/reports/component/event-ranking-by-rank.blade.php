@@ -1,7 +1,7 @@
 <div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Judge Ranking Report Content (Average)</h5>
+            <h5 class="card-title">Judge Ranking Report Content (Rank)</h5>
             <div class="row">
                 <div class="col-lg-4">
                     <div class="form-group">
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="reportRankingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="reportRankingByRankModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -72,8 +72,8 @@
 </div>
 @script
     <script>
-        window.addEventListener('openRankingModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('reportRankingModal'));
+        window.addEventListener('openRankingByRankModal', event => {
+            var myModal = new bootstrap.Modal(document.getElementById('reportRankingByRankModal'));
             myModal.show();
         });
     </script>

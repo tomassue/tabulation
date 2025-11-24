@@ -1,41 +1,41 @@
 <?php
 
-namespace App\Livewire\Reports;
+namespace App\Livewire\Reports\Component;
 
 use App\Models\Category;
+use App\Models\RefJudge;
+use App\Models\RefParticipant;
 use App\Services\ReportService;
+use Livewire\Component;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Livewire\Component;
 
-class ReportGenerator extends Component
+class EventRankingByRank extends Component
 {
-    public $selectedCategory, $selectedType, $reportType, $runnerups  = 0, $base64pdf, $selectedReports = 'rank';
+    public $selectedCategory, $percentage = "50",  $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
-        return view('livewire.reports.report-generator', compact('categories'));
+        return view('livewire.reports.component.event-ranking-by-rank', compact('categories'));
     }
     public function generateReport()
     {
         $this->validate([
-            'reportType' => 'required',
             'selectedCategory' => 'required',
         ]);
+
         $category = Category::where('category', $this->selectedCategory)->first();
-        $service = new ReportService($this->selectedCategory);
-        $participants = $service->generateTopParticipants();
-        $judges =  $service->judges;
-        $runnerups = $this->runnerups;
-        $type = $this->selectedType;
-        $reportType = $this->reportType;
+        $participants = RefParticipant::category($this->selectedCategory)->get();
+        $judges =  RefJudge::category($this->selectedCategory)->get();
+        $percentage = $this->percentage;
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.higalaay-summary', compact('participants', 'judges', 'category', 'type', 'runnerups', 'reportType'))->render();
+        $htmlContent = view("generated_pdf.judge-ranking-rank-summary", compact('category', 'participants', 'judges', 'percentage'))->render();
+
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('folio', 'landscape');
         $dompdf->render();
 
         $canvas = $dompdf->getCanvas();
@@ -43,8 +43,8 @@ class ReportGenerator extends Component
         $font = $fontMetrics->getFont("Arial", "normal");
         $size = 10;
         $canvas->page_text(
-            830,                 // X position
-            570,                 // Y position
+            850,                 // X position
+            10,                 // Y position
             "Page {PAGE_NUM} of {PAGE_COUNT}",
             $font,
             $size,
@@ -52,6 +52,6 @@ class ReportGenerator extends Component
         );
 
         $this->base64pdf = base64_encode($dompdf->output());
-        $this->dispatch('openModal');
+        $this->dispatch('openRankingByRankModal');
     }
 }

@@ -81,13 +81,40 @@
 
             </div>
             <div class="col-lg-12">
-                @livewire('reports.component.event-average-report')
-            </div>
-            <div class="col-lg-12">
-                @livewire('reports.component.event-ranking-by-judge')
-            </div>
-            <div class="col-lg-12">
-                @livewire('reports.component.event-criteria-by-judge')
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Report Generator</h5>
+                        <div class="form-group mb-3">
+                            <label for="" class="form-label">Report</label>
+                            <select class="form-select" wire:model.live="selectedReports" required>
+                                <option value="">-- Select report --</option>
+                                <option value="multiple_event">Average Report (Multiple Event)</option>
+                                <option value="average">Ranking By Judge (Average)</option>
+                                <option value="rank">Ranking By Judge (Rank)</option>
+                                <option value="criteria">Criteria By Judge</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            @if ($selectedReports == 'multiple_event')
+                                <div class="col-lg-12">
+                                    @livewire('reports.component.event-average-report')
+                                </div>
+                            @elseif ($selectedReports == 'average')
+                                <div class="col-lg-12">
+                                    @livewire('reports.component.event-ranking-by-judge')
+                                </div>
+                            @elseif ($selectedReports == 'rank')
+                                <div class="col-lg-12">
+                                    @livewire('reports.component.event-ranking-by-rank')
+                                </div>
+                            @elseif ($selectedReports == 'criteria')
+                                <div class="col-lg-12">
+                                    @livewire('reports.component.event-criteria-by-judge')
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
