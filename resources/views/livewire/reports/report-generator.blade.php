@@ -88,32 +88,39 @@
                             <label for="" class="form-label">Report</label>
                             <select class="form-select" wire:model.live="selectedReports" required>
                                 <option value="">-- Select report --</option>
-                                <option value="multiple_event">Average Report (Multiple Event)</option>
+                                <option value="multiple_event" disabled>Multiple Event (Average)</option>
+                                <option value="multiple_event_rank">Multiple Event (Rank)</option>
                                 <option value="average">Ranking By Judge (Average)</option>
                                 <option value="rank">Ranking By Judge (Rank)</option>
-                                <option value="criteria">Criteria By Judge</option>
+                                <option value="criteria">Criteria By Judge (Rank)</option>
                             </select>
                         </div>
-                        <div class="row">
-                            @if ($selectedReports == 'multiple_event')
-                                <div class="col-lg-12">
-                                    @livewire('reports.component.event-average-report')
-                                </div>
-                            @elseif ($selectedReports == 'average')
-                                <div class="col-lg-12">
-                                    @livewire('reports.component.event-ranking-by-judge')
-                                </div>
-                            @elseif ($selectedReports == 'rank')
-                                <div class="col-lg-12">
-                                    @livewire('reports.component.event-ranking-by-rank')
-                                </div>
-                            @elseif ($selectedReports == 'criteria')
-                                <div class="col-lg-12">
-                                    @livewire('reports.component.event-criteria-by-judge')
-                                </div>
-                            @endif
-                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="row" wire:loading.class="opacity-50 pe-none">
+                    @if ($selectedReports == 'multiple_event')
+                        <div class="col-lg-12">
+                            @livewire('reports.component.event-average-report')
+                        </div>
+                    @elseif ($selectedReports == 'multiple_event_rank')
+                        <div class="col-lg-12">
+                            @livewire('reports.component.event-average-rank-report')
+                        </div>
+                    @elseif ($selectedReports == 'average')
+                        <div class="col-lg-12">
+                            @livewire('reports.component.event-ranking-by-judge')
+                        </div>
+                    @elseif ($selectedReports == 'rank')
+                        <div class="col-lg-12">
+                            @livewire('reports.component.event-ranking-by-rank')
+                        </div>
+                    @elseif ($selectedReports == 'criteria')
+                        <div class="col-lg-12">
+                            @livewire('reports.component.event-criteria-by-judge')
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -1,5 +1,7 @@
 <?php
 
+use PhpParser\Node\Expr\Array_;
+
 if (! function_exists('convert_image')) {
     function convert_image($path): String
     {
@@ -63,5 +65,53 @@ if (! function_exists('bong_font_changer')) {
             $font = '4rem';
         }
         return $font;
+    }
+}
+if (! function_exists('bong_rank_arranger')) {
+    function bong_rank_arranger($grands, $label, $ordinalLabel, $skip = false, $sort = "ASC"): array
+    {
+        //$label = 'grand_total';
+        //$ordinalLabel = 'ordinal_rank';
+
+        // After collecting all participants, sort by grand total to get rankings
+        if ($sort == "ASC") {
+            usort($grands, function ($a, $b) use ($label) {
+                return $a[$label] <=> $b[$label]; // Ascending order (lowest first)
+            });
+        } else if ($sort == "DESC") {
+            usort($grands, function ($a, $b) use ($label) {
+                return $b[$label] <=> $a[$label]; // Descending order (highest first)
+            });
+        }
+
+        $rank = 1;
+        $previousScore = null;
+
+        // Add ordinal ranking
+        foreach ($grands as $index => &$participantData) {
+            if ($skip) {
+                if ($previousScore !== null && $participantData[$label] != $previousScore) {
+                    $rank = $index + 1;
+                }
+            } else {
+                if ($previousScore === null) {
+                    // First participant
+                    $participantData[$ordinalLabel] = $rank;
+                } else {
+                    if ($participantData[$label] == $previousScore) {
+                        // Same grand total, same rank
+                        $participantData[$ordinalLabel] = $rank;
+                    } else {
+                        // Different grand total, next sequential rank
+                        $rank++;
+                        $participantData[$ordinalLabel] = $rank;
+                    }
+                }
+            }
+
+            $participantData[$ordinalLabel] = $rank;
+            $previousScore = $participantData[$label];
+        }
+        return $grands;
     }
 }

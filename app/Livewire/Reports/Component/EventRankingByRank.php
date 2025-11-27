@@ -29,9 +29,11 @@ class EventRankingByRank extends Component
         $judges =  RefJudge::category($this->selectedCategory)->get();
         $percentage = $this->percentage;
 
+        $grands = $this->calculateRankings($participants, $judges, $category);
+
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view("generated_pdf.judge-ranking-rank-summary", compact('category', 'participants', 'judges', 'percentage'))->render();
+        $htmlContent = view("generated_pdf.judge-ranking-rank-summary", compact('category', 'judges', 'percentage', 'grands'))->render();
 
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
@@ -53,5 +55,77 @@ class EventRankingByRank extends Component
 
         $this->base64pdf = base64_encode($dompdf->output());
         $this->dispatch('openRankingByRankModal');
+    }
+
+    private function calculateRankings($participants, $judges, $category)
+    {
+        $grands = [];
+
+        foreach ($participants as $item) {
+            $part = [
+                'participant_no' => $item->participant_no,
+                'participant' => $item->participant,
+                'judge_scores' => [],
+                'subtotals' => [],
+                'grand' => 0
+            ];
+
+            $totalScore = 0;
+
+            foreach ($judges as $judge) {
+                $ranked = $item->getRankingsByJudge($judge->user_id, $category->category, $item->id);
+                $subtotal = $item->getHigalaayScoreByJudge($judge->id, $category->category);
+
+                $part['judge_scores'][$judge->user_id] = $ranked ?: 0;
+                $part['subtotals'][$judge->user_id] = $subtotal;
+
+                if ($ranked) {
+                    $totalScore += $ranked;
+                }
+            }
+
+            $part['grand'] = $totalScore;
+            $grands[] = $part;
+        }
+
+        // Sort by grand total (Ascending - lowest first)
+        usort($grands, function ($a, $b) {
+            if ($a['grand'] == 0 && $b['grand'] != 0) return 1;
+            if ($b['grand'] == 0 && $a['grand'] != 0) return -1;
+            return $a['grand'] <=> $b['grand']; // Ascending order
+        });
+
+        // Assign ranks
+        return $this->assignRanks($grands);
+    }
+
+
+    private function assignRanks($grands)
+    {
+        $rank = 1;
+        $previousScore = null;
+        $sameRankCount = 0;
+
+        foreach ($grands as &$participantData) {
+            if ($previousScore === null) {
+                // First participant
+                $participantData['ordinal_rank'] = $rank;
+            } else {
+                if ($participantData['grand'] == $previousScore) {
+                    // Same score, same rank
+                    $participantData['ordinal_rank'] = $rank;
+                    $sameRankCount++;
+                } else {
+                    // Different score, increment rank
+                    $rank += 1 + $sameRankCount;
+                    $participantData['ordinal_rank'] = $rank;
+                    $sameRankCount = 0;
+                }
+            }
+
+            $previousScore = $participantData['grand'];
+        }
+
+        return $grands;
     }
 }

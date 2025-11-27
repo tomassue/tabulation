@@ -114,10 +114,23 @@
             padding: 0 10px;
             /* Adds padding around the text */
         }
+
+        #developer {
+            position: fixed;
+            top: 50%;
+            left: -115px;
+            font-weight: bold;
+            text-align: right;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
     </style>
 </head>
 
 <body>
+    <div id="developer">
+        <div><i>CMISID Tabulation System</i></div>
+    </div>
     <footer class="footer">
         <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
     </footer>
@@ -149,80 +162,86 @@
         </table>
         <table class="table">
             <tr>
-                <td style="vertical-align: bottom;" width="20%">
-                    <div>
-                        @forelse ($judges as $index => $judge)
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
-                            <div style="text-align: center; height: 100px;width: 200px">
-
-                                <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">{{ $judge->judge }}</span>
-                                <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                                    <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-
-                                    <div>Time: _______________</div>
-                                </div>
-                            </div>
-                        @empty
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">NO JUDGES</div>
-                        @endforelse
-                    </div>
-                </td>
                 <td style="vertical-align: top;" width="85%">
                     <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
-                        <div style="font-size: 15pt;"><i>Scoring Sheet</i></div>
+                        <div style="font-size: 15pt;"><i>Average Scoring Sheet</i></div>
                         <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}
                             @if ($percentage)
                                 (<span style="color: red;">{{ $percentage }}%</span>)
                             @endif
                         </div>
                     </div>
-                    <table class="table bordered">
-                        <thead>
-                            <tr>
-                                <th width="30%" style="font-size: 9pt;">CONTINGENT</th>
-                                @foreach ($judges as $judge)
-                                    <th>J{{ $judge->nickname }}</th>
-                                @endforeach
-                                <th width="10%" style="font-size: 9pt;">TOTAL</th>
-                                <th width="10%" style="font-size: 9pt;">
-                                    DEMERIT <div style="color:red;font-size: 8pt;">(5 Points per deduction / violation)</div>
-                                </th>
-                                <th width="10%" style="font-size: 9pt;">HIGHEST POINTS</th>
-                                <th width="10%" style="font-size: 9pt;">AVERAGE SCORE</th>
-                                <th width="10%" style="font-size: 9pt;">PERCENTAGE <div style="color:red;">(Ranking)</div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($participants as $item)
-                                <tr>
-                                    <td style="font-size: 10pt;font-weight: bold">{{ $item['participant'] }}</td>
-                                    @foreach ($judges as $judge)
-                                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
-                                    @endforeach
-                                    <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
-                                    @php
-                                        $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
-                                    @endphp
-                                    <td class="text-center" style="font-weight: bold">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_format($item->geTheHighestPoints($category->category)) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
-                                    <td class="text-center" style="font-weight: bold">{{ bong_ordinal($item->current_rank) }}</td>
-                                </tr>
-                            @empty
-                                @php
-                                    $count = $judges->count() + 6;
-                                @endphp
-                                <tr>
-                                    <td colspan="{{ $count }}" class="text-center">No Data</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </td>
             </tr>
         </table>
-        <div style="text-align: right;font-weight: bold;opacity: 0.5;margin-top: 20px;"><i>CMISID Tabulation System</i></div>
+        <table class="table bordered">
+            <thead>
+                <tr>
+                    <th style="width: 3%;">#</th>
+                    <th width="30%" style="font-size: 11pt;">CONTINGENT</th>
+                    @foreach ($judges as $judge)
+                        <th style="text-transform: uppercase;font-size: 9pt;">{{ $judge->judge }}</th>
+                    @endforeach
+                    <th width="10%" style="font-size: 9pt;">TOTAL</th>
+                    <th width="10%" style="font-size: 9pt;">
+                        DEMERIT <div style="color:red;font-size: 8pt;">(5 Points per deduction / violation)</div>
+                    </th>
+                    <th width="10%" style="font-size: 9pt;">AVERAGE SCORE</th>
+                    <th width="10%" style="font-size: 9pt;">PERCENTAGE <div style="color:red;">(Ranking)</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($participants as $item)
+                    <tr>
+                        <td class="text-center" style="font-size: 10pt;font-weight: bold">{{ $item->participant_no }}</td>
+                        <td style="font-size: 10pt;font-weight: bold">{{ $item->participant }}</td>
+                        @foreach ($judges as $judge)
+                            <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
+                        @endforeach
+                        <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
+                        @php
+                            $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
+                        @endphp
+                        <td class="text-center" style="font-weight: bold">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                        <td class="text-center" style="font-weight: bold">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
+                        <td class="text-center" style="font-weight: bold">{{ bong_ordinal($item->current_rank) }}</td>
+                    </tr>
+                @empty
+                    @php
+                        $count = $judges->count() + 6;
+                    @endphp
+                    <tr>
+                        <td colspan="{{ $count }}" class="text-center">No Data</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <table class="table" style="padding-top: 10px;">
+            <tr>
+                @foreach ($judges as $judge)
+                    <td style="text-align: right; vertical-align: top;">
+                        &nbsp;
+                    </td>
+                    <td style="text-align: center;height: 120px;width: 300px">
+                        <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
+                        <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
+                        <div class="text-center p-2" style="border-top: 1px solid black;">
+                            <i>Full Name and Signature</i>
+                        </div>
+                        <div>Time: _______________</div>
+                    </td>
+                    <td width="20px;">
+                        &nbsp;
+                    </td>
+                    @if ($loop->iteration % 3 == 0)
+            </tr>
+            <tr>
+                @endif
+                @endforeach
+            </tr>
+        </table>
+
     </main>
 </body>
 
