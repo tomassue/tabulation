@@ -36,7 +36,8 @@
                                             <thead>
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Judge Number</th>
+                                                    <th scope="col">Judge Name</th>
                                                     <th scope="col">Event</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
@@ -48,11 +49,13 @@
                                                             {{ $loop->iteration }}
                                                         </td>
                                                         <td scope="row">
+                                                            JUDGE #{{ $item->nickname }}
+                                                        </td>
+                                                        <td scope="row">
                                                             {{ $item->judge }}
-                                                            <span class="badge text-bg-secondary">{{ $item->nickname }}</span>
                                                         </td>
                                                         <td scope="row" class="text-capitalize">
-                                                            {{ implode(', ', $item->category) }}
+                                                            {!! implode('<br /> ', $item->category) !!}
                                                         </td>
                                                         <td>
                                                             <button wire:key="edit-{{ $item->id }}" wire:target="editJudge({{ $item->id }})" wire:loading.attr="disabled" class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
@@ -109,12 +112,12 @@
                     <div class="modal-body">
                         @include('layouts.message')
                         <div class="mb-3">
-                            <label for="judgeName" class="form-label">Judge Name</label>
-                            <input type="text" class="form-control" wire:model="judge" id="judgeName" placeholder="Enter judge's name">
+                            <label for="NickName" class="form-label">Judge Number</label>
+                            <input type="number" class="form-control" wire:model="nickname" id="NickName" placeholder="Enter judge's number">
                         </div>
                         <div class="mb-3">
-                            <label for="NickName" class="form-label">Nickname</label>
-                            <input type="text" class="form-control" wire:model="nickname" id="NickName" placeholder="Enter judge's nickname">
+                            <label for="judgeName" class="form-label">Judge Name</label>
+                            <input type="text" class="form-control" wire:model="judge" id="judgeName" placeholder="Enter judge's name">
                         </div>
                         <div class="mb-3">
                             <label for="category">Event Judge</label>

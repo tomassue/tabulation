@@ -126,10 +126,23 @@
             background-color: #ffffff;
             /* White stripe */
         }
+
+        #developer {
+            position: fixed;
+            top: 50%;
+            left: -115px;
+            font-weight: bold;
+            text-align: right;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
     </style>
 </head>
 
 <body>
+    <div id="developer">
+        <div><i>CMISID Tabulation System</i></div>
+    </div>
     <footer class="footer">
         <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
     </footer>
@@ -158,71 +171,64 @@
                     <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
-        </table>
-        <table class="table">
             <tr>
-                <td style="vertical-align: middle;" width="25%">
-                    <div>
-                        <div style="margin-bottom:30px;">
-                            <div style="margin-bottom: 10px;font-weight: bold;">CRITERIAS</div>
-                            <div>
-                                @foreach ($criterias as $criteria)
-                                    <div><b>C{{ $loop->iteration }}</b>:{{ $criteria->criteria }}</div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
-                        <div style="text-align: center; height: 100px;width: 270px">
-                            <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">{{ $judge->judge }}</span>
-                            <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                                <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-
-                                <div>Time: _______________</div>
-                            </div>
-                        </div>
-
-                    </div>
-                </td>
                 <td style="vertical-align: top;" width="75%">
                     <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
                         <div style="font-size: 15pt;"><i>Scoring Sheet</i></div>
                         <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}</div>
                     </div>
-                    <table class="table bordered">
-                        <thead>
-                            <tr>
-                                <th style="font-size: 13pt;">CONTINGENT</th>
-                                @foreach ($criterias as $criteria)
-                                    <th width="10%" style="font-size: 10pt;text-transform: uppercase;">(<span style="color: red;">{{ $criteria->perfect_score }} Points</span> ) <br />C{{ $loop->iteration }}</th>
-                                @endforeach
-                                <th width="10%" style="font-size: 13pt;">TOTAL</th>
-                                <th width="10%" style="font-size: 13pt;">RANKING</div>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($participants as $item)
-                                <tr>
-                                    <td style="font-size: 10pt;font-weight: bold">{{ $item['participant'] }}</td>
-                                    @foreach ($criterias as $criteria)
-                                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria)) }}</td>
-                                    @endforeach
-                                    <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
-                                    <td class="text-center" style="font-weight: bold;">{{ bong_ordinal($item->current_rank) }}</td>
-                                </tr>
-                            @empty
-                                @php
-                                    $count = $criterias->count() + 3;
-                                @endphp
-                                <tr>
-                                    <td colspan="{{ $count }}" class="text-center">No Data</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </td>
             </tr>
         </table>
-        <div style="text-align: right;font-weight: bold;opacity: 0.5;margin-top: 20px;"><i>CMISID Tabulation System</i></div>
+        <table class="table bordered">
+            <thead>
+                <tr>
+                    <th style="font-size: 13pt;" width="3%">#</th>
+                    <th style="font-size: 13pt;">CONTINGENT</th>
+                    @foreach ($criterias as $criteria)
+                        <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }} Points</span> ) </th>
+                    @endforeach
+                    <th width="10%" style="font-size: 13pt;">TOTAL</th>
+                    <th width="10%" style="font-size: 13pt;">RANKING</div>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($participants as $item)
+                    <tr>
+                        <td class="text-center" style="font-size: 10pt;font-weight: bold">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 10pt;font-weight: bold; padding: 5px;">{{ $item['participant'] }}</td>
+                        @foreach ($criterias as $criteria)
+                            <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria)) }}</td>
+                        @endforeach
+                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
+                        <td class="text-center" style="font-weight: bold;">{{ bong_ordinal($item->current_rank) }}</td>
+                    </tr>
+                @empty
+                    @php
+                        $count = $criterias->count() + 4;
+                    @endphp
+                    <tr>
+                        <td colspan="{{ $count }}" class="text-center">No Data</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <table class="table" style="padding-top: 50px;">
+            <tr>
+                <td style="width: 40%;">&nbsp;</td>
+                <td style="width: 40%;">&nbsp;</td>
+                <td style="text-align: center;">
+                    <div style="text-align: center; height: 100px;width: 270px">
+                        <span style="text-transform: uppercase;font-weight: bold; font-size: 12pt;">{{ $judge->judge }}</span>
+                        <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
+                            <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
+                            <div>Time: _______________</div>
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+        </table>
     </main>
 </body>
 
