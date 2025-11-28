@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class ReportGenerator extends Component
 {
-    public $selectedCategory, $selectedType, $reportType, $runnerups  = 0, $base64pdf, $selectedReports = 'rank';
+    public $selectedCategory, $selectedType, $reportType, $runnerups  = 0, $base64pdf, $selectedReports, $selectedScoring;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();

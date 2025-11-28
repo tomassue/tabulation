@@ -115,10 +115,44 @@
             padding: 0 10px;
             /* Adds padding around the text */
         }
+
+        #developer {
+            position: fixed;
+            top: 50%;
+            left: -115px;
+            font-weight: bold;
+            text-align: right;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .winner-1 {
+            background: rgb(255, 240, 152) !important;
+            color: black;
+            font-weight: bold !important;
+            /* or #FFD700 */
+        }
+
+        .winner-2 {
+            background: silver !important;
+            color: black !important;
+            font-weight: bold !important;
+            /* or #C0C0C0 */
+        }
+
+        .winner-3 {
+            background: #fcd6b0 !important;
+            color: black;
+            font-weight: bold !important;
+            /* no keyword for a good bronze */
+        }
     </style>
 </head>
 
 <body>
+    <div id="developer">
+        <div><i>CMISID Tabulation System</i></div>
+    </div>
     <footer class="footer">
         <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
     </footer>
@@ -144,7 +178,7 @@
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">MARCHING BAND COMPETITION 2025</div>
                     <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>
@@ -158,124 +192,53 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table class="table bordered ">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="font-size: 12pt;">CONTINGENT</th>
+                    <th style="text-transform: uppercase;"><span style="color:blue;font-size: 9pt;">{{ $category1->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
+                    <th style="text-transform: uppercase;"><span style="color: green;font-size: 9pt;">{{ $category2->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
+                    <th style="font-size: 9pt;">GRAND <br />TOTAL</th>
+                    <th style="font-size: 9pt;">RANK</th>
+                </tr>
+            </thead>
+            @foreach ($grands as $key => $item)
+                <tr class="winner-{{ $item['ordinal_rank'] }}">
+                    <td class="text-center" style="font-size: 11pt;font-weight: bold" width="5%">{{ $item['participant_no'] }}</td>
+                    <td style="font-size: 11pt;font-weight: bold;padding: 10px;">{{ $item['participant'] }}</td>
+                    <td class="text-center" style="font-weight: bold;color: blue;" width="15%">{{ bong_format($item['cat1']) }}</td>
+                    <td class="text-center" style="font-weight: bold;color: green;" width="15%">{{ bong_format($item['cat2']) }}</td>
+                    <td class="text-center" style="font-weight: bold" width="10%">{{ bong_format($item['grand']) }}</td>
+                    <td class="text-center" style="font-weight: bold" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
+                </tr>
+            @endforeach
+        </table>
+        <table class="table" style="padding-top: 10px;">
             <tr>
-                <td style="vertical-align: bottom;" width="20%">
-                    <div>
-                        @forelse ($judges as $index => $judge)
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
-                            <div style="text-align: center; height: 100px;width: 200px">
-
-                                <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">{{ $judge->judge }}</span>
-                                <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                                    <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-
-                                    <div>Time: _______________</div>
-                                </div>
-                            </div>
-                        @empty
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">NO JUDGES</div>
-                        @endforelse
-                    </div>
-                </td>
-                <td style="vertical-align: top;">
-                    @php
-                        $service = new App\Services\ReportService($category1->category);
-                        $participants = $service->generateTopParticipants();
-                        $judges = $service->judges;
-                        $grands = [];
-                    @endphp
-
-                    @foreach ($participants as $item)
-                        @php
-                            //get the category1 and category2
-                            $cat1 = $item->averageHigalaay($category1->category);
-                            $cat2 = $item->averageHigalaay($category2->category);
-
-                            //get the grandtotal
-                            $grand = $cat1 * 0.5 + $cat2 * 0.5;
-
-                            //get the participant
-                            $participant = $item->participant;
-
-                            //add to array
-                            array_push($grands, ['participant' => $participant, 'cat1' => $cat1, 'cat2' => $cat2, 'grand' => $grand]);
-
-                            // After collecting all participants, sort by grand total to get rankings
-                            usort($grands, function ($a, $b) {
-                                return $b['grand'] <=> $a['grand']; // Descending order (highest first)
-                            });
-
-                            // After sorting by grand total
-                            $rank = 1;
-                            $previousScore = null;
-
-                            // Add ordinal ranking
-                            foreach ($grands as $index => &$participantData) {
-                                // if ($previousScore !== null && $participantData['grand'] != $previousScore) {
-                                //     $rank = $index + 1;
-                                // }
-                                if ($previousScore === null) {
-                                    // First participant
-                                    $participantData['ordinal_rank'] = $rank;
-                                } else {
-                                    if ($participantData['grand'] == $previousScore) {
-                                        // Same grand total, same rank
-                                        $participantData['ordinal_rank'] = $rank;
-                                    } else {
-                                        // Different grand total, next sequential rank
-                                        $rank++;
-                                        $participantData['ordinal_rank'] = $rank;
-                                    }
-                                }
-
-                                $participantData['ordinal_rank'] = $rank;
-                                $previousScore = $participantData['grand'];
-                            }
-                        @endphp
-                    @endforeach
-
-                    <table class="table bordered ">
-                        <thead>
-                            <tr>
-                                <th style="font-size: 9pt;">CONTINGENT</th>
-                                <th style="text-transform: uppercase;"><span style="color:blue;font-size: 9pt;">{{ $category1->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
-                                <th style="text-transform: uppercase;"><span style="color: green;font-size: 9pt;">{{ $category2->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
-                                <th style="font-size: 9pt;">GRAND <br />TOTAL</th>
-                                <th style="font-size: 9pt;">RANK</th>
-                            </tr>
-                        </thead>
-                        @foreach ($grands as $key => $item)
-                            <tr>
-                                <td style="font-size: 11pt;font-weight: bold">{{ $item['participant'] }}</td>
-                                <td class="text-center" style="font-weight: bold;color: blue;" width="15%">{{ bong_format($item['cat1']) }}</td>
-                                <td class="text-center" style="font-weight: bold;color: green;" width="15%">{{ bong_format($item['cat2']) }}</td>
-                                <td class="text-center" style="font-weight: bold" width="10%">{{ bong_format($item['grand']) }}</td>
-                                <td class="text-center" style="font-weight: bold" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </td>
-                <td style="vertical-align: bottom;" width="20%">
-                    <div>
-                        @forelse ($judges as $index => $judge)
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">TABULATOR #{{ $loop->iteration }}</div>
-                            <div style="text-align: center; height: 100px;width: 200px">
-
-                                <span style="text-transform: uppercase;font-weight: bold; font-size: 9pt;">&nbsp;</span>
-                                <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                                    <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-
-                                    <div>Time: _______________</div>
-                                </div>
-                            </div>
-                        @empty
-                            <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">NO TABULATOR</div>
-                        @endforelse
-                    </div>
-                </td>
+                @foreach ($judges as $judge)
+                    <td style="text-align: right; vertical-align: top;">
+                        &nbsp;
+                    </td>
+                    <td style="text-align: center;height: 120px;width: 300px">
+                        <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
+                        <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
+                        <div class="text-center p-2" style="border-top: 1px solid black;">
+                            <i>Full Name and Signature</i>
+                        </div>
+                        <div>Time: _______________</div>
+                    </td>
+                    <td width="20px;">
+                        &nbsp;
+                    </td>
+                    @if ($loop->iteration % 3 == 0)
+            </tr>
+            <tr>
+                @endif
+                @endforeach
             </tr>
         </table>
-        <div style="text-align: right;font-weight: bold;opacity: 0.5;margin-top: 20px;"><i>CMISID Tabulation System</i></div>
     </main>
 </body>
 

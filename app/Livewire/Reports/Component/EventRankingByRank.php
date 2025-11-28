@@ -12,7 +12,7 @@ use Dompdf\Options;
 
 class EventRankingByRank extends Component
 {
-    public $selectedCategory, $percentage = "50",  $base64pdf;
+    public $selectedCategory, $percentage = "0", $showDeduction = false,  $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
@@ -30,10 +30,11 @@ class EventRankingByRank extends Component
         $percentage = $this->percentage;
 
         $grands = $this->calculateRankings($participants, $judges, $category);
+        $showDeduction = $this->showDeduction;
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view("generated_pdf.judge-ranking-rank-summary", compact('category', 'judges', 'percentage', 'grands'))->render();
+        $htmlContent = view("generated_pdf.judge-ranking-rank-summary", compact('category', 'judges', 'percentage', 'grands', 'showDeduction'))->render();
 
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
@@ -65,13 +66,14 @@ class EventRankingByRank extends Component
             $part = [
                 'participant_no' => $item->participant_no,
                 'participant' => $item->participant,
+                'deduction' => $item->higalaayDeduction($category->category) ? $item->higalaayDeduction($category->category)->deduction : 0,
                 'judge_scores' => [],
                 'subtotals' => [],
                 'grand' => 0
             ];
 
+            $totalRankScore = 0;
             $totalScore = 0;
-
             foreach ($judges as $judge) {
                 $ranked = $item->getRankingsByJudge($judge->user_id, $category->category, $item->id);
                 $subtotal = $item->getHigalaayScoreByJudge($judge->id, $category->category);
@@ -80,11 +82,14 @@ class EventRankingByRank extends Component
                 $part['subtotals'][$judge->user_id] = $subtotal;
 
                 if ($ranked) {
-                    $totalScore += $ranked;
+                    $totalRankScore += $ranked;
+                }
+                if ($subtotal) {
+                    $totalScore += $subtotal;
                 }
             }
-
-            $part['grand'] = $totalScore;
+            $part['totalScore'] = $totalScore / $judges->count();
+            $part['grand'] = $totalRankScore;
             $grands[] = $part;
         }
 

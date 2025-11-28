@@ -4,6 +4,7 @@ namespace App\Livewire\Reports\Component;
 
 use Livewire\Component;
 use App\Models\Category;
+use App\Models\RefJudge;
 use App\Models\RefParticipant;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -32,9 +33,8 @@ class EventAverageRankReport extends Component
 
         $category1 = Category::find($this->event1);
         $category2 = Category::find($this->event2);
-        $service = new ReportService($category1->category);
-        $participants = $service->generateTopParticipants();
-        $judges =  $service->judges;
+        $participants = RefParticipant::category($category1->category)->get();
+        $judges =  RefJudge::category($category1->category)->get();
 
         $grands = $this->caculateRankings($participants, $category1, $category2);
 
@@ -65,13 +65,13 @@ class EventAverageRankReport extends Component
     private function caculateRankings($participants, $category1, $category2)
     {
         $grands = [];
-        $aw = [];
+
         foreach ($participants as $item) {
 
             //get the category1 and category2
             $cat1 = $item->averageHigalaay($category1->category);
             $cat2 = $item->averageHigalaay($category2->category);
-            $aw[] = $cat2;
+
             //get the participant
             $participant = $item->participant;
 

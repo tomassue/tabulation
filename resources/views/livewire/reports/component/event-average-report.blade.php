@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="event">Category 1</label>
+                        <label for="event">First Event</label>
                         <select wire:model="event1" id="event1" class="form-select">
                             <option value="">--- SELECT ---</option>
                             @foreach ($categories as $item)
@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="event">Category 2</label>
+                        <label for="event">Second Event</label>
                         <select wire:model="event2" id="event2" class="form-select">
                             <option value="">--- SELECT ---</option>
                             @foreach ($categories as $item)

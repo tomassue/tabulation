@@ -4,7 +4,7 @@
 
             <div class="col-lg-12">
 
-                <div class="card">
+                <div class="card" style="display: none;">
                     <div class="card-body">
                         <h5 class="card-title">Report Content (Single Event)</h5>
 
@@ -84,39 +84,49 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Report Generator</h5>
-                        <div class="form-group mb-3">
-                            <label for="" class="form-label">Report</label>
-                            <select class="form-select" wire:model.live="selectedReports" required>
-                                <option value="">-- Select report --</option>
-                                <option value="multiple_event" disabled>Multiple Event (Average)</option>
-                                <option value="multiple_event_rank">Multiple Event (Rank)</option>
-                                <option value="average">Ranking By Judge (Average)</option>
-                                <option value="rank">Ranking By Judge (Rank)</option>
-                                <option value="criteria">Criteria By Judge (Rank)</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-lg-6 form-group mb-3">
+                                <label for="" class="form-label">Report type</label>
+                                <select class="form-select" wire:model.live="selectedReports" required>
+                                    <option value="">-- Select report --</option>
+                                    <option value="two_event">1 - Final Scoring of Two Events (ex. Marching and Street)</option>
+                                    <option value="three_judges">2 - Final Scoring of 3 Judges (ex. Bangga sa daygon, Marching and Street)</option>
+                                    <option value="one_judge">3 - Final Scoring By 1 Judge</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label for="" class="form-label">Scoring type</label>
+                                <select class="form-select" wire:model.live="selectedScoring" required>
+                                    <option value="">-- Select scoring --</option>
+                                    <option value="rank">1 - By Rank Score Sheet (Ranking)</option>
+                                    @if ($selectedReports != 'one_judge')
+                                        <option value="average">2 - By Average Score Sheet (Averaging)</option>
+                                    @endif
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="row" wire:loading.class="opacity-50 pe-none">
-                    @if ($selectedReports == 'multiple_event')
+                    @if ($selectedReports == 'two_event' && $selectedScoring == 'average')
                         <div class="col-lg-12">
                             @livewire('reports.component.event-average-report')
                         </div>
-                    @elseif ($selectedReports == 'multiple_event_rank')
+                    @elseif ($selectedReports == 'two_event' && $selectedScoring == 'rank')
                         <div class="col-lg-12">
                             @livewire('reports.component.event-average-rank-report')
                         </div>
-                    @elseif ($selectedReports == 'average')
+                    @elseif ($selectedReports == 'three_judges' && $selectedScoring == 'average')
                         <div class="col-lg-12">
                             @livewire('reports.component.event-ranking-by-judge')
                         </div>
-                    @elseif ($selectedReports == 'rank')
+                    @elseif ($selectedReports == 'three_judges' && $selectedScoring == 'rank')
                         <div class="col-lg-12">
                             @livewire('reports.component.event-ranking-by-rank')
                         </div>
-                    @elseif ($selectedReports == 'criteria')
+                    @elseif ($selectedReports == 'one_judge' && $selectedScoring == 'rank')
                         <div class="col-lg-12">
                             @livewire('reports.component.event-criteria-by-judge')
                         </div>

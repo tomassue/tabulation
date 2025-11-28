@@ -137,6 +137,27 @@
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
+
+        .winner-1 {
+            background: rgb(255, 240, 152) !important;
+            color: black;
+            font-weight: bold !important;
+            /* or #FFD700 */
+        }
+
+        .winner-2 {
+            background: silver !important;
+            color: black !important;
+            font-weight: bold !important;
+            /* or #C0C0C0 */
+        }
+
+        .winner-3 {
+            background: #fcd6b0 !important;
+            color: black;
+            font-weight: bold !important;
+            /* no keyword for a good bronze */
+        }
     </style>
 </head>
 
@@ -171,7 +192,7 @@
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">MARCHING BAND COMPETITION 2025</div>
                     <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>
@@ -203,15 +224,15 @@
                 </tr>
             </thead>
             @foreach ($grands as $key => $item)
-                <tr>
-                    <td class="text-center" style="font-size: 11pt;font-weight: bold;padding: 5px;" width="3%">{{ $item['participant_no'] }}</td>
-                    <td style="font-size: 9pt;font-weight: bold;padding: 5px;">{{ $item['participant'] }}</td>
+                <tr class="winner-{{ $item['ordinal_rank'] }}">
+                    <td class="text-center" style="font-size: 11pt;padding: 5px;" width="3%">{{ $item['participant_no'] }}</td>
+                    <td style="font-size: 9pt;padding: 5px;">{{ $item['participant'] }}</td>
                     <td class="text-center" width="8%">{{ bong_format($item['cat1']) }} </td>
-                    <td class="text-center" style="font-weight: bold" width="8%">{{ bong_ordinal($item['cat1_ordinal_rank']) }}</td>
+                    <td class="text-center" style="" width="8%">{{ bong_ordinal($item['cat1_ordinal_rank']) }}</td>
                     <td class="text-center" width="8%">{{ bong_format($item['cat2']) }} </td>
-                    <td class="text-center" style="font-weight: bold;" width="8%">{{ bong_ordinal($item['cat2_ordinal_rank']) }}</td>
-                    <td class="text-center" style="font-weight: bold" width="10%">{{ $item['cat1_ordinal_rank'] + $item['cat2_ordinal_rank'] }}</td>
-                    <td class="text-center" style="font-weight: bold;color: green;" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
+                    <td class="text-center" style=";" width="8%">{{ bong_ordinal($item['cat2_ordinal_rank']) }}</td>
+                    <td class="text-center" style="" width="10%">{{ $item['cat1_ordinal_rank'] + $item['cat2_ordinal_rank'] }}</td>
+                    <td class="text-center" style=";color: green;" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
                 </tr>
             @endforeach
         </table>
