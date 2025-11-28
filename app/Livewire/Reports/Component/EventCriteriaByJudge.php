@@ -5,6 +5,7 @@ namespace App\Livewire\Reports\Component;
 use App\Models\Category;
 use App\Models\RefCriteria;
 use App\Models\RefJudge;
+use App\Models\RefParticipant;
 use App\Services\ReportService;
 use Livewire\Component;
 use Dompdf\Dompdf;
@@ -27,15 +28,15 @@ class EventCriteriaByJudge extends Component
         ]);
 
         $category = Category::where('category', $this->selectedCategory)->first();
-        $service = new ReportService($this->selectedCategory, null, $this->selectedJudge);
-        $participants = $service->generateTopParticipants();
-
+        $participants = RefParticipant::category($this->selectedCategory)->get();
         $judge =  RefJudge::where('user_id', $this->selectedJudge)->first();
         $criterias = RefCriteria::category($this->selectedCategory)->get();
 
+        $grands = $this->caculateRankings($category, $participants, $criterias, $judge);
+
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.judge-criteria-summary', compact('category', 'participants', 'judge', 'criterias'))->render();
+        $htmlContent = view('generated_pdf.judge-criteria-summary', compact('category', 'participants', 'judge', 'criterias', 'grands'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
         $dompdf->setPaper('folio', 'landscape');
@@ -56,5 +57,32 @@ class EventCriteriaByJudge extends Component
 
         $this->base64pdf = base64_encode($dompdf->output());
         $this->dispatch('openCriteriaModal');
+    }
+    private function caculateRankings($category, $participants, $criterias, $judge)
+    {
+        $grands = [];
+
+        foreach ($participants as $item) {
+
+            $part = [
+                'participant_no' => $item->participant_no,
+                'participant' => $item->participant,
+                'criteria_scores' => [],
+                'grand' => 0
+            ];
+            $totalScore = 0;
+            foreach ($criterias as $criteria) {
+                $criteria_score = $item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria);
+                $part['criteria_scores'][$criteria->id] = $criteria_score;
+
+                if ($criteria_score) {
+                    $totalScore += $criteria_score;
+                }
+            }
+            $part['grand'] =  $totalScore;
+            $grands[] = $part;
+        }
+        $grands = bong_rank_arranger($grands, 'grand', 'ordinal_rank', false, "DESC");
+        return $grands;
     }
 }

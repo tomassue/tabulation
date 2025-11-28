@@ -115,17 +115,19 @@
             /* Adds padding around the text */
         }
 
-        /* Apply background color to every even row in the table body */
-        .bordered tbody tr:nth-child(even) {
-            background-color: #d4d0d0;
-            /* Light gray stripe */
+
+        /* Style for all odd rows (1st, 3rd, 5th, etc.) */
+        table.bordered tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+            /* A light gray color */
         }
 
-        /* Apply a different background color to odd rows if desired */
-        .bordered tbody tr:nth-child(odd) {
+        /* Style for all even rows (2nd, 4th, 6th, etc.) */
+        table.bordered tbody tr:nth-child(even) {
             background-color: #ffffff;
-            /* White stripe */
+            /* A white color (optional, as it's the default) */
         }
+
 
         #developer {
             position: fixed;
@@ -135,6 +137,27 @@
             text-align: right;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
+        }
+
+        .winner-1 {
+            background: rgb(255, 240, 152) !important;
+            color: black;
+            font-weight: bold !important;
+            /* or #FFD700 */
+        }
+
+        .winner-2 {
+            background: silver !important;
+            color: black !important;
+            font-weight: bold !important;
+            /* or #C0C0C0 */
+        }
+
+        .winner-3 {
+            background: #fcd6b0 !important;
+            color: black;
+            font-weight: bold !important;
+            /* no keyword for a good bronze */
         }
     </style>
 </head>
@@ -168,7 +191,7 @@
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
                     <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
             <tr>
@@ -189,19 +212,19 @@
                         <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }} Points</span> ) </th>
                     @endforeach
                     <th width="10%" style="font-size: 13pt;">TOTAL</th>
-                    <th width="10%" style="font-size: 13pt;">RANKING</div>
+                    <th width="10%" style="font-size: 13pt;color:green;">RANKING</div>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($participants as $item)
-                    <tr>
-                        <td class="text-center" style="font-size: 10pt;font-weight: bold">{{ $item['participant_no'] }}</td>
-                        <td style="font-size: 10pt;font-weight: bold; padding: 5px;">{{ $item['participant'] }}</td>
+                @forelse ($grands as $item)
+                    <tr class="winner-{{ $item['ordinal_rank'] }}">
+                        <td class="text-center" style="font-size: 10pt;">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 10pt;padding: 10px;">{{ $item['participant'] }}</td>
                         @foreach ($criterias as $criteria)
-                            <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria)) }}</td>
+                            <td class="text-center">{{ bong_format($item['criteria_scores'][$criteria->id]) }}</td>
                         @endforeach
-                        <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
-                        <td class="text-center" style="font-weight: bold;">{{ bong_ordinal($item->current_rank) }}</td>
+                        <td class="text-center">{{ bong_format($item['grand']) }}</td>
+                        <td class="text-center" style="color:green;">{{ bong_ordinal($item['ordinal_rank']) }}</td>
                     </tr>
                 @empty
                     @php

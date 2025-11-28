@@ -108,6 +108,18 @@
             /* Adds spacing between lines and text */
         }
 
+        /* Style for all odd rows (1st, 3rd, 5th, etc.) */
+        table.bordered tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+            /* A light gray color */
+        }
+
+        /* Style for all even rows (2nd, 4th, 6th, etc.) */
+        table.bordered tbody tr:nth-child(even) {
+            background-color: #ffffff;
+            /* A white color (optional, as it's the default) */
+        }
+
         .hr-with-text span {
             white-space: nowrap;
             /* Prevents text from wrapping */
@@ -123,6 +135,27 @@
             text-align: right;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
+        }
+
+        .winner-1 {
+            background: rgb(255, 240, 152) !important;
+            color: black;
+            font-weight: bold !important;
+            /* or #FFD700 */
+        }
+
+        .winner-2 {
+            background: silver !important;
+            color: black !important;
+            font-weight: bold !important;
+            /* or #C0C0C0 */
+        }
+
+        .winner-3 {
+            background: #fcd6b0 !important;
+            color: black;
+            font-weight: bold !important;
+            /* no keyword for a good bronze */
         }
     </style>
 </head>
@@ -155,8 +188,10 @@
             <tr>
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
-                    <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
+                    @if ($category->category != 'bangga-sa-daygon')
+                        <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
+                    @endif
+                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>
@@ -167,7 +202,7 @@
                         <div style="font-size: 15pt;"><i>Average Scoring Sheet</i></div>
                         <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}
                             @if ($percentage)
-                                (<span style="color: red;">{{ $percentage }}%</span>)
+                                (<span style="color: red;">50%</span>)
                             @endif
                         </div>
                     </div>
@@ -187,25 +222,26 @@
                         DEMERIT <div style="color:red;font-size: 8pt;">(5 Points per deduction / violation)</div>
                     </th>
                     <th width="10%" style="font-size: 9pt;">AVERAGE SCORE</th>
-                    <th width="10%" style="font-size: 9pt;">PERCENTAGE <div style="color:red;">(Ranking)</div>
+                    <th width="10%" style="font-size: 9pt;">AVERAGE <div style="color:red;">(Ranking)</div>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($participants as $item)
-                    <tr>
-                        <td class="text-center" style="font-size: 10pt;font-weight: bold">{{ $item->participant_no }}</td>
-                        <td style="font-size: 10pt;font-weight: bold">{{ $item->participant }}</td>
+                    @php
+                        $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
+                    @endphp
+                    <tr class="winner-{{ $item->current_rank }}">
+                        <td class="text-center" style="font-size: 10pt;">{{ $item->participant_no }}</td>
+                        <td style="font-size: 12pt;padding: 10px;">{{ $item->participant }}</td>
                         @foreach ($judges as $judge)
                             <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
                         @endforeach
                         <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
-                        @php
-                            $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
-                        @endphp
-                        <td class="text-center" style="font-weight: bold">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
-                        <td class="text-center" style="font-weight: bold">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
-                        <td class="text-center" style="font-weight: bold">{{ bong_ordinal($item->current_rank) }}</td>
+
+                        <td class="text-center" style="{{ $deducted?->deduction == 0 ? '' : 'color: red;' }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                        <td class="text-center">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
+                        <td class="text-center">{{ bong_ordinal($item->current_rank) }}</td>
                     </tr>
                 @empty
                     @php

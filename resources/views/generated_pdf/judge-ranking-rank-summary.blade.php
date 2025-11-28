@@ -108,6 +108,18 @@
             /* Adds spacing between lines and text */
         }
 
+        /* Style for all odd rows (1st, 3rd, 5th, etc.) */
+        table.bordered tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+            /* A light gray color */
+        }
+
+        /* Style for all even rows (2nd, 4th, 6th, etc.) */
+        table.bordered tbody tr:nth-child(even) {
+            background-color: #ffffff;
+            /* A white color (optional, as it's the default) */
+        }
+
         .hr-with-text span {
             white-space: nowrap;
             /* Prevents text from wrapping */
@@ -123,6 +135,27 @@
             text-align: right;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
+        }
+
+        .winner-1 {
+            background: rgb(255, 240, 152) !important;
+            color: black;
+            font-weight: bold !important;
+            /* or #FFD700 */
+        }
+
+        .winner-2 {
+            background: silver !important;
+            color: black !important;
+            font-weight: bold !important;
+            /* or #C0C0C0 */
+        }
+
+        .winner-3 {
+            background: #fcd6b0 !important;
+            color: black;
+            font-weight: bold !important;
+            /* no keyword for a good bronze */
         }
     </style>
 </head>
@@ -155,8 +188,10 @@
             <tr>
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
-                    <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
+                    @if ($category->category != 'bangga-sa-daygon')
+                        <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
+                    @endif
+                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>
@@ -178,35 +213,46 @@
             <thead>
                 <tr>
                     <th style="width: 3%;" rowspan="2">#</th>
-                    <th width="50%" rowspan="2" style="font-size: 9pt;">CONTINGENT</th>
+                    <th width="40%" rowspan="2" style="font-size: 9pt;">CONTINGENT</th>
                     @foreach ($judges as $judge)
                         <th style="text-transform: uppercase;font-size: 9pt;" colspan="2">{{ $judge->judge }}</th>
                     @endforeach
+                    @if ($showDeduction == true)
+                        <th width="5%" rowspan="2" style="font-size: 8pt;color: rgb(11, 11, 224);">AVE SCORE</th>
+                        <th width="5%" rowspan="2" style="font-size: 8pt;color: red;">DEMIRIT</th>
+                    @endif
                     <th width="5%" rowspan="2" style="font-size: 9pt;">TOTAL RANK</th>
-                    <th width="5%" rowspan="2" style="font-size: 9pt;">FINAL RANK</th>
+                    <th width="5%" rowspan="2" style="font-size: 9pt;color:green;">FINAL RANK</th>
                 </tr>
                 <tr>
                     @foreach ($judges as $judge)
-                        <th style="text-transform: uppercase;font-size: 8pt;">Points</th>
+                        <th style="text-transform: uppercase;font-size: 8pt;">Score</th>
                         <th style="text-transform: uppercase;font-size: 8pt;">Rank</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
                 @forelse ($grands as $item)
-                    <tr>
-                        <td class="text-center" style="font-size: 10pt;font-weight: bold">{{ $item['participant_no'] }}</td>
-                        <td style="font-size: 10pt;font-weight: bold;padding: 5px;">{{ $item['participant'] }}</td>
+                    <tr class="winner-{{ $item['ordinal_rank'] }}">
+                        <td class="text-center" style="font-size: 10pt;">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 12pt;padding: 10px;">{{ $item['participant'] }}</td>
                         @foreach ($judges as $judge)
                             <td class="text-center">{{ $item['subtotals'][$judge->user_id] }}</td>
                             <td class="text-center" style="font-weight: bold">{{ $item['judge_scores'][$judge->user_id] != 0 ? bong_ordinal($item['judge_scores'][$judge->user_id]) : '-' }}</td>
                         @endforeach
-                        <td class="text-center" style="font-weight: bold">{{ $item['grand'] }}</td>
-                        <td class="text-center" style="font-weight: bold">{{ bong_ordinal($item['ordinal_rank']) }}</td>
+                        @if ($showDeduction == true)
+                            <td class="text-center" style="font-weight: bold;color: rgb(11, 11, 224);">{{ bong_format($item['totalScore']) }}</td>
+                            <td class="text-center" style="font-weight: bold;{{ $item['deduction'] == 0 ? '' : 'color: red;' }}">{{ $item['deduction'] == 0 ? '-' : $item['deduction'] }}</td>
+                        @endif
+                        <td class="text-center" style="font-size: 12pt;">{{ $item['grand'] }}</td>
+                        <td class="text-center" style="font-size: 12pt;">{{ bong_ordinal($item['ordinal_rank']) }}</td>
                     </tr>
                 @empty
                     @php
-                        $count = $judges->count() + 3;
+                        $count = $judges->count() * 2 + 4;
+                        if ($showDeduction == true) {
+                            $count += 2;
+                        }
                     @endphp
                     <tr>
                         <td colspan="{{ $count }}" class="text-center">No Data</td>

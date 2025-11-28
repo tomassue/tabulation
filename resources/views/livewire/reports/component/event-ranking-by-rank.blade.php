@@ -26,6 +26,19 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="event">Show Average/Deduction</label>
+                        <select class="form-select" wire:model.live="showDeduction" required>
+                            <option value="">--- SELECT ---</option>
+                            <option value="1">YES</option>
+                            <option value="0">NO</option>
+                        </select>
+                        @error('showDeduction')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="text-center pt-3">
                         <button type="button" class="btn btn-primary" wire:click="generateReport">
