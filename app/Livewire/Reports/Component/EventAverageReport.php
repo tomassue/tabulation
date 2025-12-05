@@ -71,8 +71,12 @@ class EventAverageReport extends Component
             $cat1 = $item->averageHigalaay($category1->category);
             $cat2 = $item->averageHigalaay($category2->category);
 
+            //get the 50% of category1 and category2
+            $cat1 = $cat1 * 0.5;
+            $cat2 = $cat2 * 0.5;
+
             //get the grandtotal
-            $grand = $cat1 * 0.5 + $cat2 * 0.5;
+            $grand = $cat1 + $cat2;
 
             //get the participant
             $participant = $item->participant;
