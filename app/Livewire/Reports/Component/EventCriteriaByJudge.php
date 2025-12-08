@@ -58,6 +58,11 @@ class EventCriteriaByJudge extends Component
         $this->base64pdf = base64_encode($dompdf->output());
         $this->dispatch('openCriteriaModal');
     }
+    public function handleOptionChange()
+    {
+        $this->selectedJudge = "";
+        // Perform other actions like updating a dependent dropdown's options
+    }
     private function caculateRankings($category, $participants, $criterias, $judge)
     {
         $grands = [];

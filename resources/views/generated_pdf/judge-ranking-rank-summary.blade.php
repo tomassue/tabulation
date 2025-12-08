@@ -187,11 +187,13 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: {{ $category->description }} COMPETITION</div>
                     @if ($category->category != 'bangga-sa-daygon')
-                        <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                    @else
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                     @endif
-                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>

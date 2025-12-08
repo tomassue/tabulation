@@ -10,7 +10,7 @@ use Dompdf\Options;
 
 class EventRankingByJudge extends Component
 {
-    public $selectedCategory, $percentage = false, $base64pdf;
+    public $selectedCategory, $percentage = false,  $showDeduction = false, $base64pdf;
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
@@ -27,10 +27,11 @@ class EventRankingByJudge extends Component
         $participants = $service->generateTopParticipants();
         $judges =  $service->judges;
         $percentage = $this->percentage;
+        $showDeduction = $this->showDeduction;
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.judge-ranking-summary', compact('category', 'participants', 'judges', 'percentage'))->render();
+        $htmlContent = view('generated_pdf.judge-ranking-summary', compact('category', 'participants', 'judges', 'percentage', 'showDeduction'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
         $dompdf->setPaper('folio', 'landscape');

@@ -6,7 +6,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="event">Category</label>
-                        <select wire:model.live="selectedCategory" id="selectedCategory" class="form-select">
+                        <select wire:model.live="selectedCategory" wire:change="handleOptionChange" id="selectedCategory" class="form-select">
                             <option value="">--- SELECT ---</option>
                             @foreach ($categories as $item)
                                 <option value="{{ $item->category }}">{{ $loop->iteration }} - {{ $item->description }}</option>
@@ -26,7 +26,7 @@
                                 <option value="{{ $item->user_id }}">{{ $loop->iteration }} - {{ $item->judge }}</option>
                             @endforeach
                         </select>
-                        @error('selectedCategory')
+                        @error('selectedJudge')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

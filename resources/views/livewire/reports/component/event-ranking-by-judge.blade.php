@@ -3,7 +3,7 @@
         <div class="card-body">
             <h5 class="card-title">Judge Ranking Report Content (Average)</h5>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-group">
                         <label for="event">Category</label>
                         <select wire:model="selectedCategory" id="selectedCategory" class="form-select">
@@ -17,15 +17,28 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-group">
                         <label for="event">Show percentage label</label>
                         <select class="form-select" wire:model="percentage" required>
                             <option value="">--- SELECT ---</option>
-                            <option value="1">YES</option>
-                            <option value="0">NO</option>
+                            <option value="1">YES (ex. Marching band/Street)</option>
+                            <option value="0">NO (ex. Band Major/Majorette)</option>
                         </select>
                         @error('percentage')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="event">Show Average/Deduction</label>
+                        <select class="form-select" wire:model.live="showDeduction" required>
+                            <option value="">--- SELECT ---</option>
+                            <option value="1">YES (ex. Marching band/Street)</option>
+                            <option value="0">NO (ex. Band Major/Majorette)</option>
+                        </select>
+                        @error('showDeduction')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
