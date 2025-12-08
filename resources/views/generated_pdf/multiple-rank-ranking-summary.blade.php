@@ -191,8 +191,12 @@
             <tr>
                 <td class="text-center">
                     <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">MARCHING BAND COMPETITION 2025</div>
-                    <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    @if ($category1->category != 'bangga-sa-daygon')
+                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                    @else
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    @endif
                 </td>
             </tr>
         </table>

@@ -176,9 +176,13 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">MARCHING BAND COMPETITION 2025</div>
-                    <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: MARCHING BAND COMPETITION</div>
+                    @if ($category1->category != 'bangga-sa-daygon')
+                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                    @else
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    @endif
                 </td>
             </tr>
         </table>
@@ -186,57 +190,79 @@
             <tr>
                 <td colspan="3">
                     <div style="text-align: center;padding-top:20px;">
-                        <div style="font-size: 15pt;font-weight:bold;"><i>Scoring Sheet</i></div>
                         <div style="font-size: 25pt;text-transform: uppercase;color: red;font-weight:bold;">FINAL TABULATION </div>
-                        <div><i>(Percentage Ranking)</i></div>
                     </div>
                 </td>
             </tr>
         </table>
-        <table class="table bordered ">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th style="font-size: 12pt;">CONTINGENT</th>
-                    <th style="text-transform: uppercase;"><span style="color:blue;font-size: 9pt;">{{ $category1->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
-                    <th style="text-transform: uppercase;"><span style="color: green;font-size: 9pt;">{{ $category2->description }}</span> <br />(<span style="color:red;">50%</span>)</th>
-                    <th style="font-size: 9pt;">GRAND <br />TOTAL</th>
-                    <th style="font-size: 9pt;">RANK</th>
-                </tr>
-            </thead>
-            @foreach ($grands as $key => $item)
-                <tr class="winner-{{ $item['ordinal_rank'] }}">
-                    <td class="text-center" style="font-size: 11pt;font-weight: bold" width="5%">{{ $item['participant_no'] }}</td>
-                    <td style="font-size: 11pt;font-weight: bold;padding: 10px;">{{ $item['participant'] }}</td>
-                    <td class="text-center" style="font-weight: bold;color: blue;" width="15%">{{ bong_format($item['cat1']) }}</td>
-                    <td class="text-center" style="font-weight: bold;color: green;" width="15%">{{ bong_format($item['cat2']) }}</td>
-                    <td class="text-center" style="font-weight: bold" width="10%">{{ bong_format($item['grand']) }}</td>
-                    <td class="text-center" style="font-weight: bold" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
-                </tr>
-            @endforeach
-        </table>
-        <table class="table" style="padding-top: 10px;">
+        <table style="width: 100%;">
             <tr>
-                @foreach ($judges as $judge)
-                    <td style="text-align: right; vertical-align: top;">
-                        &nbsp;
-                    </td>
-                    <td style="text-align: center;height: 120px;width: 300px">
-                        <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
-                        <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
-                        <div class="text-center p-2" style="border-top: 1px solid black;">
-                            <i>Full Name and Signature</i>
-                        </div>
-                        <div>Time: _______________</div>
-                    </td>
-                    <td width="20px;">
-                        &nbsp;
-                    </td>
-                    @if ($loop->iteration % 3 == 0)
-            </tr>
-            <tr>
-                @endif
-                @endforeach
+                <td style="width: 10%">
+                    <table class="table" style="padding-top: 10px;">
+                        @foreach ($judges as $judge)
+                            <tr>
+                                <td style="text-align: right; vertical-align: top;">
+                                    &nbsp;
+                                </td>
+                                <td style="text-align: center;height: 120px;width: 200px">
+                                    <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
+                                    <span style="text-transform: uppercase;font-weight: bold">{{ $judge->judge }}</span>
+                                    <div class="text-center p-2" style="border-top: 1px solid black;">
+                                        <i>Full Name & Signature</i>
+                                    </div>
+                                </td>
+                                <td width="20px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td style="width:80%;">
+                    <table class="table bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th style="font-size: 12pt;">CONTINGENT</th>
+                                <th style="text-transform: uppercase;background: #e2efd9;color:#00b050;"><span style="font-size: 9pt;">{{ $category1->description }}</span> <br />(50%)</th>
+                                <th style="text-transform: uppercase;background: #fbe4d5;color: #ed7d31;"><span style="font-size: 9pt;">{{ $category2->description }}</span> <br />(50%)</th>
+                                <th style="font-size: 9pt;">TOTAL</th>
+                                <th style="font-size: 9pt;">RANK</th>
+                            </tr>
+                        </thead>
+                        @foreach ($grands as $key => $item)
+                            <tr>
+                                <td class="text-center" style="font-size: 10pt;font-weight: bold" width="5%">{{ $item['participant_no'] }}</td>
+                                <td style="font-size: 9pt;font-weight: bold;padding: 3px;">{{ $item['participant'] }}</td>
+                                <td class="text-center" style="font-weight: bold;color: black;background: #e2efd9;" width="15%">{{ bong_format($item['cat1']) }}</td>
+                                <td class="text-center" style="font-weight: bold;color: black;background: #fbe4d5;" width="15%">{{ bong_format($item['cat2']) }}</td>
+                                <td class="text-center" style="font-weight: bold" width="10%">{{ bong_format($item['grand']) }}</td>
+                                <td class="text-center" style="font-weight: bold" width="10%">{{ bong_ordinal($item['ordinal_rank']) }} </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td style="width: 10%">
+                    <table class="table" style="padding-top: 10px;">
+                        @foreach ($judges as $judge)
+                            <tr>
+                                <td style="text-align: right; vertical-align: top;">
+                                    &nbsp;
+                                </td>
+                                <td style="text-align: center;height: 120px;width: 200px">
+                                    <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">TABULATOR #{{ $loop->iteration }}</div>
+                                    <span style="text-transform: uppercase;font-weight: bold">&nbsp;</span>
+                                    <div class="text-center p-2" style="border-top: 1px solid black;">
+                                        <i>Full Name & Signature</i>
+                                    </div>
+                                </td>
+                                <td width="20px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </td>
             </tr>
         </table>
     </main>

@@ -189,17 +189,38 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
-                    <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: {{ $category->description }} COMPETITION</div>
+                    @if ($category->category != 'bangga-sa-daygon')
+                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                    @else
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                    @endif
+
                 </td>
             </tr>
             <tr>
-                <td style="vertical-align: top;" width="75%">
-                    <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
-                        <div style="font-size: 15pt;"><i>Scoring Sheet</i></div>
-                        <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}</div>
-                    </div>
+                <td style="vertical-align: top;" width="100%">
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="text-align: center;width: 10%;vertical-align: center;">
+                                <div style="text-align: center; height: 100px;width: 270px">
+                                    <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">JUDGE #{{ $judge->nickname }}</div>
+                                    <span style="text-transform: uppercase;font-weight: bold; font-size: 12pt;">{{ $judge->judge }}</span>
+                                    <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
+                                        <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
+                                    <div style="font-size: 20pt;font-weight:bold;">Scoring Sheet & Criteria for Judging</div>
+                                    <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}</div>
+                                </div>
+                            </td>
+                            <td style="width: 10%;width: 270px;">&nbsp;</td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -209,17 +230,17 @@
                     <th style="font-size: 13pt;" width="3%">#</th>
                     <th style="font-size: 13pt;">CONTINGENT</th>
                     @foreach ($criterias as $criteria)
-                        <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }} Points</span> ) </th>
+                        <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }}%</span> ) </th>
                     @endforeach
-                    <th width="10%" style="font-size: 13pt;">TOTAL</th>
+                    <th width="10%" style="font-size: 13pt;">TOTAL<br />(<span style="color: red;">100%</span> )</th>
                     <th width="10%" style="font-size: 13pt;color:green;">RANKING</div>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($grands as $item)
                     <tr class="winner-{{ $item['ordinal_rank'] }}">
-                        <td class="text-center" style="font-size: 10pt;">{{ $item['participant_no'] }}</td>
-                        <td style="font-size: 10pt;padding: 10px;">{{ $item['participant'] }}</td>
+                        <td class="text-center" style="font-size: 9pt;">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 9pt;padding: 3px;">{{ $item['participant'] }}</td>
                         @foreach ($criterias as $criteria)
                             <td class="text-center">{{ bong_format($item['criteria_scores'][$criteria->id]) }}</td>
                         @endforeach
@@ -235,22 +256,6 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-        <table class="table" style="padding-top: 50px;">
-            <tr>
-                <td style="width: 40%;">&nbsp;</td>
-                <td style="width: 40%;">&nbsp;</td>
-                <td style="text-align: center;">
-                    <div style="text-align: center; height: 100px;width: 270px">
-                        <span style="text-transform: uppercase;font-weight: bold; font-size: 12pt;">{{ $judge->judge }}</span>
-                        <div class="text-center" style="border-top: 1px solid black;margin-bottom: -5px">
-                            <div><i style="font-size: 10pt;">Full Name and Signature</i></div>
-                            <div>Time: _______________</div>
-                        </div>
-                    </div>
-                </td>
-
-            </tr>
         </table>
     </main>
 </body>

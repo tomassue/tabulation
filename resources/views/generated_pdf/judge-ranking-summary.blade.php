@@ -187,11 +187,13 @@
         <table class="table" style="margin-top:-100px;">
             <tr>
                 <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">{{ $category->description }} COMPETITION 2025</div>
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: {{ $category->description }} COMPETITION</div>
                     @if ($category->category != 'bangga-sa-daygon')
-                        <div style="font-size: 13pt;">Rodelsa Circle - Velez - Tirso Neri - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                    @else
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                     @endif
-                    <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
                 </td>
             </tr>
         </table>
@@ -199,7 +201,13 @@
             <tr>
                 <td style="vertical-align: top;" width="85%">
                     <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
-                        <div style="font-size: 15pt;"><i>Average Scoring Sheet</i></div>
+                        <div style="font-size: 20pt;font-weight:bold;">
+                            @if ($percentage)
+                                Tabulation Sheet
+                            @else
+                                FINAL TABULATION
+                            @endif
+                        </div>
                         <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}
                             @if ($percentage)
                                 (<span style="color: red;">50%</span>)
@@ -217,13 +225,22 @@
                     @foreach ($judges as $judge)
                         <th style="text-transform: uppercase;font-size: 9pt;">{{ $judge->judge }}</th>
                     @endforeach
-                    <th width="10%" style="font-size: 9pt;">TOTAL</th>
-                    <th width="10%" style="font-size: 9pt;">
-                        DEMERIT <div style="color:red;font-size: 8pt;">(5 Points per deduction / violation)</div>
-                    </th>
-                    <th width="10%" style="font-size: 9pt;">AVERAGE SCORE</th>
-                    <th width="10%" style="font-size: 9pt;">AVERAGE <div style="color:red;">(Ranking)</div>
-                    </th>
+                    @if ($showDeduction == true)
+                        <th width="10%" style="font-size: 9pt;">RAW AVERAGE SCORE</th>
+                        <th width="10%" style="font-size: 9pt;">
+                            DEMERIT <div style="color:red;font-size: 8pt;">(2 Points per deduction / violation)</div>
+                        </th>
+                    @endif
+                    <th width="10%" style="font-size: 9pt;">TOTAL<br />AVERAGE</th>
+                    @if ($percentage)
+                        <th width="10%" style="font-size: 9pt;text-transform: uppercase;">
+                            {{ $category->description }} <div style="color:blue;">(50%)</div>
+                        </th>
+                    @else
+                        <th width="10%" style="font-size: 9pt;">
+                            AVERAGE <div style="color:red;">(Ranking)</div>
+                        </th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -232,20 +249,28 @@
                         $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
                     @endphp
                     <tr class="winner-{{ $item->current_rank }}">
-                        <td class="text-center" style="font-size: 10pt;">{{ $item->participant_no }}</td>
-                        <td style="font-size: 12pt;padding: 10px;">{{ $item->participant }}</td>
+                        <td class="text-center" style="font-size: 9pt;">{{ $item->participant_no }}</td>
+                        <td style="font-size: 9pt;padding: 3px;">{{ $item->participant }}</td>
                         @foreach ($judges as $judge)
                             <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
                         @endforeach
-                        <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
-
-                        <td class="text-center" style="{{ $deducted?->deduction == 0 ? '' : 'color: red;' }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                        @if ($showDeduction == true)
+                            <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
+                            <td class="text-center" style="{{ $deducted?->deduction == 0 ? '' : 'color: red;' }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                        @endif
                         <td class="text-center">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
-                        <td class="text-center">{{ bong_ordinal($item->current_rank) }}</td>
+                        @if ($percentage)
+                            <td class="text-center">{{ bong_format($item->averageHigalaay($category->category) * 0.5) }}</td>
+                        @else
+                            <td class="text-center">{{ bong_ordinal($item->current_rank) }}</td>
+                        @endif
                     </tr>
                 @empty
                     @php
                         $count = $judges->count() + 6;
+                        if ($showDeduction == false) {
+                            $count -= 2;
+                        }
                     @endphp
                     <tr>
                         <td colspan="{{ $count }}" class="text-center">No Data</td>
@@ -265,7 +290,6 @@
                         <div class="text-center p-2" style="border-top: 1px solid black;">
                             <i>Full Name and Signature</i>
                         </div>
-                        <div>Time: _______________</div>
                     </td>
                     <td width="20px;">
                         &nbsp;
