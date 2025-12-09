@@ -4,9 +4,9 @@
 
             <div class="col-lg-12">
 
-                <div class="card" style="display: none;">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Report Content (Single Event)</h5>
+                        <h5 class="card-title">Special Awards </h5>
 
                         <form id="reportForm">
 
@@ -17,19 +17,8 @@
                                 <div class="row mb-3 participant-row g-2">
                                     <div class="col-sm-12 row g-2">
                                         <div class="col-sm-3">
-                                            <label for="" class="form-label">Report</label>
-                                            <select class="form-select" wire:model="reportType" required>
-                                                <option value="">-- Select report --</option>
-                                                <option value="1">Champion</option>
-                                                <option value="2">Special Awards</option>
-                                            </select>
-                                            @error('reportType')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm-3">
                                             <label for="" class="form-label">Category</label>
-                                            <select class="form-select" wire:model="selectedCategory" required>
+                                            <select class="form-select" wire:model="selectedCategory" wire:change="handleOptionChange" required>
                                                 <option value="">-- Select category --</option>
                                                 @foreach ($categories as $item)
                                                     <option value="{{ $item->category }}">{{ $item->description }}</option>
@@ -40,20 +29,40 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm-3">
-                                            <label for="" class="form-label">Type</label>
-                                            <select class="form-select" wire:model="selectedType" required>
-                                                <option value="">ALL</option>
-                                                <option value="1">Champion Only</option>
-                                                <option value="2">To 1st Runner Up</option>
-                                                <option value="3">To 2nd Runner Up</option>
-                                                @for ($i = 4; $i < 10; $i++)
-                                                    <option value="{{ $i }}">{{ bong_ordinal($i - 1) }}</option>
-                                                @endfor
+                                            <label for="" class="form-label">Criteria</label>
+                                            <select class="form-select" wire:model="selectedCriteria" required>
+                                                <option value="">-- Select criteria --</option>
+                                                @foreach ($criterias1 as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->criteria }}</option>
+                                                @endforeach
                                             </select>
+                                            @error('selectedCriteria')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="col-sm-3">
-                                            <label for="runnerups" class="form-label">Winners up to?</label>
-                                            <input type="number" class="form-control" wire:model="runnerups" id="runnerups" placeholder="Enter custom count">
+                                            <label for="" class="form-label">Category</label>
+                                            <select class="form-select" wire:model="selectedCategory2" wire:change="handleOptionChange2" required>
+                                                <option value="">-- Select category --</option>
+                                                @foreach ($categories as $item)
+                                                    <option value="{{ $item->category }}">{{ $item->description }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('selectedCategory')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label for="" class="form-label">Criteria</label>
+                                            <select class="form-select" wire:model="selectedCriteria2" required>
+                                                <option value="">-- Select criteria --</option>
+                                                @foreach ($criterias2 as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->criteria }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('selectedCriteria2')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>

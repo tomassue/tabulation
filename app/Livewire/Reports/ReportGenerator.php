@@ -3,6 +3,9 @@
 namespace App\Livewire\Reports;
 
 use App\Models\Category;
+use App\Models\RefCriteria;
+use App\Models\RefJudge;
+use App\Models\RefParticipant;
 use App\Services\ReportService;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -10,32 +13,50 @@ use Livewire\Component;
 
 class ReportGenerator extends Component
 {
-    public $selectedCategory, $selectedType, $reportType, $runnerups  = 0, $base64pdf, $selectedReports, $selectedScoring;
+    public $categories, $selectedCategory, $selectedCategory2, $selectedCriteria, $selectedCriteria2, $selectedType, $reportType, $runnerups  = 0, $base64pdf, $selectedReports, $selectedScoring;
+    public function mount()
+    {
+        $this->categories = Category::where('is_active', 1)->get();
+    }
     public function render()
     {
-        $categories = Category::where('is_active', 1)->get();
-        return view('livewire.reports.report-generator', compact('categories'));
+        $criterias1 = RefCriteria::where('category', $this->selectedCategory)->get();
+        $criterias2 = RefCriteria::where('category', $this->selectedCategory2)->get();
+        return view('livewire.reports.report-generator', compact('criterias1', 'criterias2'));
+    }
+    public function handleOptionChange()
+    {
+        $this->selectedCriteria = null;
+    }
+    public function handleOptionChange2()
+    {
+        $this->selectedCriteria2 = null;
     }
     public function generateReport()
     {
         $this->validate([
-            'reportType' => 'required',
+            'selectedCriteria' => 'required',
+            'selectedCriteria2' => 'required',
             'selectedCategory' => 'required',
+            'selectedCategory2' => 'required',
         ]);
-        $category = Category::where('category', $this->selectedCategory)->first();
-        $service = new ReportService($this->selectedCategory);
-        $participants = $service->generateTopParticipants();
-        $judges =  $service->judges;
-        $runnerups = $this->runnerups;
-        $type = $this->selectedType;
-        $reportType = $this->reportType;
+        $category1 = Category::where('category', $this->selectedCategory)->first();
+        $category2 = Category::where('category', $this->selectedCategory2)->first();
+
+        $participants = RefParticipant::category($this->selectedCategory)->get();
+        $judges =  RefJudge::category($this->selectedCategory)->get();
+
+        $criteria1 = RefCriteria::find($this->selectedCriteria);
+        $criteria2 = RefCriteria::find($this->selectedCriteria2);
+
+        $grands = $this->caculateRankings($participants, $category1, $category2, $criteria1, $criteria2);
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
-        $htmlContent = view('generated_pdf.higalaay-summary', compact('participants', 'judges', 'category', 'type', 'runnerups', 'reportType'))->render();
+        $htmlContent = view('generated_pdf.higalaay-summary', compact('judges', 'category1', 'category2', 'criteria1', 'grands'))->render();
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($htmlContent);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('folio', 'landscape');
         $dompdf->render();
 
         $canvas = $dompdf->getCanvas();
@@ -53,5 +74,30 @@ class ReportGenerator extends Component
 
         $this->base64pdf = base64_encode($dompdf->output());
         $this->dispatch('openModal');
+    }
+
+    private function caculateRankings($participants, $category1, $category2,  $criteria, $criteria2)
+    {
+        $grands = [];
+        // dd($category->category);
+        foreach ($participants as $item) {
+            $cat1 =  $item->averageHigalaay($category1?->category, $criteria)  * 0.5;
+            $cat2 =  $item->averageHigalaay($category2?->category, $criteria2)  * 0.5;
+
+            $grand = $cat1 + $cat2;
+
+            $part = [
+                'participant_no' => $item->participant_no,
+                'participant' => $item->participant,
+                'cat1' => $cat1,
+                'cat2' => $cat2,
+                'grand' =>  $grand,
+            ];
+
+            $grands[] = $part;
+        }
+        $grands = bong_rank_arranger($grands, 'grand', 'ordinal_rank', true, "DESC");
+
+        return $grands;
     }
 }

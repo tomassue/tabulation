@@ -66,18 +66,19 @@
 
         .footer {
             position: fixed;
-            bottom: -20px;
+            bottom: 10px;
             /* Pull content into margin area */
             left: 0;
             right: 0;
             text-align: center;
-            height: 50px;
-            z-index: 1000;
+            height: 70px;
+            z-index: -1000;
         }
+
 
         #watermark {
             position: fixed;
-            top: 20%;
+            top: 10%;
             width: 100%;
             text-align: center;
             /* transform: rotate(330deg); */
@@ -114,20 +115,25 @@
             padding: 0 10px;
             /* Adds padding around the text */
         }
+
+        #developer {
+            position: fixed;
+            top: 50%;
+            left: -115px;
+            font-weight: bold;
+            text-align: right;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
     </style>
 </head>
 
 <body>
+    <div id="developer">
+        <div><i>CMISID Tabulation System</i></div>
+    </div>
     <footer class="footer">
-        <table style="opacity: 0.5;">
-            <tr>
-                <td colspan="2" style="vertical-align: bottom;font-weight: bold;"><i>CMISID Tabulation System</i></td>
-            </tr>
-            <tr>
-                <td style="vertical-align: middle;"><i>Powered by:</i></td>
-                <td style="vertical-align: bottom;"><img src="{{ convert_image(public_path() . '/img/ict.png') }}" width="30"></td>
-            </tr>
-        </table>
+        <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
     </footer>
     <div id="watermark">
         <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="70%">
@@ -135,108 +141,56 @@
     <main>
         <table class="table">
             <tr>
-                <td class="text-start" style="vertical-align: top;" width="30%">
-                    <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="70">
-                    <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="120">
-
+                <td class="text-start" style="vertical-align: top;">
+                    <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="100">
+                    <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
+                    <img src="{{ convert_image(public_path() . '/img/risebig.png') }}" width="150">
                 </td>
-                <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;">Pasko de Oro 2025</div>
-                    <div style="font-size: 15pt;font-weight:bold;color: #26a75c;">Beyond Higala</div>
-                    <div style="font-size: 13pt;">...Pamilya</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
-                </td>
-                <td class="text-end" width="30%">
-                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="60">
-                    <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="60">
+                <td></td>
+                <td class="text-end">
+                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="150">
                 </td>
             </tr>
         </table>
-        <div style="text-align: center;padding-top:50px;">
-            <h2 style="text-transform: uppercase">{{ $category->description }} WINNERS</h2>
-        </div>
-        <table class="table">
-            <tbody>
-                @foreach ($participants as $item)
-                    @if ($item->current_rank <= $category->winners)
-                        @php
-                            $class = 'top3';
-                            $style = 'font-size: ' . (18 - $item->current_rank) . 'pt;';
-                        @endphp
-                    @else
-                        @php
-                            $style = '';
-                            $class = 'rest';
-                        @endphp
-                    @endif
-                    <tr>
-                        <td class="{{ $class }}" style="text-align: center; {{ $style }}">
-                            @if ($reportType == 2)
-                                <span style="text-transform: uppercase;">{{ $category->description }}</span>
-                            @else
-                                <span>
-                                    {{ bong_ordinal_new($item->current_rank) }}
-                                </span>
-                            @endif
+        <table class="table" style="margin-top:-70px;">
+            <tr>
+                <td class="text-center">
+                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: MARCHING BAND COMPETITION</div>
+                    <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
+                    <div style="font-size: 13pt;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center;padding:10px;">
 
-                        </td>
-                        <td class="{{ $class }}" style="{{ $style }}">
-                            {{ $item->participant }}
-                        </td>
-                        <td class="{{ $class }}" style="text-align: right;{{ $style }}">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
+            <div style="text-transform: uppercase;font-weight: bold;font-size: 15pt;">CRITERIA</div>
+            <div style="font-size: 20pt;font-weight: bold;text-transform: uppercase;">BEST IN {{ $criteria1->criteria }}</div>
+        </div>
+        <table class="table bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px;">NO.</th>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px;">PARTICIPANT</th>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px; text-transform: uppercase;width: 12%;background: #e2efd9;color:#00b050;">{{ $category1->description }} <br /> (50%)</th>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px; text-transform: uppercase;width: 12%;background: #fbe4d5;color: #ed7d31;">{{ $category2->description }} <br /> (50%)</th>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px;">SCORE</th>
+                    <th class="text-center" style="font-size: 11pt;padding: 5px;">RANKING</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($grands as $item)
+                    <tr>
+                        <td class="text-center" style="font-size: 11pt;padding: 5px;" width="3%">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 11pt;padding: 5px;font-weight: bold;">{{ $item['participant'] }}</td>
+                        <td class="text-center" style="background: #e2efd9;color:#00b050;">{{ bong_format($item['cat1']) }}</td>
+                        <td class="text-center" style="background: #fbe4d5;color: #ed7d31;">{{ bong_format($item['cat2']) }}</td>
+                        <td class="text-center" style="font-weight: bold" width="7%">{{ bong_format($item['grand']) }}</td>
+                        <td class="text-center" style="font-weight: bold" width="7%">{{ bong_ordinal($item['ordinal_rank']) }}</td>
                     </tr>
-                    @if ($type == $item->current_rank)
-                        @break
-                    @endif
-                    @if ($runnerups == $loop->iteration)
-                        @break
-                    @endif
-                    @if ($item->current_rank == 3)
-                        @if ($category->category == 'band')
-                            @php
-                                $service = new App\Services\ReportService('majorette');
-                                $majorette = $service->generateTopParticipants()->first();
-                                $service1 = new App\Services\ReportService('major');
-                                $major = $service1->generateTopParticipants()->first();
-                                $service2 = new App\Services\ReportService('costume');
-                                $costume = $service2->generateTopParticipants()->first();
-                            @endphp
-                            <tr>
-                                <td colspan="3" style="text-align: center;padding-top: 10px;padding-bottom: 10px;">
-                                    <span style="color: orange; font-weight: bold;">SPECIAL AWARDS</span>
-                                    <div style="border-style: dotted;border-width: 1px;border-color: black;"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best Band Majorette</td>
-                                <td style="color: rgb(38, 38, 224);">{{ $majorette?->participant }}</td>
-                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($majorette?->averageHigalaay('majorette')) }}</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best Band Major</td>
-                                <td style="color: rgb(38, 38, 224);">{{ $major?->participant }}</td>
-                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($major?->averageHigalaay('major')) }}</td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; font-weight: bold;color: rgb(38, 38, 224);">Best in Costume</td>
-                                <td style="color: rgb(38, 38, 224);">{{ $costume?->participant }}</td>
-                                <td style="text-align: right;color: rgb(38, 38, 224);">{{ bong_format($costume?->averageHigalaay('costume')) }}</td>
-                            </tr>
-                        @endif
-                        <tr>
-                            <td colspan="3" style="text-align: center;padding-top: 10px;padding-bottom: 10px;">
-                                <span style="color:red; font-weight: bold;">RUNNER-UPS</span>
-                                <div style="border-style: dotted;border-width: 1px;border-color: black;"></div>
-                            </td>
-                        </tr>
-                    @endif
-                    @if ($reportType == 2)
-                        @break
-                    @endif
                 @endforeach
             </tbody>
         </table>
-        <table class="table" style="padding-top: 100px;">
+        <table class="table" style="padding-top: 20px;">
             <tr>
                 @foreach ($judges as $index => $judge)
                     <td style="text-align: right; vertical-align: top;">
@@ -252,7 +206,7 @@
                     <td width="20px;">
                         &nbsp;
                     </td>
-                    @if ($loop->iteration % 2 == 0)
+                    @if ($loop->iteration % 3 == 0)
             </tr>
             <tr>
                 @endif
