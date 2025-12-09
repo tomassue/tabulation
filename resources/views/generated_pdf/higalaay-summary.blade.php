@@ -162,9 +162,8 @@
             </tr>
         </table>
         <div style="text-align: center;padding:10px;">
-
             <div style="text-transform: uppercase;font-weight: bold;font-size: 15pt;">CRITERIA</div>
-            <div style="font-size: 20pt;font-weight: bold;text-transform: uppercase;">BEST IN {{ $criteria1->criteria }}</div>
+            <div style="font-size: 20pt;font-weight: bold;text-transform: uppercase;">BEST IN MUSICALITY</div>
         </div>
         <table class="table bordered">
             <thead>
