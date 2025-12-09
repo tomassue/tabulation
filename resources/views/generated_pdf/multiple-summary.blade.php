@@ -233,7 +233,7 @@
                         @foreach ($grands as $key => $item)
                             <tr>
                                 <td class="text-center" style="font-size: 10pt;font-weight: bold" width="5%">{{ $item['participant_no'] }}</td>
-                                <td style="font-size: 9pt;font-weight: bold;padding: 3px;">{{ $item['participant'] }}</td>
+                                <td style="font-size: 10pt;font-weight: bold;padding: 3px;">{{ $item['participant'] }}</td>
                                 <td class="text-center" style="font-weight: bold;color: black;background: #e2efd9;" width="15%">{{ bong_format($item['cat1']) }}</td>
                                 <td class="text-center" style="font-weight: bold;color: black;background: #fbe4d5;" width="15%">{{ bong_format($item['cat2']) }}</td>
                                 <td class="text-center" style="font-weight: bold" width="10%">{{ bong_format($item['grand']) }}</td>
@@ -244,14 +244,17 @@
                 </td>
                 <td style="width: 10%">
                     <table class="table" style="padding-top: 10px;">
-                        @foreach ($judges as $judge)
+                        @php
+                            $tabulators = ['CHRISTINE B. DAGUPLO', 'MIKE JUN R. ZABALLERO', 'JEVONIE M. VILLARIN'];
+                        @endphp
+                        @foreach ($tabulators as $tabulator)
                             <tr>
                                 <td style="text-align: right; vertical-align: top;">
                                     &nbsp;
                                 </td>
                                 <td style="text-align: center;height: 120px;width: 200px">
                                     <div style="text-align: center;margin-bottom: 30px;font-weight: bold;">TABULATOR #{{ $loop->iteration }}</div>
-                                    <span style="text-transform: uppercase;font-weight: bold">&nbsp;</span>
+                                    <span style="text-transform: uppercase;font-weight: bold">{{ $tabulator }}</span>
                                     <div class="text-center p-2" style="border-top: 1px solid black;">
                                         <i>Full Name & Signature</i>
                                     </div>
