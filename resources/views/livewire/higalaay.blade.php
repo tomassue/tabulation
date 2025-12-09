@@ -116,8 +116,8 @@
                                                             @endphp
 
                                                             <div class="col-12 mb-2">
-                                                                <label for="" class="text-muted small criteria-label">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} points</span></label>
-                                                                <input type="number" class="form-control" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="your score..." min="0" max="{{ $criteria->perfect_score }}"
+                                                                <label for="" class="text-muted small criteria-label">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} percent</span></label>
+                                                                <input type="number" class="form-control form-control-lg" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="your score..." min="0" max="{{ $criteria->perfect_score }}"
                                                                     oninput="
                                                                     const max = {{ $criteria->perfect_score }};
                                                                     const value = parseFloat(this.value) || 0;
