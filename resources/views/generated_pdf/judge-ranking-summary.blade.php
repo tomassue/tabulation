@@ -244,25 +244,22 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($participants as $item)
-                    @php
-                        $deducted = \App\Models\HigalaayDeduction::where('participant_id', $item->id)->where('category', $category->category)->first();
-                    @endphp
-                    <tr class="winner-{{ $item->current_rank }}">
-                        <td class="text-center" style="font-size: 9pt;">{{ $item->participant_no }}</td>
-                        <td style="font-size: 9pt;padding: 3px;">{{ $item->participant }}</td>
+                @forelse ($grands as $item)
+                    <tr class="winner-{{ $item['ordinal_rank'] }}">
+                        <td class="text-center" style="font-size: 9pt;">{{ $item['participant_no'] }}</td>
+                        <td style="font-size: 9pt;padding: 3px;">{{ $item['participant'] }}</td>
                         @foreach ($judges as $judge)
-                            <td class="text-center">{{ bong_format($item->getHigalaayScoreByJudge($judge->id, $category->category)) }}</td>
+                            <td class="text-center">{{ bong_format($item['judge_scores'][$judge->user_id]) }}</td>
                         @endforeach
                         @if ($showDeduction == true)
-                            <td class="text-center">{{ bong_format($item->higalaayJudgesTotalScore($category->category)) }}</td>
-                            <td class="text-center" style="{{ $deducted?->deduction == 0 ? '' : 'color: red;' }}">{{ $deducted?->deduction == 0 ? '-' : bong_format($deducted?->deduction) }}</td>
+                            <td class="text-center">{{ bong_format($item['subtotals']) }}</td>
+                            <td class="text-center" style="{{ $item['deduction'] == 0 ? '' : 'color: red;' }}">{{ $item['deduction'] == 0 ? '-' : bong_format($item['deduction']) }}</td>
                         @endif
-                        <td class="text-center">{{ bong_format($item->averageHigalaay($category->category)) }}</td>
+                        <td class="text-center">{{ bong_format($item['grand']) }}</td>
                         @if ($percentage)
-                            <td class="text-center">{{ bong_format($item->averageHigalaay($category->category) * 0.5) }}</td>
+                            <td class="text-center">{{ bong_format($item['grand'] * 0.5) }}</td>
                         @else
-                            <td class="text-center">{{ bong_ordinal($item->current_rank) }}</td>
+                            <td class="text-center">{{ bong_ordinal($item['ordinal_rank']) }}</td>
                         @endif
                     </tr>
                 @empty
