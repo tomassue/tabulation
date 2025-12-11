@@ -192,7 +192,8 @@
                         <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
                         <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
                     @else
-                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }}</div>
+                        <div style="font-size: 13pt;">Cagayan de Oro City Hall Building - Tourism Hall</div>
+                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 4:00 PM</div>
                     @endif
                 </td>
             </tr>
