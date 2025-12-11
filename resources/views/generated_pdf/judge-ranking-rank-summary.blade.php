@@ -201,7 +201,7 @@
         <table class="table">
             <tr>
                 <td style="vertical-align: top;" width="85%">
-                    <div style="text-align: center;padding-top:20px;padding-bottom:20px;">
+                    <div style="text-align: center;padding-top:10px;padding-bottom:5px;">
                         <div style="font-size: 15pt;"><i>Ranking Scoring Sheet</i></div>
                         <div style="font-size: 20pt;text-transform: uppercase;color: #266da7;font-weight: bold;">{{ $category->description }}
                             @if ($percentage)
@@ -238,7 +238,7 @@
                 @forelse ($grands as $item)
                     <tr class="winner-{{ $item['ordinal_rank'] }}">
                         <td class="text-center" style="font-size: 10pt;">{{ $item['participant_no'] }}</td>
-                        <td style="font-size: 12pt;padding: 10px;">{{ $item['participant'] }}</td>
+                        <td style="font-size: 9pt;padding: 2px;">{{ $item['participant'] }}</td>
                         @foreach ($judges as $judge)
                             <td class="text-center">{{ $item['subtotals'][$judge->user_id] }}</td>
                             <td class="text-center" style="font-weight: bold">{{ $item['judge_scores'][$judge->user_id] != 0 ? bong_ordinal($item['judge_scores'][$judge->user_id]) : '-' }}</td>
@@ -263,7 +263,7 @@
                 @endforelse
             </tbody>
         </table>
-        <table class="table" style="padding-top: 10px;">
+        <table class="table" style="padding-top: 5px;">
             <tr>
                 @foreach ($judges as $judge)
                     <td style="text-align: right; vertical-align: top;">
@@ -275,7 +275,6 @@
                         <div class="text-center p-2" style="border-top: 1px solid black;">
                             <i>Full Name and Signature</i>
                         </div>
-                        <div>Time: _______________</div>
                     </td>
                     <td width="20px;">
                         &nbsp;

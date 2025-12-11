@@ -20,8 +20,8 @@ class ReportGenerator extends Component
     }
     public function render()
     {
-        $criterias1 = RefCriteria::where('category', $this->selectedCategory)->whereIn("criteria", ['Sound'])->get();
-        $criterias2 = RefCriteria::where('category', $this->selectedCategory2)->whereIn("criteria", ['Sound'])->get();
+        $criterias1 = RefCriteria::where('category', $this->selectedCategory)->get();
+        $criterias2 = RefCriteria::where('category', $this->selectedCategory2)->get();
         return view('livewire.reports.report-generator', compact('criterias1', 'criterias2'));
     }
     public function handleOptionChange()
