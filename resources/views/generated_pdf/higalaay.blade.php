@@ -92,45 +92,24 @@
 </head>
 
 <body>
-    <footer class="footer">
-        <table style="opacity: 0.5;">
-            <tr>
-                <td colspan="2" style="vertical-align: bottom;font-weight: bold;"><i>CMISID Tabulation System</i></td>
-            </tr>
-            <tr>
-                <td style="vertical-align: middle;"><i>Powered by:</i></td>
-                <td style="vertical-align: bottom;"><img src="{{ convert_image(public_path() . '/img/ict.png') }}" width="30"></td>
-            </tr>
-        </table>
-    </footer>
-    <div id="watermark">
-        <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="50%">
-    </div>
     <main class="content">
         <div style="color: black;">
-            <table class="table">
-                <tr>
-                    <td class="text-start" style="vertical-align: top;" width="30%">
-                        <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="80">
-                        <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
-
-                    </td>
-                    <td class="text-center">
-                        <div style="font-size: 20pt;font-weight:bold;">Pasko de Oro 2025</div>
-                        <div style="font-size: 15pt;font-weight:bold;color: #26a75c;">Beyond Higala</div>
-                        <div style="font-size: 13pt;">...Pamilya</div>
-                        <div style="font-size: 13pt;">{{ date('F d, Y') }}</div>
-                    </td>
-                    <td class="text-end" width="30%">
-                        <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="75">
-                        <img src="{{ convert_image(public_path() . '/img/tourism_email.png') }}" width="75">
-                    </td>
-                </tr>
+        @php
+            use App\Models\Setting;
+            $titlePrefix = Setting::get('report_header_title', '');
+            $venue       = Setting::get('report_header_venue', '');
+            $time        = Setting::get('report_header_time', '');
+            $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+        @endphp
+        @include('generated_pdf._header', [
+            'headerTitle'    => trim(($titlePrefix ? $titlePrefix . ': ' : '') . ($categoryName ?? 'COMPETITION') . ' SCORE REPORT'),
+            'headerVenue'    => $venue,
+            'headerDatetime' => $datetime,
+        ])
+        <table class="table">
                 <tr>
                     <td colspan="3" class="text-center">
-
-                        <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 20px;">
-                            <div>{{ $categoryName ?? 'COMPETITION' }} SCORE REPORT</div>
+                        <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;padding-top: 10px;">
                             <div>{{ $criteria ? '(BEST IN ' . $criteria->criteria . ')' : '' }}</div>
                             <div style="font-size: 9pt;">{{ $judges->count() == 1 ? '(JUDGE: ' . $judges->first()->judge . ')' : '' }}</div>
                         </div>
