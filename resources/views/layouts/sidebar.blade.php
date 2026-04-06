@@ -85,6 +85,11 @@
                             <i class="bi bi-circle"></i><span>DB Export/Import</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('settings.report-header') }}" class="{{ Route::currentRouteName() == 'settings.report-header' ? 'active' : '' }}">
+                            <i class="bi bi-circle"></i><span>Report Header</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <!-- End Components Nav -->
