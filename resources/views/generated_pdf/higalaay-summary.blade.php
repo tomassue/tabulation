@@ -132,35 +132,20 @@
     <div id="developer">
         <div><i>CMISID Tabulation System</i></div>
     </div>
-    <footer class="footer">
-        <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
-    </footer>
-    <div id="watermark">
-        <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="70%">
-    </div>
     <main>
-        <table class="table">
-            <tr>
-                <td class="text-start" style="vertical-align: top;">
-                    <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="100">
-                    <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
-                    <img src="{{ convert_image(public_path() . '/img/risebig.png') }}" width="150">
-                </td>
-                <td></td>
-                <td class="text-end">
-                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="150">
-                </td>
-            </tr>
-        </table>
-        <table class="table" style="margin-top:-70px;">
-            <tr>
-                <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: MARCHING BAND COMPETITION</div>
-                    <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
-                    <div style="font-size: 13pt;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
-                </td>
-            </tr>
-        </table>
+        @php
+            use App\Models\Setting;
+            $titlePrefix = Setting::get('report_header_title', '');
+            $venue       = Setting::get('report_header_venue', '');
+            $time        = Setting::get('report_header_time', '');
+            $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+        @endphp
+        @include('generated_pdf._header', [
+            'headerTitle'    => $titlePrefix ? $titlePrefix . ': ' . $criteria1->criteria : $criteria1->criteria,
+            'headerVenue'    => $venue,
+            'headerDatetime' => $datetime,
+            'headerMarginTop' => '-70px',
+        ])
         <div style="text-align: center;padding:10px;">
             <div style="text-transform: uppercase;font-weight: bold;font-size: 15pt;">CRITERIA</div>
             <div style="font-size: 20pt;font-weight: bold;text-transform: uppercase;">BEST IN MUSICALITY</div>

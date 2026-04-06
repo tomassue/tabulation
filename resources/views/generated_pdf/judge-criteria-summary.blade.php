@@ -166,40 +166,25 @@
     <div id="developer">
         <div><i>CMISID Tabulation System</i></div>
     </div>
-    <footer class="footer">
-        <img src="{{ convert_image(public_path() . '/img/footer-marching.png') }}" alt="" style="opacity: 0.5;" width="100%">
-    </footer>
-    <div id="watermark">
-        <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="70%">
-    </div>
     <main>
+        @php
+            use App\Models\Setting;
+            $isBangga    = $category->category == 'bangga-sa-daygon';
+            $titlePrefix = Setting::get('report_header_title', '');
+            $venue       = $isBangga
+                ? Setting::get('report_header_venue_alt', 'Cagayan de Oro City Hall Building - Tourism Hall')
+                : Setting::get('report_header_venue', '');
+            $time        = $isBangga
+                ? Setting::get('report_header_time_alt', '4:00 PM')
+                : Setting::get('report_header_time', '');
+            $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+        @endphp
+        @include('generated_pdf._header', [
+            'headerTitle'    => $titlePrefix ? $titlePrefix . ': ' . $category->description : $category->description,
+            'headerVenue'    => $venue,
+            'headerDatetime' => $datetime,
+        ])
         <table class="table">
-            <tr>
-                <td class="text-start" style="vertical-align: top;">
-                    <img src="{{ convert_image(public_path() . '/img/cdo_email.png') }}" width="70">
-                    <img src="{{ convert_image(public_path() . '/img/goldencdo_email.png') }}" width="150">
-                    <img src="{{ convert_image(public_path() . '/img/risebig.png') }}" width="150">
-                </td>
-                <td></td>
-                <td class="text-end">
-                    <img src="{{ convert_image(public_path() . '/img/final-pasko-de-oro.png') }}" width="150" style="z-index: 1000;">
-                </td>
-            </tr>
-        </table>
-        <table class="table" style="margin-top:-100px;">
-            <tr>
-                <td class="text-center">
-                    <div style="font-size: 20pt;font-weight:bold;text-transform: uppercase;">PASKO DE ORO 2025: {{ $category->description }}</div>
-                    @if ($category->category != 'bangga-sa-daygon')
-                        <div style="font-size: 13pt;">Amphitheater - Capistrano - Gaerlan Streets</div>
-                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 6:30 AM – 10:00 AM</div>
-                    @else
-                        <div style="font-size: 13pt;">Cagayan de Oro City Hall Building - Tourism Hall</div>
-                        <div style="font-size: 13pt;font-weight: bold;">{{ date('F d, Y') }} | 4:00 PM</div>
-                    @endif
-
-                </td>
-            </tr>
             <tr>
                 <td style="vertical-align: top;" width="100%">
                     <table style="width: 100%">
