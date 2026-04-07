@@ -57,12 +57,12 @@
                         @if (session('imagesSaved'))
                             <div class="alert alert-success py-2">{{ session('imagesSaved') }}</div>
                         @endif
-                        @error('logoLeft1Upload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
-                        @error('logoLeft2Upload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
-                        @error('logoLeft3Upload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
-                        @error('logoRightUpload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
-                        @error('watermarkUpload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
-                        @error('footerUpload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('logoLeft1Upload')  <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('logoLeft2Upload')  <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('logoRight1Upload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('logoRight2Upload') <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('watermarkUpload')  <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
+                        @error('footerUpload')     <div class="alert alert-danger py-1">{{ $message }}</div> @enderror
 
                         <div class="row g-3">
 
@@ -102,40 +102,40 @@
                                 <input type="file" class="form-control" wire:model="logoLeft2Upload" accept="image/*">
                             </div>
 
-                            {{-- Left Logo 3 --}}
+                            {{-- Right Logo 1 --}}
                             <div class="col-sm-4">
-                                <label class="form-label fw-bold">Left Logo 3</label>
-                                @if ($logoLeft3)
+                                <label class="form-label fw-bold">Right Logo 1</label>
+                                @if ($logoRight1)
                                     <div class="mb-2 d-flex align-items-center gap-2">
-                                        <img src="{{ asset('storage/report-header/' . $logoLeft3) }}" height="50"
-                                            style="object-fit:contain;">
-                                        <button class="btn btn-sm btn-outline-danger"
-                                            wire:click="removeImage('report_logo_left_3')">Remove</button>
-                                    </div>
-                                @endif
-                                @if ($logoLeft3Upload)
-                                    <img src="{{ $logoLeft3Upload->temporaryUrl() }}" height="50" class="mb-2"
-                                        style="object-fit:contain;">
-                                @endif
-                                <input type="file" class="form-control" wire:model="logoLeft3Upload" accept="image/*">
-                            </div>
-
-                            {{-- Right Logo --}}
-                            <div class="col-sm-4">
-                                <label class="form-label fw-bold">Right Logo</label>
-                                @if ($logoRight)
-                                    <div class="mb-2 d-flex align-items-center gap-2">
-                                        <img src="{{ asset('storage/report-header/' . $logoRight) }}" height="50"
+                                        <img src="{{ asset('storage/report-header/' . $logoRight1) }}" height="50"
                                             style="object-fit:contain;">
                                         <button class="btn btn-sm btn-outline-danger"
                                             wire:click="removeImage('report_logo_right')">Remove</button>
                                     </div>
                                 @endif
-                                @if ($logoRightUpload)
-                                    <img src="{{ $logoRightUpload->temporaryUrl() }}" height="50" class="mb-2"
+                                @if ($logoRight1Upload)
+                                    <img src="{{ $logoRight1Upload->temporaryUrl() }}" height="50" class="mb-2"
                                         style="object-fit:contain;">
                                 @endif
-                                <input type="file" class="form-control" wire:model="logoRightUpload" accept="image/*">
+                                <input type="file" class="form-control" wire:model="logoRight1Upload" accept="image/*">
+                            </div>
+
+                            {{-- Right Logo 2 --}}
+                            <div class="col-sm-4">
+                                <label class="form-label fw-bold">Right Logo 2</label>
+                                @if ($logoRight2)
+                                    <div class="mb-2 d-flex align-items-center gap-2">
+                                        <img src="{{ asset('storage/report-header/' . $logoRight2) }}" height="50"
+                                            style="object-fit:contain;">
+                                        <button class="btn btn-sm btn-outline-danger"
+                                            wire:click="removeImage('report_logo_right_2')">Remove</button>
+                                    </div>
+                                @endif
+                                @if ($logoRight2Upload)
+                                    <img src="{{ $logoRight2Upload->temporaryUrl() }}" height="50" class="mb-2"
+                                        style="object-fit:contain;">
+                                @endif
+                                <input type="file" class="form-control" wire:model="logoRight2Upload" accept="image/*">
                             </div>
 
                             {{-- Watermark --}}
