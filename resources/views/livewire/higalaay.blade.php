@@ -105,12 +105,21 @@
                                     </div>
 
                                     {{-- Score grid: criteria rows × judge columns --}}
+                                    @php
+                                        $judgeCount = count($judges);
+                                        $criteriaWidth = match(true) {
+                                            $judgeCount <= 1 => '60%',
+                                            $judgeCount <= 2 => '40%',
+                                            $judgeCount <= 3 => '30%',
+                                            default          => '220px',
+                                        };
+                                    @endphp
                                     <div class="card-body p-0">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm mb-0 scoring-table">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th class="criteria-col px-3 py-2 text-muted fw-semibold" style="width:220px;">CRITERIA</th>
+                                                        <th class="criteria-col px-3 py-2 text-muted fw-semibold" style="width:{{ $criteriaWidth }};">CRITERIA</th>
                                                         @foreach ($judges as $judge)
                                                             <th class="text-center py-2">
                                                                 <div class="fw-semibold">{{ $judge->judge }}</div>
