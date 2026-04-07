@@ -20,16 +20,16 @@ class ReportHeader extends Component
     // Image upload fields (new uploads)
     public $logoLeft1Upload;
     public $logoLeft2Upload;
-    public $logoLeft3Upload;
-    public $logoRightUpload;
+    public $logoRight1Upload;
+    public $logoRight2Upload;
     public $watermarkUpload;
     public $footerUpload;
 
     // Current saved filenames
     public $logoLeft1;
     public $logoLeft2;
-    public $logoLeft3;
-    public $logoRight;
+    public $logoRight1;
+    public $logoRight2;
     public $watermark;
     public $footer;
 
@@ -40,12 +40,12 @@ class ReportHeader extends Component
         $this->headerTime     = Setting::get('report_header_time', '');
         $this->headerVenueAlt = Setting::get('report_header_venue_alt', '');
         $this->headerTimeAlt  = Setting::get('report_header_time_alt', '');
-        $this->logoLeft1      = Setting::get('report_logo_left_1');
-        $this->logoLeft2      = Setting::get('report_logo_left_2');
-        $this->logoLeft3      = Setting::get('report_logo_left_3');
-        $this->logoRight      = Setting::get('report_logo_right');
-        $this->watermark      = Setting::get('report_watermark');
-        $this->footer         = Setting::get('report_footer');
+        $this->logoLeft1  = Setting::get('report_logo_left_1');
+        $this->logoLeft2  = Setting::get('report_logo_left_2');
+        $this->logoRight1 = Setting::get('report_logo_right');
+        $this->logoRight2 = Setting::get('report_logo_right_2');
+        $this->watermark  = Setting::get('report_watermark');
+        $this->footer     = Setting::get('report_footer');
     }
 
     public function render()
@@ -77,8 +77,8 @@ class ReportHeader extends Component
         $this->validate([
             'logoLeft1Upload'  => 'nullable|image|max:2048',
             'logoLeft2Upload'  => 'nullable|image|max:2048',
-            'logoLeft3Upload'  => 'nullable|image|max:2048',
-            'logoRightUpload'  => 'nullable|image|max:2048',
+            'logoRight1Upload' => 'nullable|image|max:2048',
+            'logoRight2Upload' => 'nullable|image|max:2048',
             'watermarkUpload'  => 'nullable|image|max:2048',
             'footerUpload'     => 'nullable|image|max:2048',
         ]);
@@ -86,19 +86,19 @@ class ReportHeader extends Component
         $uploads = [
             'logoLeft1Upload'  => 'report_logo_left_1',
             'logoLeft2Upload'  => 'report_logo_left_2',
-            'logoLeft3Upload'  => 'report_logo_left_3',
-            'logoRightUpload'  => 'report_logo_right',
+            'logoRight1Upload' => 'report_logo_right',
+            'logoRight2Upload' => 'report_logo_right_2',
             'watermarkUpload'  => 'report_watermark',
             'footerUpload'     => 'report_footer',
         ];
 
         $propMap = [
-            'report_logo_left_1' => 'logoLeft1',
-            'report_logo_left_2' => 'logoLeft2',
-            'report_logo_left_3' => 'logoLeft3',
-            'report_logo_right'  => 'logoRight',
-            'report_watermark'   => 'watermark',
-            'report_footer'      => 'footer',
+            'report_logo_left_1'  => 'logoLeft1',
+            'report_logo_left_2'  => 'logoLeft2',
+            'report_logo_right'   => 'logoRight1',
+            'report_logo_right_2' => 'logoRight2',
+            'report_watermark'    => 'watermark',
+            'report_footer'       => 'footer',
         ];
 
         foreach ($uploads as $uploadProp => $settingKey) {
@@ -116,12 +116,12 @@ class ReportHeader extends Component
     public function removeImage(string $settingKey)
     {
         $propMap = [
-            'report_logo_left_1' => 'logoLeft1',
-            'report_logo_left_2' => 'logoLeft2',
-            'report_logo_left_3' => 'logoLeft3',
-            'report_logo_right'  => 'logoRight',
-            'report_watermark'   => 'watermark',
-            'report_footer'      => 'footer',
+            'report_logo_left_1'  => 'logoLeft1',
+            'report_logo_left_2'  => 'logoLeft2',
+            'report_logo_right'   => 'logoRight1',
+            'report_logo_right_2' => 'logoRight2',
+            'report_watermark'    => 'watermark',
+            'report_footer'       => 'footer',
         ];
 
         $filename = Setting::get($settingKey);
