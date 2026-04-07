@@ -58,86 +58,105 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="table-wrapper" style="max-height: 600px; overflow-y: auto;">
-                            <!-- Table with hoverable rows -->
-                            <table class="table table-hover table-bordered table-striped table-mobile-responsive table-mobile-sided">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" width="5%">#</th>
-                                        <th scope="col">Participant</th>
-                                        @foreach ($judges as $item)
-                                            <th scope="col">
-                                                <div>{{ $item->judge }}</div>
-                                                <span class="small text-muted">Judge #{{ $item->nickname }}</span>
-                                                @php
-                                                    $percent = $item->getHigalaayPercent($type);
-                                                @endphp
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-success" style="width: {{ $percent }}%"></div>
-                                                </div>
-                                                <small> {{ $percent }}% complete</small>
-                                            </th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($participants as $participant)
-                                        <tr scope="row">
-                                            <th data-content="#">{{ $loop->iteration }}</th>
-                                            <th data-content="Participant">
-                                                <div class="row">
-                                                    <h3 class="col-12 fs-6 fw-bold participant-no">Participant #{{ $participant->participant_no }}</h3>
-                                                    @if ($categoryName?->display_participant || auth()->user()->role == 'admin')
-                                                        <h4 class="col-12 fw-bold">{{ $participant->participant }}</h4>
-                                                    @endif
-                                                    @if (auth()->user()->role == 'admin')
-                                                        <div class="col-12 text-success fw-bold total-score">{{ bong_format($participant->averageHigalaay($type)) }}</div>
-                                                        @php
-                                                            $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->where('category', $type)->first();
-                                                        @endphp
-                                                        <div class="my-2 col-12">
-                                                            <label class="text-muted small">Deduction</label>
-                                                            <div class="input-group">
-                                                                <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
-                                                                <button class="btn btn-primary btn-sm" wire:click="showDeductionDetails({{ $participant->id }})"><i class="bi bi-three-dots"></i></button>
-                                                            </div>
-                                                        </div>
-                                                    @else
-                                                        <div class="col-12 text-success fw-bold total-score">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</div>
-                                                    @endif
-                                                </div>
-                                            </th>
-                                            @foreach ($judges as $judge)
-                                                <td data-content="{{ $judge->judge }}" class="participant-td">
-                                                    <div class="row w-100 score-div">
-                                                        @foreach ($criterias as $criteria)
-                                                            @php
-                                                                $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                            @endphp
+                        {{-- Judge progress bar strip --}}
+                        <div class="d-flex gap-3 flex-wrap mb-3 px-1">
+                            @foreach ($judges as $item)
+                                @php $percent = $item->getHigalaayPercent($type); @endphp
+                                <div class="flex-grow-1" style="min-width:160px;">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <small class="fw-semibold">{{ $item->judge }}</small>
+                                        <small class="text-muted">{{ $percent }}%</small>
+                                    </div>
+                                    <div class="progress" style="height:6px;">
+                                        <div class="progress-bar bg-success" style="width:{{ $percent }}%"></div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
 
-                                                            <div class="col-12 mb-2">
-                                                                <label for="" class="text-muted small criteria-label">{{ $criteria->criteria }} <span class="badge bg-secondary">{{ $criteria->perfect_score }} percent</span></label>
-                                                                <input type="number" class="form-control form-control-lg" wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)" value="{{ $score ? $score->score : '' }}" placeholder="your score..." min="0" max="{{ $criteria->perfect_score }}"
-                                                                    oninput="
-                                                                    const max = {{ $criteria->perfect_score }};
-                                                                    const value = parseFloat(this.value) || 0;
-                                                                    const correctedValue = value > max || value < 0 ? max : value;
-                                                                    
-                                                                    if (value !== correctedValue) {
-                                                                        this.value = correctedValue;
-                                                                        this.dispatchEvent(new Event('change'));
-                                                                    }
-                                                                    " />
-                                                            </div>
-                                                        @endforeach
+                        {{-- Participant scoring cards --}}
+                        <div class="scoring-cards">
+                            @foreach ($participants as $participant)
+                                <div class="card mb-3 shadow-sm border-0 participant-card">
+
+                                    {{-- Card header: participant identity + totals --}}
+                                    <div class="card-header d-flex align-items-center justify-content-between py-2 px-3 bg-white border-bottom">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="badge bg-primary fs-6 px-3 py-2">#{{ $participant->participant_no }}</span>
+                                            @if ($categoryName?->display_participant || auth()->user()->role == 'admin')
+                                                <span class="fw-bold fs-6">{{ $participant->participant }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            @if (auth()->user()->role == 'admin')
+                                                <span class="text-success fw-bold fs-5">{{ bong_format($participant->averageHigalaay($type)) }}</span>
+                                                @php $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->where('category', $type)->first(); @endphp
+                                                <div class="d-flex align-items-center gap-1">
+                                                    <small class="text-muted me-1">Deduction</small>
+                                                    <div class="input-group input-group-sm" style="width:140px;">
+                                                        <input type="number" wire:change="saveDeduction({{ $participant->id }},$event.target.value)" value="{{ $deduction ? $deduction->deduction : '' }}" class="form-control">
+                                                        <button class="btn btn-outline-secondary btn-sm" wire:click="showDeductionDetails({{ $participant->id }})"><i class="bi bi-three-dots"></i></button>
                                                     </div>
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <!-- End Table with hoverable rows -->
+                                                </div>
+                                            @else
+                                                <span class="text-success fw-bold fs-5">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Score grid: criteria rows × judge columns --}}
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm mb-0 scoring-table">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th class="criteria-col px-3 py-2 text-muted fw-semibold" style="width:220px;">CRITERIA</th>
+                                                        @foreach ($judges as $judge)
+                                                            <th class="text-center py-2">
+                                                                <div class="fw-semibold">{{ $judge->judge }}</div>
+                                                                <small class="text-muted">Judge #{{ $judge->nickname }}</small>
+                                                            </th>
+                                                        @endforeach
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($criterias as $criteria)
+                                                        <tr>
+                                                            <td class="px-3 py-2 align-middle bg-light">
+                                                                <div class="fw-semibold criteria-label">{{ $criteria->criteria }}</div>
+                                                                <small class="text-muted">Max: {{ $criteria->perfect_score }}</small>
+                                                            </td>
+                                                            @foreach ($judges as $judge)
+                                                                @php
+                                                                    $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                                @endphp
+                                                                <td class="text-center align-middle p-2">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
+                                                                        wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
+                                                                        value="{{ $score ? $score->score : '' }}"
+                                                                        placeholder="—"
+                                                                        min="0"
+                                                                        max="{{ $criteria->perfect_score }}"
+                                                                        oninput="
+                                                                            const max = {{ $criteria->perfect_score }};
+                                                                            const value = parseFloat(this.value) || 0;
+                                                                            const correctedValue = value > max || value < 0 ? max : value;
+                                                                            if (value !== correctedValue) {
+                                                                                this.value = correctedValue;
+                                                                                this.dispatchEvent(new Event('change'));
+                                                                            }
+                                                                        " />
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -239,55 +258,45 @@
         </div>
     </div>
     <style>
-        .table-wrapper {
-            max-height: 600px;
-            /* or whatever fits your layout */
-            overflow-y: auto;
+        /* Scoring card */
+        .participant-card {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .participant-card .card-header {
+            background: #f8f9fa;
         }
 
-        /* Make header sticky */
-        .table-wrapper thead th {
+        /* Score input */
+        .score-input {
+            border-radius: 8px;
+            font-size: 1.2rem;
+            min-width: 80px;
+            max-width: 120px;
+            margin: 0 auto;
+            border-color: #dee2e6;
+            transition: border-color .15s, background .15s;
+        }
+        .score-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+        }
+        .score-input.scored {
+            background: #f0fff4;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        /* Criteria column */
+        .scoring-table .criteria-col {
+            min-width: 180px;
+        }
+
+        /* Sticky criteria header inside each card */
+        .scoring-table thead th {
             position: sticky;
             top: 0;
-            z-index: 10;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .without_ampm::-webkit-datetime-edit-ampm-field {
-            display: none;
-        }
-
-        input[type=time]::-webkit-clear-button {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            -o-appearance: none;
-            -ms-appearance: none;
-            appearance: none;
-            margin: -10px;
-        }
-
-        @media only screen and (max-width: 1075px) {
-            .criteria-label {
-                font-size: 12pt;
-            }
-
-            .score-div {
-                margin-top: 25px;
-            }
-
-            .participant-td {
-                font-size: 12pt !important;
-            }
-
-            .participant-no {
-                font-size: 20pt !important;
-                color: green;
-            }
-
-            .total-score {
-                font-size: 20pt !important;
-            }
+            z-index: 5;
         }
     </style>
 </section>
