@@ -34,7 +34,7 @@
                                 $assignedJudge = $tc->judgeAssignments->first()?->judge;
                                 $pct = $tc->completionPercent($type);
                             @endphp
-                            @if ($isAdmin || $activeTechnicalCategoryId == $tc->id)
+                            @if ($isAdmin || $judgeAssignedCategoryIds->contains($tc->id))
                                 <li class="nav-item">
                                     <button wire:click="$set('activeTechnicalCategoryId', {{ $tc->id }})" class="nav-link py-1 px-3 {{ $isActiveTab ? 'active fw-semibold' : '' }}">
                                         {{ $tc->name }}
