@@ -14,6 +14,7 @@ class RefParticipant extends Model
         'participant_no',
         'participant',
         'school',
+        'gender',
     ];
     protected $casts = [
         'category' => 'array', // Casts the 'details' column to a PHP array
@@ -93,24 +94,70 @@ class RefParticipant extends Model
         $deduction = $this->deductions?->deduction;
         return ($this->hasOne(Oral::class, 'participant_id', 'id')->sum('score') / 3) - $deduction;
     }
-    public function averageHigalaay($category, $criteria =  null)
+    public function averageHigalaay($category, $criteria = null)
     {
-        $deduction =  $this->higalaayDeduction($category) ? $this->higalaayDeduction($category)->deduction : 0;
-        $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id');
+        $deduction = $this->higalaayDeduction($category)?->deduction ?? 0;
+
+        // Single-criteria filter (used for per-criteria PDF views) — no weighting
         if ($criteria) {
-            $relation->where('criteria_id', $criteria->id);
-            $deduction = 0;
+            $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id')
+                ->where('criteria_id', $criteria->id)
+                ->where('category', $category);
+            if (Auth::user()->role == 'admin') {
+                $judges = RefJudge::category($category)->count();
+                return $judges > 0 ? $relation->sum('score') / $judges : 0;
+            }
+            $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
+            return $judge ? $relation->where('judge_id', $judge->id)->sum('score') : 0;
         }
+
+        // Check for weighted segments
+        $allCriterias = RefCriteria::where('category', $category)->get();
+        $weighted = $allCriterias->whereNotNull('segment')->whereNotNull('segment_weight');
+
+        if ($weighted->isNotEmpty()) {
+            $judgeCount = RefJudge::category($category)->count();
+            if ($judgeCount == 0) return 0;
+
+            // For non-admin, only use that judge's scores
+            $judgeId = null;
+            if (Auth::user()->role !== 'admin') {
+                $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
+                if (!$judge) return 0;
+                $judgeId = $judge->id;
+                $judgeCount = 1;
+            }
+
+            $total = 0;
+            foreach ($weighted->groupBy('segment') as $segCriterias) {
+                $segWeight   = $segCriterias->first()->segment_weight; // e.g. 20
+                $segMax      = $segCriterias->sum('perfect_score');    // e.g. 100
+                if ($segMax == 0) continue;
+
+                $criteriaIds = $segCriterias->pluck('id');
+                $query = $this->hasMany(Higalaay::class, 'participant_id', 'id')
+                    ->where('category', $category)
+                    ->whereIn('criteria_id', $criteriaIds);
+
+                if ($judgeId) $query->where('judge_id', $judgeId);
+
+                $segScore = $query->sum('score'); // sum across all judges in segment
+                // (segScore / judgeCount) = avg judge score for segment (max = segMax)
+                // normalize to weight: (avg / segMax) * segWeight
+                $total += ($segScore / $judgeCount / $segMax) * $segWeight;
+            }
+
+            return round($total - $deduction, 4);
+        }
+
+        // Original unweighted average
+        $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category);
         if (Auth::user()->role == 'admin') {
             $judges = RefJudge::category($category)->count();
-            if ($judges == 0) {
-                return 0;
-            }
-            return ($relation->where('category', $category)->sum('score') / $judges) - $deduction;
-        } else {
-            $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
-            return ($relation->where('judge_id', $judge->id)->where('category', $category)->sum('score') / 1) - $deduction;
+            return $judges > 0 ? ($relation->sum('score') / $judges) - $deduction : 0;
         }
+        $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
+        return $judge ? ($relation->where('judge_id', $judge->id)->sum('score')) - $deduction : 0;
     }
     public function getHigalaayScoreByJudge($judge_id, $category,  $criteria =  null)
     {

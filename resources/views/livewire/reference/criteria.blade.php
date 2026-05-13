@@ -38,6 +38,7 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Event</th>
+                                                    <th scope="col">Segment</th>
                                                     <th scope="col">Perfect Score</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
@@ -53,6 +54,12 @@
                                                         </td>
                                                         <td scope="row" class="text-capitalize">
                                                             {{ $item->category }}
+                                                        </td>
+                                                        <td scope="row" class="text-capitalize">
+                                                            {{ $item->segment ?? '—' }}
+                                                            @if($item->segment_weight)
+                                                                <span class="badge bg-info ms-1">{{ $item->segment_weight }}%</span>
+                                                            @endif
                                                         </td>
                                                         <td>
                                                             {{ $item->perfect_score }}
@@ -124,6 +131,19 @@
                                     <option value="{{ $item->category }}">{{ $item->category }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-8">
+                                <label for="segment" class="form-label">Segment <small class="text-muted">(optional)</small></label>
+                                <input type="text" class="form-control" wire:model="segment" id="segment" placeholder="e.g. Casual Attire Presentation">
+                            </div>
+                            <div class="col-4">
+                                <label for="segment_weight" class="form-label">Weight % <small class="text-muted">(optional)</small></label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" wire:model="segment_weight" id="segment_weight" placeholder="e.g. 20" min="1" max="100">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="perfect_score" class="form-label">Perfect Score</label>

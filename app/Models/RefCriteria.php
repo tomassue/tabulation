@@ -10,6 +10,8 @@ class RefCriteria extends Model
         'criteria',
         'perfect_score',
         'category',
+        'segment',
+        'segment_weight',
     ];
 
     public function scopeCategory($query, $category)

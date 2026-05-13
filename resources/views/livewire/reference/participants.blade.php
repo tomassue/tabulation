@@ -36,6 +36,7 @@
                                             <th scope="col">Participant's No.</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">School/Organization</th>
+                                            <th scope="col">Gender</th>
                                             <th scope="col">Events</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -54,6 +55,15 @@
                                                 </td>
                                                 <td scope="row">
                                                     {{ $item->school }}
+                                                </td>
+                                                <td scope="row" class="text-capitalize">
+                                                    @if($item->gender)
+                                                        <span class="badge {{ $item->gender === 'male' ? 'bg-primary' : 'bg-danger' }}">
+                                                            {{ ucfirst($item->gender) }}
+                                                        </span>
+                                                    @else
+                                                        —
+                                                    @endif
                                                 </td>
                                                 <td scope="row" class="text-capitalize">
                                                     {{ implode(', ', $item->category) }}
@@ -132,6 +142,14 @@
                             <div class="mb-3">
                                 <label for="school" class="form-label">Participant's School/Organization</label>
                                 <input type="text" class="form-control" id="school" wire:model="school" placeholder="Enter participant's school">
+                            </div>
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">Gender <small class="text-muted">(optional, for pageant male/female split)</small></label>
+                                <select wire:model="gender" id="gender" class="form-select">
+                                    <option value="">— No gender —</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="category">Event Participant</label>
