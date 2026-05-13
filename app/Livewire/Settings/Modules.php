@@ -20,7 +20,8 @@ class Modules extends Component
         $description,
         $display_participant,
         $is_active,
-        $winners;
+        $winners,
+        $tabulation_mode = 'average';
 
     public function rules()
     {
@@ -82,8 +83,8 @@ class Modules extends Component
                     'description' => $this->description,
                     'winners' => $this->winners,
                     'is_active' => $this->is_active,
-                    'winners' => $this->winners,
                     'display_participant' => $this->display_participant,
+                    'tabulation_mode' => $this->tabulation_mode,
                     'icon' => '<i class="bi bi-box-seam"></i>'
                 ]
             );
@@ -95,13 +96,14 @@ class Modules extends Component
 
     public function editModule($id)
     {
-        $this->category_id = $id;
-        $this->category = Category::find($id)->category;
-        $this->description = Category::find($id)->description;
-        $this->winners = Category::find($id)->winners;
-        $this->is_active = Category::find($id)->is_active;
-        $this->winners = Category::find($id)->winners;
-        $this->display_participant = Category::find($id)->display_participant;
+        $module = Category::findOrFail($id);
+        $this->category_id = $module->id;
+        $this->category = $module->category;
+        $this->description = $module->description;
+        $this->winners = $module->winners;
+        $this->is_active = $module->is_active;
+        $this->display_participant = $module->display_participant;
+        $this->tabulation_mode = $module->tabulation_mode ?? 'average';
 
         $this->dispatch('openModal');
     }

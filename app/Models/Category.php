@@ -17,7 +17,8 @@ class Category extends Model
         'winners',
         'display_participant',
         'is_active',
-        'icon'
+        'icon',
+        'tabulation_mode',
     ];
 
     public function getPercent()

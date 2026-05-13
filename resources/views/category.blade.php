@@ -6,7 +6,11 @@
             <h1>{{ $category->description }}</h1>
         </div><!-- End Page Title -->
 
-        @livewire('higalaay', ['type' => $category->category, 'winner' => $category->winners])
+        @if($category->tabulation_mode === 'technical')
+            @livewire('technical.scoring', ['type' => $category->category, 'winner' => $category->winners])
+        @else
+            @livewire('higalaay', ['type' => $category->category, 'winner' => $category->winners])
+        @endif
 
     </main>
 @endsection

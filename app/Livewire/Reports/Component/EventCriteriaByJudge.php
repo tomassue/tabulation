@@ -66,25 +66,49 @@ class EventCriteriaByJudge extends Component
     private function caculateRankings($category, $participants, $criterias, $judge)
     {
         $grands = [];
+        $weighted = $criterias->whereNotNull('segment')->whereNotNull('segment_weight');
+        $isWeighted = $weighted->isNotEmpty();
 
         foreach ($participants as $item) {
-
             $part = [
                 'participant_no' => $item->participant_no,
-                'participant' => $item->participant,
+                'participant'    => $item->participant,
                 'criteria_scores' => [],
-                'grand' => 0
+                'segment_scores'  => [],
+                'grand' => 0,
             ];
-            $totalScore = 0;
-            foreach ($criterias as $criteria) {
-                $criteria_score = $item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria);
-                $part['criteria_scores'][$criteria->id] = $criteria_score;
 
-                if ($criteria_score) {
-                    $totalScore += $criteria_score;
+            if ($isWeighted) {
+                $totalWeighted = 0;
+                foreach ($criterias->groupBy('segment') as $segName => $segCriterias) {
+                    $segWeight = $segCriterias->first()->segment_weight;
+                    $segMax    = $segCriterias->sum('perfect_score');
+                    $segRaw    = 0;
+                    foreach ($segCriterias as $criteria) {
+                        $score = $item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria);
+                        $part['criteria_scores'][$criteria->id] = $score;
+                        $segRaw += $score;
+                    }
+                    $segWeighted = $segMax > 0 ? ($segRaw / $segMax) * $segWeight : 0;
+                    $part['segment_scores'][$segName] = [
+                        'raw'      => $segRaw,
+                        'max'      => $segMax,
+                        'weight'   => $segWeight,
+                        'weighted' => round($segWeighted, 4),
+                    ];
+                    $totalWeighted += $segWeighted;
                 }
+                $part['grand'] = round($totalWeighted, 4);
+            } else {
+                $totalScore = 0;
+                foreach ($criterias as $criteria) {
+                    $score = $item->getHigalaayScoreByJudge($judge->id, $category->category, $criteria);
+                    $part['criteria_scores'][$criteria->id] = $score;
+                    $totalScore += $score;
+                }
+                $part['grand'] = $totalScore;
             }
-            $part['grand'] =  $totalScore;
+
             $grands[] = $part;
         }
         $grands = bong_rank_arranger($grands, 'grand', 'ordinal_rank', false, "DESC");

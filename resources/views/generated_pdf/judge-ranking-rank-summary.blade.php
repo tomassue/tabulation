@@ -196,16 +196,24 @@
                 </td>
             </tr>
         </table>
+        @php $isWeighted = $isWeighted ?? false; @endphp
         <table class="table bordered">
             <thead>
                 <tr>
                     <th style="width: 3%;" rowspan="2">#</th>
                     <th width="40%" rowspan="2" style="font-size: 9pt;">CONTINGENT</th>
                     @foreach ($judges as $judge)
-                        <th style="text-transform: uppercase;font-size: 9pt;" colspan="2">{{ $judge->judge }}</th>
+                        <th style="text-transform: uppercase;font-size: 9pt;" colspan="2">
+                            {{ $judge->judge }}
+                            @if ($isWeighted)
+                                <div style="color:#27ae60;font-size:7pt;font-weight:normal;">(weighted avg)</div>
+                            @endif
+                        </th>
                     @endforeach
                     @if ($showDeduction == true)
-                        <th width="5%" rowspan="2" style="font-size: 8pt;color: rgb(11, 11, 224);">AVE SCORE</th>
+                        <th width="5%" rowspan="2" style="font-size: 8pt;color: rgb(11, 11, 224);">
+                            @if ($isWeighted) WTD @else AVE @endif SCORE
+                        </th>
                         <th width="5%" rowspan="2" style="font-size: 8pt;color: red;">DEMIRIT</th>
                     @endif
                     <th width="5%" rowspan="2" style="font-size: 9pt;">TOTAL RANK</th>
@@ -213,7 +221,9 @@
                 </tr>
                 <tr>
                     @foreach ($judges as $judge)
-                        <th style="text-transform: uppercase;font-size: 8pt;">Score</th>
+                        <th style="text-transform: uppercase;font-size: 8pt;">
+                            @if ($isWeighted) Wtd Avg @else Score @endif
+                        </th>
                         <th style="text-transform: uppercase;font-size: 8pt;">Rank</th>
                     @endforeach
                 </tr>
@@ -224,7 +234,7 @@
                         <td class="text-center" style="font-size: 10pt;">{{ $item['participant_no'] }}</td>
                         <td style="font-size: 9pt;padding: 2px;">{{ $item['participant'] }}</td>
                         @foreach ($judges as $judge)
-                            <td class="text-center">{{ $item['subtotals'][$judge->user_id] }}</td>
+                            <td class="text-center">{{ bong_format($item['subtotals'][$judge->user_id]) }}</td>
                             <td class="text-center" style="font-weight: bold">{{ $item['judge_scores'][$judge->user_id] != 0 ? bong_ordinal($item['judge_scores'][$judge->user_id]) : '-' }}</td>
                         @endforeach
                         @if ($showDeduction == true)

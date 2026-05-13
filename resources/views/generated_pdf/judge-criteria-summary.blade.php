@@ -169,19 +169,15 @@
     <main>
         @php
             use App\Models\Setting;
-            $isBangga    = $category->category == 'bangga-sa-daygon';
+            $isBangga = $category->category == 'bangga-sa-daygon';
             $titlePrefix = Setting::get('report_header_title', '');
-            $venue       = $isBangga
-                ? Setting::get('report_header_venue_alt', 'Cagayan de Oro City Hall Building - Tourism Hall')
-                : Setting::get('report_header_venue', '');
-            $time        = $isBangga
-                ? Setting::get('report_header_time_alt', '4:00 PM')
-                : Setting::get('report_header_time', '');
-            $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+            $venue = $isBangga ? Setting::get('report_header_venue_alt', 'Cagayan de Oro City Hall Building - Tourism Hall') : Setting::get('report_header_venue', '');
+            $time = $isBangga ? Setting::get('report_header_time_alt', '4:00 PM') : Setting::get('report_header_time', '');
+            $datetime = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
         @endphp
         @include('generated_pdf._header', [
-            'headerTitle'    => $titlePrefix ? $titlePrefix . ': ' . $category->description : $category->description,
-            'headerVenue'    => $venue,
+            'headerTitle' => $titlePrefix ? $titlePrefix . ': ' . $category->description : $category->description,
+            'headerVenue' => $venue,
             'headerDatetime' => $datetime,
         ])
         <table class="table">
@@ -210,39 +206,163 @@
                 </td>
             </tr>
         </table>
-        <table class="table bordered">
-            <thead>
-                <tr>
-                    <th style="font-size: 13pt;" width="3%">#</th>
-                    <th style="font-size: 13pt;">CONTINGENT</th>
-                    @foreach ($criterias as $criteria)
-                        <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }}%</span> ) </th>
-                    @endforeach
-                    <th width="10%" style="font-size: 13pt;">TOTAL<br />(<span style="color: red;">100%</span> )</th>
-                    <th width="10%" style="font-size: 13pt;color:green;">RANKING</div>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($grands as $item)
-                    <tr class="winner-{{ $item['ordinal_rank'] }}">
-                        <td class="text-center" style="font-size: 9pt;">{{ $item['participant_no'] }}</td>
-                        <td style="font-size: 9pt;padding: 3px;">{{ $item['participant'] }}</td>
-                        @foreach ($criterias as $criteria)
-                            <td class="text-center">{{ bong_format($item['criteria_scores'][$criteria->id]) }}</td>
-                        @endforeach
-                        <td class="text-center">{{ bong_format($item['grand']) }}</td>
-                        <td class="text-center" style="color:green;">{{ bong_ordinal($item['ordinal_rank']) }}</td>
-                    </tr>
-                @empty
-                    @php
-                        $count = $criterias->count() + 4;
-                    @endphp
+        @php
+            $isWeighted = $criterias->whereNotNull('segment')->whereNotNull('segment_weight')->isNotEmpty();
+            $segmentedCriterias = $isWeighted ? $criterias->groupBy('segment') : collect();
+        @endphp
+
+        @if ($isWeighted)
+
+            {{-- ── PER-SEGMENT DETAIL TABLES ──────────────────────────────────── --}}
+            @foreach ($segmentedCriterias as $segName => $segCriterias)
+                @php
+                    $segWeight = $segCriterias->first()->segment_weight;
+                    $segMax = $segCriterias->sum('perfect_score');
+                    $segCols = $segCriterias->count() + 3; //# + contingent + sub-total
+                @endphp
+                <table class="table" style="margin-top:12px;">
                     <tr>
-                        <td colspan="{{ $count }}" class="text-center">No Data</td>
+                        <td colspan="{{ $segCols }}" style="background:#dce9f7;font-size:11pt;font-weight:bold;text-transform:uppercase;padding:5px 8px;border:1px solid #aec6e8;">
+                            {{ $segName }}
+                            <span style="color:#c0392b;font-weight:normal;font-size:10pt;">&nbsp;({{ $segWeight }}%)</span>
+                            <span style="color:#555;font-weight:normal;font-size:9pt;">&nbsp;— max {{ $segMax }} pts per judge</span>
+                        </td>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </table>
+                <table class="table bordered" style="margin-bottom:6px;">
+                    <thead>
+                        <tr>
+                            <th width="3%" style="font-size:9pt;">#</th>
+                            <th style="font-size:9pt;">CONTINGENT</th>
+                            @foreach ($segCriterias as $criteria)
+                                <th style="font-size:8pt;text-transform:uppercase;">
+                                    {{ $criteria->criteria }}<br />
+                                    <span style="color:red;">{{ $criteria->perfect_score }}%</span>
+                                </th>
+                            @endforeach
+                            <th width="12%" style="font-size:8pt;background:#eaf4ea;">
+                                SUB-TOTAL<br />
+                                <span style="color:#555;font-weight:normal;">/ {{ $segMax }}</span>
+                            </th>
+                            <th width="10%" style="font-size:8pt;background:#eaf4ea;color:#27ae60;">
+                                WEIGHTED<br />
+                                <span style="color:#c0392b;">/ {{ $segWeight }}%</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($grands as $item)
+                            @php $seg = $item['segment_scores'][$segName] ?? null; @endphp
+                            <tr class="winner-{{ $item['ordinal_rank'] }}">
+                                <td class="text-center" style="font-size:9pt;">{{ $item['participant_no'] }}</td>
+                                <td style="font-size:9pt;padding:2px;">{{ $item['participant'] }}</td>
+                                @foreach ($segCriterias as $criteria)
+                                    <td class="text-center" style="font-size:9pt;">
+                                        {{ bong_format($item['criteria_scores'][$criteria->id] ?? 0) }}
+                                    </td>
+                                @endforeach
+                                <td class="text-center" style="font-size:9pt;font-weight:bold;background:#eaf4ea;">
+                                    {{ $seg ? bong_format($seg['raw']) : '—' }}
+                                </td>
+                                <td class="text-center" style="font-size:9pt;font-weight:bold;background:#eaf4ea;color:#27ae60;">
+                                    {{ $seg ? bong_format($seg['weighted']) : '—' }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="{{ $segCols }}" class="text-center">No Data</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            @endforeach
+
+            {{-- ── GRAND TOTAL SUMMARY TABLE ───────────────────────────────────── --}}
+            <table class="table" style="margin-top:16px;">
+                <tr>
+                    <td style="background:#2c3e50;color:#fff;font-size:11pt;font-weight:bold;padding:5px 8px;border:1px solid #1a252f;">
+                        GRAND TOTAL SUMMARY &mdash; All Segments Combined
+                    </td>
+                </tr>
+            </table>
+            <table class="table bordered">
+                <thead>
+                    <tr>
+                        <th width="3%" style="font-size:9pt;">#</th>
+                        <th style="font-size:9pt;">CONTINGENT</th>
+                        @foreach ($segmentedCriterias as $segName => $segCriterias)
+                            @php $segWeight = $segCriterias->first()->segment_weight; @endphp
+                            <th width="10%" style="font-size:8pt;text-transform:uppercase;background:#dce9f7;">
+                                {{ \Illuminate\Support\Str::limit($segName, 18) }}<br />
+                                <span style="color:#c0392b;">{{ $segWeight }}%</span>
+                            </th>
+                        @endforeach
+                        <th width="10%" style="font-size:10pt;font-weight:bold;">
+                            TOTAL<br /><span style="color:red;font-size:8pt;">100%</span>
+                        </th>
+                        <th width="8%" style="font-size:10pt;color:green;">RANKING</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($grands as $item)
+                        <tr class="winner-{{ $item['ordinal_rank'] }}">
+                            <td class="text-center" style="font-size:9pt;">{{ $item['participant_no'] }}</td>
+                            <td style="font-size:9pt;padding:2px;">{{ $item['participant'] }}</td>
+                            @foreach ($segmentedCriterias as $segName => $segCriterias)
+                                @php $seg = $item['segment_scores'][$segName] ?? null; @endphp
+                                <td class="text-center" style="font-size:9pt;background:#dce9f7;">
+                                    {{ $seg ? bong_format($seg['weighted']) : '—' }}
+                                </td>
+                            @endforeach
+                            <td class="text-center" style="font-size:10pt;font-weight:bold;">
+                                {{ bong_format($item['grand']) }}
+                            </td>
+                            <td class="text-center" style="font-size:10pt;color:green;font-weight:bold;">
+                                {{ bong_ordinal($item['ordinal_rank']) }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="{{ $segmentedCriterias->count() + 4 }}" class="text-center">No Data</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        @else
+            {{-- ── ORIGINAL FLAT TABLE (non-weighted, unchanged) ───────────────── --}}
+            @php $flatColspan = $criterias->count() + 4; @endphp
+            <table class="table bordered">
+                <thead>
+                    <tr>
+                        <th style="font-size: 13pt;" width="3%">#</th>
+                        <th style="font-size: 13pt;">CONTINGENT</th>
+                        @foreach ($criterias as $criteria)
+                            <th width="10%" style="font-size: 10pt;text-transform: uppercase;">{{ $criteria->criteria }}<br />(<span style="color: red;">{{ $criteria->perfect_score }}%</span> ) </th>
+                        @endforeach
+                        <th width="10%" style="font-size: 13pt;">TOTAL<br />(<span style="color: red;">100%</span> )</th>
+                        <th width="10%" style="font-size: 13pt;color:green;">RANKING</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($grands as $item)
+                        <tr class="winner-{{ $item['ordinal_rank'] }}">
+                            <td class="text-center" style="font-size: 9pt;">{{ $item['participant_no'] }}</td>
+                            <td style="font-size: 9pt;padding: 3px;">{{ $item['participant'] }}</td>
+                            @foreach ($criterias as $criteria)
+                                <td class="text-center">{{ bong_format($item['criteria_scores'][$criteria->id]) }}</td>
+                            @endforeach
+                            <td class="text-center" style="font-weight:bold;">{{ bong_format($item['grand']) }}</td>
+                            <td class="text-center" style="color:green;">{{ bong_ordinal($item['ordinal_rank']) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="{{ $flatColspan }}" class="text-center">No Data</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+        @endif
     </main>
 </body>
 

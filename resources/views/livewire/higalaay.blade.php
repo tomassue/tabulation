@@ -129,36 +129,55 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($criterias as $criteria)
-                                                        <tr>
-                                                            <td class="px-3 py-2 align-middle bg-light">
-                                                                <div class="fw-semibold criteria-label">{{ $criteria->criteria }}</div>
-                                                                <small class="text-muted">Max: {{ $criteria->perfect_score }}</small>
-                                                            </td>
-                                                            @foreach ($judges as $judge)
-                                                                @php
-                                                                    $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
-                                                                @endphp
-                                                                <td class="text-center align-middle p-2">
-                                                                    <input type="number"
-                                                                        class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
-                                                                        wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
-                                                                        value="{{ $score ? $score->score : '' }}"
-                                                                        placeholder="—"
-                                                                        min="0"
-                                                                        max="{{ $criteria->perfect_score }}"
-                                                                        oninput="
-                                                                            const max = {{ $criteria->perfect_score }};
-                                                                            const value = parseFloat(this.value) || 0;
-                                                                            const correctedValue = value > max || value < 0 ? max : value;
-                                                                            if (value !== correctedValue) {
-                                                                                this.value = correctedValue;
-                                                                                this.dispatchEvent(new Event('change'));
-                                                                            }
-                                                                        " />
+                                                    @php
+                                                        $hasSeg = $criterias->whereNotNull('segment')->isNotEmpty();
+                                                        $grouped = $hasSeg
+                                                            ? $criterias->groupBy(fn($c) => $c->segment ?? '')
+                                                            : collect(['' => $criterias]);
+                                                    @endphp
+                                                    @foreach ($grouped as $segmentName => $segCriterias)
+                                                        @if ($hasSeg && $segmentName !== '')
+                                                            @php $segWeight = $segCriterias->first()->segment_weight; @endphp
+                                                            <tr class="segment-header-row">
+                                                                <td colspan="{{ count($judges) + 1 }}" class="px-3 py-2 fw-bold text-uppercase text-white bg-secondary small">
+                                                                    {{ $segmentName }}
+                                                                    @if ($segWeight)
+                                                                        <span class="badge bg-warning text-dark ms-2">{{ $segWeight }}%</span>
+                                                                    @endif
                                                                 </td>
-                                                            @endforeach
-                                                        </tr>
+                                                            </tr>
+                                                        @endif
+                                                        @foreach ($segCriterias as $criteria)
+                                                            <tr>
+                                                                <td class="px-3 py-2 align-middle bg-light">
+                                                                    <div class="fw-semibold criteria-label">{{ $criteria->criteria }}</div>
+                                                                    <small class="text-muted">Max: {{ $criteria->perfect_score }}</small>
+                                                                </td>
+                                                                @foreach ($judges as $judge)
+                                                                    @php
+                                                                        $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
+                                                                    @endphp
+                                                                    <td class="text-center align-middle p-2">
+                                                                        <input type="number"
+                                                                            class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
+                                                                            wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
+                                                                            value="{{ $score ? $score->score : '' }}"
+                                                                            placeholder="—"
+                                                                            min="0"
+                                                                            max="{{ $criteria->perfect_score }}"
+                                                                            oninput="
+                                                                                const max = {{ $criteria->perfect_score }};
+                                                                                const value = parseFloat(this.value) || 0;
+                                                                                const correctedValue = value > max || value < 0 ? max : value;
+                                                                                if (value !== correctedValue) {
+                                                                                    this.value = correctedValue;
+                                                                                    this.dispatchEvent(new Event('change'));
+                                                                                }
+                                                                            " />
+                                                                    </td>
+                                                                @endforeach
+                                                            </tr>
+                                                        @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>

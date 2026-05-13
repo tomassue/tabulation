@@ -167,19 +167,15 @@
     <main>
         @php
             use App\Models\Setting;
-            $isBangga    = $category->category == 'bangga-sa-daygon';
+            $isBangga = $category->category == 'bangga-sa-daygon';
             $titlePrefix = Setting::get('report_header_title', '');
-            $venue       = $isBangga
-                ? Setting::get('report_header_venue_alt', 'Cagayan de Oro City Hall Building - Tourism Hall')
-                : Setting::get('report_header_venue', '');
-            $time        = $isBangga
-                ? Setting::get('report_header_time_alt', '4:00 PM')
-                : Setting::get('report_header_time', '');
-            $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+            $venue = $isBangga ? Setting::get('report_header_venue_alt', 'Cagayan de Oro City Hall Building - Tourism Hall') : Setting::get('report_header_venue', '');
+            $time = $isBangga ? Setting::get('report_header_time_alt', '4:00 PM') : Setting::get('report_header_time', '');
+            $datetime = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
         @endphp
         @include('generated_pdf._header', [
-            'headerTitle'    => $titlePrefix ? $titlePrefix . ': ' . $category->description : $category->description,
-            'headerVenue'    => $venue,
+            'headerTitle' => $titlePrefix ? $titlePrefix . ': ' . $category->description : $category->description,
+            'headerVenue' => $venue,
             'headerDatetime' => $datetime,
         ])
         <table class="table">
@@ -202,13 +198,19 @@
                 </td>
             </tr>
         </table>
+        @php $isWeighted = $isWeighted ?? false; @endphp
         <table class="table bordered">
             <thead>
                 <tr>
                     <th style="width: 3%;">#</th>
                     <th width="30%" style="font-size: 11pt;">CONTINGENT</th>
                     @foreach ($judges as $judge)
-                        <th style="text-transform: uppercase;font-size: 9pt;">{{ $judge->judge }}</th>
+                        <th style="text-transform: uppercase;font-size: 9pt;">
+                            {{ $judge->judge }}
+                            @if ($isWeighted)
+                                <div style="color:#27ae60;font-size:8pt;">(weighted avg)</div>
+                            @endif
+                        </th>
                     @endforeach
                     @if ($showDeduction == true)
                         <th width="10%" style="font-size: 9pt;">RAW AVERAGE SCORE</th>
@@ -216,7 +218,9 @@
                             DEMERIT <div style="color:red;font-size: 8pt;">(2 Points per deduction / violation)</div>
                         </th>
                     @endif
-                    <th width="10%" style="font-size: 9pt;">TOTAL<br />AVERAGE</th>
+                    <th width="10%" style="font-size: 9pt;">
+                        @if ($isWeighted) WEIGHTED @else TOTAL @endif<br />AVERAGE
+                    </th>
                     @if ($percentage)
                         <th width="10%" style="font-size: 9pt;text-transform: uppercase;">
                             {{ $category->description }} <div style="color:blue;">(50%)</div>

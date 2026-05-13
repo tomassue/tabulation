@@ -11,7 +11,7 @@ class Criteria extends Component
 {
     use WithPagination;
 
-    public $id, $criteria, $perfect_score, $category, $selectedCateg, $password;
+    public $id, $criteria, $perfect_score, $category, $segment, $segment_weight, $selectedCateg, $password;
     public function render()
     {
         $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->paginate(10);
@@ -31,6 +31,8 @@ class Criteria extends Component
         $this->criteria = $criteria->criteria;
         $this->perfect_score = $criteria->perfect_score;
         $this->category = $criteria->category;
+        $this->segment = $criteria->segment;
+        $this->segment_weight = $criteria->segment_weight;
         $this->dispatch('openModal');
     }
     public function saveCriteria()
@@ -45,6 +47,8 @@ class Criteria extends Component
         $criteria->criteria = $this->criteria;
         $criteria->perfect_score = $this->perfect_score;
         $criteria->category = $this->category;
+        $criteria->segment = $this->segment ?: null;
+        $criteria->segment_weight = $this->segment_weight ? (int) $this->segment_weight : null;
         $criteria->save();
 
         return session()->flash('status', 'Sucessfully saved!');

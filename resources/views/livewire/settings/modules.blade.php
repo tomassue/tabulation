@@ -39,6 +39,7 @@
                                                     <th scope="col">Name</th>
                                                     <th scope="col" class="text-center">Winners</th>
                                                     <th scope="col">Show Participant?</th>
+                                                    <th scope="col">Tabulation</th>
                                                     <th scope="col">Status</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
@@ -59,6 +60,12 @@
                                                         <td>
                                                             <span class="badge {{ $item->display_participant == 1 ? 'text-bg-success' : 'text-bg-danger' }}">
                                                                 {{ $item->display_participant == 1 ? 'Shown' : 'Hidden' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            @php $mode = $item->tabulation_mode ?? 'average'; @endphp
+                                                            <span class="badge {{ $mode === 'technical' ? 'text-bg-primary' : 'text-bg-secondary' }}">
+                                                                {{ $mode === 'technical' ? 'Technical' : 'Average' }}
                                                             </span>
                                                         </td>
                                                         <td>
@@ -123,6 +130,13 @@
                                 <option value="">--- SELECT ---</option>
                                 <option value="1">Shown</option>
                                 <option value="0">Hidden</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tabulation_mode">Tabulation Mode</label>
+                            <select wire:model="tabulation_mode" id="tabulation_mode" class="form-select">
+                                <option value="average">Average (standard multi-judge scoring)</option>
+                                <option value="technical">Technical (each judge scores assigned criteria, scores are totalled)</option>
                             </select>
                         </div>
                         <div class="mb-3">
