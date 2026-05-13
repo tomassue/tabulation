@@ -74,6 +74,36 @@
                             @endforeach
                         </div>
 
+                        @php
+                            $hasSeg = $criterias->whereNotNull('segment')->isNotEmpty();
+                            $segments = $hasSeg
+                                ? $criterias->whereNotNull('segment')->pluck('segment')->unique()->values()
+                                : collect();
+                        @endphp
+
+                        {{-- Segment filter tabs (only when segments exist) --}}
+                        <div x-data="{ activeSeg: '' }">
+                        @if ($hasSeg)
+                            <div class="d-flex gap-2 flex-wrap mb-3">
+                                <button class="btn btn-sm"
+                                    :class="activeSeg === '' ? 'btn-primary' : 'btn-outline-secondary'"
+                                    @click="activeSeg = ''">
+                                    ALL SEGMENTS
+                                </button>
+                                @foreach ($segments as $seg)
+                                    @php $sw = $criterias->firstWhere('segment', $seg)?->segment_weight; @endphp
+                                    <button class="btn btn-sm"
+                                        :class="activeSeg === @js($seg) ? 'btn-primary' : 'btn-outline-secondary'"
+                                        @click="activeSeg = @js($seg)">
+                                        {{ $seg }}
+                                        @if ($sw)
+                                            <span class="badge bg-warning text-dark ms-1">{{ $sw }}%</span>
+                                        @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+
                         {{-- Participant scoring cards --}}
                         <div class="scoring-cards">
                             @foreach ($participants as $participant)
@@ -130,7 +160,6 @@
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                        $hasSeg = $criterias->whereNotNull('segment')->isNotEmpty();
                                                         $grouped = $hasSeg
                                                             ? $criterias->groupBy(fn($c) => $c->segment ?? '')
                                                             : collect(['' => $criterias]);
@@ -138,7 +167,8 @@
                                                     @foreach ($grouped as $segmentName => $segCriterias)
                                                         @if ($hasSeg && $segmentName !== '')
                                                             @php $segWeight = $segCriterias->first()->segment_weight; @endphp
-                                                            <tr class="segment-header-row">
+                                                            <tr class="segment-header-row"
+                                                                x-show="activeSeg === '' || activeSeg === @js($segmentName)">
                                                                 <td colspan="{{ count($judges) + 1 }}" class="px-3 py-2 fw-bold text-uppercase text-white bg-secondary small">
                                                                     {{ $segmentName }}
                                                                     @if ($segWeight)
@@ -148,7 +178,7 @@
                                                             </tr>
                                                         @endif
                                                         @foreach ($segCriterias as $criteria)
-                                                            <tr>
+                                                            <tr x-show="@js($criteria->segment ?? '') === '' || activeSeg === '' || activeSeg === @js($criteria->segment ?? '')">
                                                                 <td class="px-3 py-2 align-middle bg-light">
                                                                     <div class="fw-semibold criteria-label">{{ $criteria->criteria }}</div>
                                                                     <small class="text-muted">Max: {{ $criteria->perfect_score }}</small>
@@ -186,6 +216,7 @@
                                 </div>
                             @endforeach
                         </div>
+                        </div>{{-- end x-data segment filter --}}
                     </div>
                 </div>
             </div>
