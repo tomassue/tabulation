@@ -187,16 +187,28 @@
 
     {{-- ── Signatures ── --}}
     @if($technicalCategories->isNotEmpty())
+        @php
+            // Deduplicate: one signature cell per unique judge, listing all their categories
+            $sigEntries = [];
+            foreach ($technicalCategories as $tc) {
+                $j = $tc->judgeAssignments->first()?->judge;
+                $key = $j ? $j->id : 'none_' . $tc->id;
+                if (!isset($sigEntries[$key])) {
+                    $sigEntries[$key] = ['judge' => $j, 'categories' => []];
+                }
+                $sigEntries[$key]['categories'][] = $tc->name;
+            }
+            $sigEntries = array_values($sigEntries);
+        @endphp
         <table class="sig-table" style="margin-top:30px;">
             <tr>
-                @foreach($technicalCategories as $i => $tc)
-                    @php $j = $tc->judgeAssignments->first()?->judge; @endphp
+                @foreach($sigEntries as $i => $entry)
                     <td class="sig-cell">
                         <div style="font-size:8pt;color:#777;margin-bottom:25px;">
-                            Judge — {{ $tc->name }}
+                            Judge — {{ implode(' & ', $entry['categories']) }}
                         </div>
-                        @if($j)
-                            <div class="sig-name">{{ $j->judge }}</div>
+                        @if($entry['judge'])
+                            <div class="sig-name">{{ $entry['judge']->judge }}</div>
                         @else
                             <div class="sig-name" style="color:#aaa;">(No judge assigned)</div>
                         @endif
