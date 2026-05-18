@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Higalaay as ModelsHigalaay;
 use App\Models\HigalaayDeduction;
 use App\Models\RefJudge;
+use App\Models\TechnicalScore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
@@ -103,6 +104,26 @@ class DBImportExport extends Component
                 $result = DB::table('ref_deductions')->insertOrIgnore($deductions);
                 $message .= 'Deductions: ' . $result . '<br>';
             }
+            if (isset($body['technical_categories'])) {
+                $technical_categories = $body['technical_categories'];
+                $result = DB::table('technical_categories')->insertOrIgnore($technical_categories);
+                $message .= 'Technical Categories: ' . $result . '<br>';
+            }
+            if (isset($body['technical_deductions'])) {
+                $technical_deductions = $body['technical_deductions'];
+                $result = DB::table('technical_deductions')->insertOrIgnore($technical_deductions);
+                $message .= 'Technical Deductions: ' . $result . '<br>';
+            }
+            if (isset($body['technical_judge_assignments'])) {
+                $technical_judge_assignments = $body['technical_judge_assignments'];
+                $result = DB::table('technical_judge_assignments')->insertOrIgnore($technical_judge_assignments);
+                $message .= 'Technical Judge Assignments: ' . $result . '<br>';
+            }
+            if (isset($body['technical_sub_criterias'])) {
+                $technical_sub_criterias = $body['technical_sub_criterias'];
+                $result = DB::table('technical_sub_criterias')->insertOrIgnore($technical_sub_criterias);
+                $message .= 'Technical Sub-Criteria: ' . $result . '<br>';
+            }
             if (isset($body['users'])) {
                 $users = $body['users'];
                 $result = DB::table('users')->insertOrIgnore($users);
@@ -125,6 +146,7 @@ class DBImportExport extends Component
 
         $data = ModelsHigalaay::get();
         $deductions = HigalaayDeduction::get();
+        $technical_scores = TechnicalScore::get();
 
         $response = Http::withHeaders([
             'Accept' => 'application/json',
@@ -133,7 +155,8 @@ class DBImportExport extends Component
             config('settings.api_url') . '/upload-database',
             [
                 'higalaay' => $data,
-                'deductions' => $deductions
+                'deductions' => $deductions,
+                'technical_scores' => $technical_scores
             ]
         );
         if ($response->successful()) {
