@@ -102,14 +102,22 @@ class Scoring extends Component
             $activeCategoryJudge = $assignment?->judge;
         }
 
-        // Judge: restrict to their own category
+        // Judge: restrict to their assigned categories only
+        $judgeAssignedCategoryIds = collect();
         if (!$isAdmin) {
             $judge = RefJudge::where('user_id', Auth::id())->first();
-            $myAssignment = TechnicalJudgeAssignment::where('judge_id', $judge?->id)
+            $myAssignments = TechnicalJudgeAssignment::where('judge_id', $judge?->id)
                 ->whereHas('technicalCategory', fn($q) => $q->where('competition_category', $this->type))
-                ->with('technicalCategory.subCriterias')
-                ->first();
-            $activeCategory = $myAssignment?->technicalCategory ?? $activeCategory;
+                ->get();
+            $judgeAssignedCategoryIds = $myAssignments->pluck('technical_category_id');
+
+            if ($judgeAssignedCategoryIds->isNotEmpty()) {
+                // If current selection isn't one of theirs, fall back to their first
+                if (!$judgeAssignedCategoryIds->contains($this->activeTechnicalCategoryId)) {
+                    $this->activeTechnicalCategoryId = $judgeAssignedCategoryIds->first();
+                }
+                $activeCategory = $technicalCategories->firstWhere('id', $this->activeTechnicalCategoryId);
+            }
             $activeCategoryJudge = $judge;
         }
 
@@ -138,6 +146,7 @@ class Scoring extends Component
             'isAdmin',
             'summaryData',
             'allJudges',
+            'judgeAssignedCategoryIds',
         ));
     }
 

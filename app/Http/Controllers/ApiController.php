@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Log;
+use App\Models\TechnicalScore;
 use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
@@ -83,6 +84,28 @@ class ApiController extends Controller
                 }
             }
         }
+
+        if (isset($request->technical_scores)) {
+            $technical_scores = $request->technical_scores;
+            foreach ($technical_scores as $value) {
+                $score = TechnicalScore::updateOrCreate(
+                    [
+                        'participant_id' => $value['participant_id'],
+                        'judge_id' => $value['judge_id'],
+                        'sub_criteria_id' => $value['sub_criteria_id'],
+                        'competition_category' => $value['competition_category'],
+                    ],
+                    $value
+                );
+                if ($score->wasRecentlyCreated) {
+                    $data .=  '<br/><b>[Technical Score Inserted: participant_id:' . $value['participant_id'] . ', judge_id:' . $value['judge_id'] . ', sub_criteria_id:' . $value['sub_criteria_id'] . ', competition_category:' . $value['competition_category'] . ', score:' . $value['score'] . ']<b>';
+                } else {
+                    if ($score->wasChanged()) {
+                        $data .=  '<br/><b>[Technical Score Updated: participant_id:' . $value['participant_id'] . ', judge_id:' . $value['judge_id'] . ', sub_criteria_id:' . $value['sub_criteria_id'] . ', competition_category:' . $value['competition_category'] . ', score:' . $value['score'] . ']<b>';
+                    }
+                }
+            }
+        }
         Log::create([
             'user_id' => Auth::user()->id,
             'activity' =>  '(API Update) Event Data Affected: ' . $higalaayInsertedData + $higalaayUpdatedData . ', Deductions Affected: ' . $higalaayInsertedDeductionData + $higalaayUpdatedDeductionData . ' | ' . $data,
@@ -98,6 +121,10 @@ class ApiController extends Controller
         $participants = DB::table('ref_participants')->get();
         $deductions = DB::table('ref_deductions')->get();
         $categories = DB::table('categories')->get();
+        $technical_categories = DB::table('technical_categories')->get();
+        $technical_deductions = DB::table('technical_deductions')->get();
+        $technical_judge_assignments = DB::table('technical_judge_assignments')->get();
+        $technical_sub_criterias = DB::table('technical_sub_criterias')->get();
         $users = DB::table('users')->where('role', '<>', 'admin')->get();
         return response()->json([
             "criteria" => $criteria,
@@ -105,6 +132,10 @@ class ApiController extends Controller
             "participants" => $participants,
             "deductions" => $deductions,
             "categories" => $categories,
+            "technical_categories" => $technical_categories,
+            "technical_deductions" => $technical_deductions,
+            "technical_judge_assignments" => $technical_judge_assignments,
+            "technical_sub_criterias" => $technical_sub_criterias,
             "users" => $users
         ]);
     }
