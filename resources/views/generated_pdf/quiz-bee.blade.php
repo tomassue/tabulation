@@ -41,38 +41,36 @@
         }
         #watermark {
             position: fixed;
-            top: 20%;
+            top: 10%;
             width: 100%;
             text-align: center;
-            /* transform: rotate(330deg); */
             transform-origin: 50% 50%;
-            opacity: .2;
+            opacity: .07;
+        }
+        .footer {
+            position: fixed;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            height: 50px;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
-    <table class="table">
-        <tr>
-            <td class="text-start" width="20%">
-                <img src="{{ convert_image(public_path()."/img/cdo_email.png") }}" width="90" >
-                <img src="{{ convert_image(public_path()."/img/tourism_email.png") }}" width="95" >
-            </td>
-            <td class="text-center">
-                <div style="font-size: 15pt;font-weight:bold;">1st Mayor Rolando <i><span style="color: green;">“Klarex”</span></i> Uy </div>
-                <div style="font-size: 20pt;font-weight:bold;">KINAADMAN SA KASAYSAYAN: A Literary and Speech Contest</div>
-                <div>June 27, 2025, 1:00 PM | 5F SM CDO Downtown</div>
-            </td>
-            <td class="text-end" width="20%">
-                <img src="{{ convert_image(public_path()."/img/goldencdo_email.png") }}"  width="120">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" class="text-center">
-                
-                <div style="font-size: 15pt;font-weight:bold;text-transform:uppercase;">QUIZBEE SCORE SHEET</div>
-            </td>
-        </tr>
-    </table>
+    @php
+        use App\Models\Setting;
+        $titlePrefix = Setting::get('report_header_title', '');
+        $venue       = Setting::get('report_header_venue', '');
+        $time        = Setting::get('report_header_time', '');
+        $datetime    = $time ? date('F d, Y') . ' | ' . $time : date('F d, Y');
+    @endphp
+    @include('generated_pdf._header', [
+        'headerTitle'    => trim(($titlePrefix ? $titlePrefix . ': ' : '') . 'QUIZBOWL SCORE SHEET'),
+        'headerVenue'    => $venue,
+        'headerDatetime' => $datetime,
+    ])
     <table class="table bordered" style="padding-top: 10px;" >
         <thead>
             <tr>
@@ -104,7 +102,7 @@
         </thead>
         @foreach ($participants as $item)
             <tr>
-                <td class="text-start" style="padding:5px;font-size:12pt;">{{$item->school}}</td>
+                <td class="text-start" style="padding:5px;font-size:12pt;"><span style="font-weight:bold;">{{$item->participant_no}}. {{$item->participant}}</span><br><small>{{$item->school}}</small></td>
                  @for ($i = 1; $i <= 10; $i++)
                     @php
                         $score = \App\Models\QuizBee::where('participant_id', $item->id)->where('round_id', '1')->where('question_number', $i)->first();

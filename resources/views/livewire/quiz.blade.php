@@ -27,7 +27,7 @@
                                 <input type="search" wire:model.live="search" list="datalistOptions" name="search" id="search" class="form-control" placeholder="Search participant....">
                                 <datalist id="datalistOptions">
                                     @foreach ($part as $item)
-                                    <option value="{{$item->school}}">
+                                    <option value="{{$item->participant}}">
                                         @endforeach
                                 </datalist>
                             </div>
@@ -52,7 +52,10 @@
                                 <tbody>
                                     @foreach ($participants as $item)
                                     <tr>
-                                        <td scope="row">{{$item->school}}</td>
+                                        <td scope="row">
+                                            <div class="fw-bold">{{ $item->participant_no }}. {{ $item->participant }}</div>
+                                            <small class="text-muted">{{ $item->school }}</small>
+                                        </td>
                                         @for ($i = 1; $i <= 10; $i++)
                                             @php
                                             $score=\App\Models\QuizBee::where('participant_id', $item->id)->where('round_id', '1')->where('question_number', $i)->first();
