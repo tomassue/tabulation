@@ -35,29 +35,29 @@
                                         <table class="table table-hover  table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Judge Number</th>
+                                                    <th scope="col" style="width:3%">#</th>
+                                                    <th scope="col" style="width:12%">Judge No.</th>
                                                     <th scope="col">Judge Name</th>
-                                                    <th scope="col">Event</th>
-                                                    <th scope="col">Actions</th>
+                                                    <th scope="col">Events</th>
+                                                    <th scope="col" style="width:10%" class="text-center">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse ($judges as $item)
                                                     <tr>
-                                                        <td scope="row">
-                                                            {{ $loop->iteration }}
-                                                        </td>
-                                                        <td scope="row">
-                                                            JUDGE #{{ $item->nickname }}
-                                                        </td>
-                                                        <td scope="row">
-                                                            {{ $item->judge }}
-                                                        </td>
-                                                        <td scope="row" class="text-capitalize">
-                                                            {!! implode('<br /> ', $item->category) !!}
+                                                        <td>{{ ($judges->currentPage() - 1) * $judges->perPage() + $loop->iteration }}</td>
+                                                        <td>
+                                                            <span class="badge text-bg-secondary fs-6">#{{ $item->nickname }}</span>
                                                         </td>
                                                         <td>
+                                                            <span class="fw-semibold">{{ $item->judge }}</span>
+                                                        </td>
+                                                        <td>
+                                                            @foreach ($item->category as $cat)
+                                                                <span class="badge text-bg-primary me-1 mb-1 text-capitalize">{{ $cat }}</span>
+                                                            @endforeach
+                                                        </td>
+                                                        <td class="text-center">
                                                             <button wire:key="edit-{{ $item->id }}" wire:target="editJudge({{ $item->id }})" wire:loading.attr="disabled" class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
                                                                 <div wire:loading.remove wire:target="editJudge({{ $item->id }})">
                                                                     <i class="bi bi-pencil-square"></i>
@@ -82,7 +82,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr class="text-center">
-                                                        <td colspan="4">-- NO DATA --</td>
+                                                        <td colspan="5" class="text-muted py-3">-- NO DATA --</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -178,8 +178,8 @@
             myModal.show();
         });
         window.addEventListener('hideModal', event => {
-            var myModal = new bootstrap.Modal(document.getElementById('judgeModal'));
-            myModal.show();
+            var myModal = bootstrap.Modal.getInstance(document.getElementById('judgeModal'));
+            if (myModal) myModal.hide();
         });
         window.addEventListener('openDeleteModal', event => {
             var myModal = new bootstrap.Modal(document.getElementById('deleteModal'));

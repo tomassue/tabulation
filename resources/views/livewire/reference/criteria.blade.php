@@ -57,7 +57,7 @@
                                                         </td>
                                                         <td scope="row" class="text-capitalize">
                                                             {{ $item->segment ?? '—' }}
-                                                            @if($item->segment_weight)
+                                                            @if ($item->segment_weight)
                                                                 <span class="badge bg-info ms-1">{{ $item->segment_weight }}%</span>
                                                             @endif
                                                         </td>

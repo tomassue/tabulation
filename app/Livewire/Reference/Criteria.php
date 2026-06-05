@@ -14,7 +14,7 @@ class Criteria extends Component
     public $id, $criteria, $perfect_score, $category, $segment, $segment_weight, $selectedCateg, $password;
     public function render()
     {
-        $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->paginate(10);
+        $criterias = RefCriteria::where('category', 'LIKE', "%{$this->selectedCateg}%")->orderBy('id', 'desc')->paginate(10);
         $categories = Category::where('is_active', 1)->get();
         return view('livewire.reference.criteria', compact('criterias', 'categories'));
     }

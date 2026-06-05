@@ -30,7 +30,7 @@ class Participants extends Component
 
     public function render()
     {
-        $participants = RefParticipant::orderBy('category', 'asc')->paginate(10,  pageName: 'participant-page');
+        $participants = RefParticipant::orderBy('category', 'asc')->orderBy('id', 'desc')->paginate(10,  pageName: 'participant-page');
         if ($this->selectedCateg) {
             $participants = RefParticipant::whereJsonContains('category', $this->selectedCateg)->orderBy('category', 'asc')->paginate(10,  pageName: 'participant-page');
         }

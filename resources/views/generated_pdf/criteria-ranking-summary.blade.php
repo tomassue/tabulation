@@ -141,11 +141,33 @@
                     <span style="color:#555;font-size:9pt;margin-left:6px;">— {{ $criteria->segment }} segment</span>
                 @endif
             </div>
+            <div style="font-size:10pt;color:#888;margin-top:4px;">Scoring Mode: <strong>{{ isset($scoringType) && $scoringType === 'rank' ? 'Ranking' : 'Average' }}</strong></div>
         </div>
+
+        @php $isRank = isset($scoringType) && $scoringType === 'rank'; @endphp
 
         {{-- Main scores table --}}
         <table class="table bordered" style="margin-top:10px;">
             <thead>
+                @if ($isRank)
+                <tr>
+                    <th width="3%" rowspan="2" style="font-size:9pt;padding:4px;">#</th>
+                    <th rowspan="2" style="font-size:9pt;padding:4px;">CONTINGENT</th>
+                    @foreach ($judges as $judge)
+                        <th style="font-size:8pt;padding:4px;text-align:center;" colspan="2">
+                            {{ $judge->judge }}
+                        </th>
+                    @endforeach
+                    <th width="8%" rowspan="2" style="font-size:9pt;padding:4px;text-align:center;">TOTAL RANK</th>
+                    <th width="10%" rowspan="2" style="font-size:9pt;padding:4px;text-align:center;color:green;">FINAL RANK</th>
+                </tr>
+                <tr>
+                    @foreach ($judges as $judge)
+                        <th style="font-size:8pt;padding:4px;text-align:center;">Score</th>
+                        <th style="font-size:8pt;padding:4px;text-align:center;">Rank</th>
+                    @endforeach
+                </tr>
+                @else
                 <tr style="background:#2c3e50;color:#fff;">
                     <th width="3%" style="font-size:9pt;padding:4px;">#</th>
                     <th style="font-size:9pt;padding:4px;">CONTINGENT</th>
@@ -163,6 +185,7 @@
                     </th>
                     <th width="10%" style="font-size:9pt;padding:4px;text-align:center;color:#27ae60;">RANKING</th>
                 </tr>
+                @endif
             </thead>
             <tbody>
                 @forelse ($grands as $item)
@@ -173,13 +196,25 @@
                             <td class="text-center" style="font-size:9pt;padding:3px;">
                                 {{ bong_format($item['judge_scores'][$judge->user_id] ?? 0) }}
                             </td>
+                            @if ($isRank)
+                            <td class="text-center" style="font-size:9pt;padding:3px;font-weight:bold;">
+                                {{ ($item['judge_scores'][$judge->user_id] ?? 0) != 0 ? bong_ordinal($item['judge_rank_' . $judge->user_id] ?? 0) : '-' }}
+                            </td>
+                            @endif
                         @endforeach
+                        @if ($isRank)
+                        <td class="text-center" style="font-size:12pt;padding:3px;">{{ $item['total_rank'] }}</td>
+                        <td class="text-center" style="font-size:12pt;color:green;font-weight:bold;padding:3px;">
+                            {{ bong_ordinal($item['ordinal_rank']) }}
+                        </td>
+                        @else
                         <td class="text-center" style="font-size:10pt;font-weight:bold;padding:3px;background:#eaf4ea;">
                             {{ bong_format($item['grand']) }}
                         </td>
                         <td class="text-center" style="font-size:10pt;color:green;font-weight:bold;padding:3px;">
                             {{ bong_ordinal($item['ordinal_rank']) }}
                         </td>
+                        @endif
                     </tr>
                 @empty
                     <tr>

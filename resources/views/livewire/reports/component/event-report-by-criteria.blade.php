@@ -18,7 +18,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-group">
                         <label for="critCriteria" class="form-label">Criteria</label>
                         <select wire:model="selectedCriteria" id="critCriteria"
@@ -37,6 +37,15 @@
                         @error('selectedCriteria')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="form-group">
+                        <label for="critScoringType" class="form-label">Scoring Type</label>
+                        <select wire:model="scoringType" id="critScoringType" class="form-select">
+                            <option value="average">Average</option>
+                            <option value="rank">Ranking</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-12">
