@@ -189,30 +189,33 @@
             </thead>
             <tbody>
                 @forelse ($grands as $item)
-                    <tr class="winner-{{ $item['ordinal_rank'] }}">
+                    @php $hasScore = array_sum($item['judge_scores']) > 0; @endphp
+                    <tr class="{{ $hasScore ? 'winner-' . $item['ordinal_rank'] : '' }}">
                         <td class="text-center" style="font-size:9pt;padding:3px;">{{ $item['participant_no'] }}</td>
                         <td style="font-size:9pt;padding:3px;">{{ $item['participant'] }}</td>
                         @foreach ($judges as $judge)
                             <td class="text-center" style="font-size:9pt;padding:3px;">
-                                {{ bong_format($item['judge_scores'][$judge->user_id] ?? 0) }}
+                                {{ ($item['judge_scores'][$judge->user_id] ?? 0) > 0 ? bong_format($item['judge_scores'][$judge->user_id]) : '-' }}
                             </td>
                             @if ($isRank)
                             <td class="text-center" style="font-size:9pt;padding:3px;font-weight:bold;">
-                                {{ ($item['judge_scores'][$judge->user_id] ?? 0) != 0 ? bong_ordinal($item['judge_rank_' . $judge->user_id] ?? 0) : '-' }}
+                                {{ ($item['judge_scores'][$judge->user_id] ?? 0) > 0 ? bong_ordinal($item['judge_rank_' . $judge->user_id] ?? 0) : '-' }}
                             </td>
                             @endif
                         @endforeach
                         @if ($isRank)
-                        <td class="text-center" style="font-size:12pt;padding:3px;">{{ $item['total_rank'] }}</td>
+                        <td class="text-center" style="font-size:12pt;padding:3px;">
+                            {{ $hasScore ? $item['total_rank'] : '-' }}
+                        </td>
                         <td class="text-center" style="font-size:12pt;color:green;font-weight:bold;padding:3px;">
-                            {{ bong_ordinal($item['ordinal_rank']) }}
+                            {{ $hasScore ? bong_ordinal($item['ordinal_rank']) : '-' }}
                         </td>
                         @else
                         <td class="text-center" style="font-size:10pt;font-weight:bold;padding:3px;background:#eaf4ea;">
-                            {{ bong_format($item['grand']) }}
+                            {{ $hasScore ? bong_format($item['grand']) : '-' }}
                         </td>
                         <td class="text-center" style="font-size:10pt;color:green;font-weight:bold;padding:3px;">
-                            {{ bong_ordinal($item['ordinal_rank']) }}
+                            {{ $hasScore ? bong_ordinal($item['ordinal_rank']) : '-' }}
                         </td>
                         @endif
                     </tr>

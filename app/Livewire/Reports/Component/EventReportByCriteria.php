@@ -90,20 +90,27 @@ class EventReportByCriteria extends Component
         }
 
         if ($scoringType === 'rank') {
+            // Split scored vs unscored participants
+            $scored   = array_filter($grands, fn($r) => array_sum($r['judge_scores']) > 0);
+            $unscored = array_filter($grands, fn($r) => array_sum($r['judge_scores']) == 0);
+            $scored   = array_values($scored);
+            $unscored = array_values($unscored);
+
             // Rank each judge's scores independently using a temp top-level key
             foreach ($judges as $judge) {
                 $tempKey = '_jscore_' . $judge->user_id;
-                foreach ($grands as &$row) {
+                foreach ($scored as &$row) {
                     $row[$tempKey] = $row['judge_scores'][$judge->user_id] ?? 0;
                 }
                 unset($row);
-                $grands = bong_rank_arranger($grands, $tempKey, 'judge_rank_' . $judge->user_id, false, 'DESC');
-                foreach ($grands as &$row) {
+                $scored = bong_rank_arranger($scored, $tempKey, 'judge_rank_' . $judge->user_id, false, 'DESC');
+                foreach ($scored as &$row) {
                     unset($row[$tempKey]);
                 }
                 unset($row);
             }
-            foreach ($grands as &$row) {
+
+            foreach ($scored as &$row) {
                 $totalRank = 0;
                 foreach ($judges as $judge) {
                     $totalRank += $row['judge_rank_' . $judge->user_id] ?? 0;
@@ -111,7 +118,19 @@ class EventReportByCriteria extends Component
                 $row['total_rank'] = $totalRank;
             }
             unset($row);
-            return bong_rank_arranger($grands, 'total_rank', 'ordinal_rank', false, 'ASC');
+            $scored = bong_rank_arranger($scored, 'total_rank', 'ordinal_rank', false, 'ASC');
+
+            // Unscored participants get no rank
+            foreach ($unscored as &$row) {
+                foreach ($judges as $judge) {
+                    $row['judge_rank_' . $judge->user_id] = 0;
+                }
+                $row['total_rank']  = 0;
+                $row['ordinal_rank'] = 0;
+            }
+            unset($row);
+
+            return array_merge($scored, $unscored);
         }
 
         $grands = bong_rank_arranger($grands, 'grand', 'ordinal_rank', true, "DESC");
