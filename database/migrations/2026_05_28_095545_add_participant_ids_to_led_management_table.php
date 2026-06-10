@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedBigInteger('first_id')->nullable()->after('show_third');
             $table->unsignedBigInteger('second_id')->nullable()->after('first_id');
             $table->unsignedBigInteger('third_id')->nullable()->after('second_id');
-            $table->unsignedBigInteger('fourth_id')->nullable()->after('third_id');
         });
     }
 
