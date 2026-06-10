@@ -48,16 +48,16 @@
         </div>
         <div class="">
             @php
-                $image = ['img/1st.png', 'img/2nd.png', 'img/3rd.png'];
-                $color = ['#ebba64', '#aaaaaa', '#5d412d'];
-                $font = ['80px', '70px', '60px'];
+                $image = ['img/1st.png', 'img/2nd.png', 'img/3rd.png', 'img/3rd.png'];
+                $color = ['#ebba64', '#aaaaaa', '#5d412d', '#5d412d'];
+                $font  = ['80px', '70px', '60px', '60px'];
             @endphp
-            @if (isset($position) && $position && $position != null)
+            @if (isset($position) && $position)
                 @php
-                    $position = $position - 1;
-                    $image = [$image[$position]];
-                    $font = [$font[$position]];
-                    $color = [$color[$position]];
+                    $idx   = $position - 1;
+                    $image = [$image[$idx]];
+                    $font  = [$font[$idx]];
+                    $color = [$color[$idx]];
                 @endphp
             @endif
             @foreach ($participants as $index => $item)

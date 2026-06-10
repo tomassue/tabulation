@@ -63,9 +63,13 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            @php $mode = $item->tabulation_mode ?? 'average'; @endphp
-                                                            <span class="badge {{ $mode === 'technical' ? 'text-bg-primary' : 'text-bg-secondary' }}">
-                                                                {{ $mode === 'technical' ? 'Technical' : 'Average' }}
+                                                            @php
+                                                                $mode = $item->tabulation_mode ?? 'average';
+                                                                $modeLabels = ['technical' => 'Technical', 'oral' => 'Oral', 'poster' => 'Poster', 'quiz' => 'Quizbowl', 'average' => 'Average'];
+                                                                $modeColors = ['technical' => 'text-bg-primary', 'oral' => 'text-bg-info', 'poster' => 'text-bg-warning', 'quiz' => 'text-bg-success'];
+                                                            @endphp
+                                                            <span class="badge {{ $modeColors[$mode] ?? 'text-bg-secondary' }}">
+                                                                {{ $modeLabels[$mode] ?? 'Average' }}
                                                             </span>
                                                         </td>
                                                         <td>
@@ -137,6 +141,9 @@
                             <select wire:model="tabulation_mode" id="tabulation_mode" class="form-select">
                                 <option value="average">Average (standard multi-judge scoring)</option>
                                 <option value="technical">Technical (each judge scores assigned criteria, scores are totalled)</option>
+                                <option value="oral">Oral Presentation</option>
+                                <option value="poster">Poster Making Contest</option>
+                                <option value="quiz">Quizbowl</option>
                             </select>
                         </div>
                         <div class="mb-3">

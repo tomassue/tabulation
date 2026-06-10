@@ -43,6 +43,8 @@ if (! function_exists('bong_ordinal_new')) {
             return "1ST RUNNER UP";
         } else if ($number == 3) {
             return "2ND RUNNER UP";
+        } else if ($number == 4) {
+            return "3RD RUNNER UP";
         }
         $number -= 1;
         $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');

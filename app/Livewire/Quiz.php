@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class Quiz extends Component
 {
+    public $type, $winner;
     public $search = '', $base64pdf;
     public function render()
     {
-        $participants = RefParticipant::where('school', 'like', '%' . $this->search . '%')->where('category', 'quiz')->get();
-        $part = RefParticipant::where('category', 'quiz')->get();
+        $participants = RefParticipant::where('participant', 'like', '%' . $this->search . '%')->category('quiz')->get();
+
+        $part = RefParticipant::category('quiz')->get();
         $quizbees = QuizBee::all();
         return view('livewire.quiz', compact('participants', 'part', 'quizbees'));
     }
@@ -39,7 +41,7 @@ class Quiz extends Component
     public function generateReport()
     {
         $paper = array(0, 0, 1400, 850);
-        $participants = RefParticipant::where('category', 'quiz')
+        $participants = RefParticipant::category('quiz')
             ->leftjoin('quiz_bees', 'ref_participants.id', '=', 'quiz_bees.participant_id')
             ->groupBy('ref_participants.id')
             ->orderByRaw('SUM(quiz_bees.score) DESC')

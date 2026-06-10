@@ -142,6 +142,24 @@
                     @endif
                 </div>
             </div>
+
+            {{-- Segment & Criteria Reports --}}
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Segment &amp; Criteria Reports</h5>
+                        <p class="text-muted" style="font-size:0.875rem;">
+                            Generate per-segment or per-criteria score breakdowns across all judges.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                @livewire('reports.component.event-report-by-segment')
+            </div>
+            <div class="col-lg-6">
+                @livewire('reports.component.event-report-by-criteria')
+            </div>
         </div>
     </section>
     <div class="modal fade" id="reportModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true" wire:ignore.self>

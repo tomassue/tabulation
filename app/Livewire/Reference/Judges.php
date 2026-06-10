@@ -16,9 +16,9 @@ class Judges extends Component
     public $id, $judge, $nickname, $selectedCategories = [], $selectedCateg, $password;
     public function render()
     {
-        $judges = RefJudge::paginate(10);
+        $judges = RefJudge::orderBy('id', 'desc')->paginate(10);
         if ($this->selectedCateg) {
-            $judges = RefJudge::whereJsonContains('category', $this->selectedCateg)->paginate(10);
+            $judges = RefJudge::whereJsonContains('category', $this->selectedCateg)->orderBy('id', 'desc')->paginate(10);
         }
         $categories = Category::where('is_active', 1)->get();
         return view('livewire.reference.judges', compact('judges', 'categories'));

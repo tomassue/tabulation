@@ -66,7 +66,7 @@ class Modules extends Component
         $modules = Category::when($this->selectedStatus !== '' && $this->selectedStatus !== null, function ($query) {
             $query->where('is_active', $this->selectedStatus);
         })
-            ->paginate(5);
+            ->orderBy('id', 'desc')->paginate(5);
 
         return $modules;
     }

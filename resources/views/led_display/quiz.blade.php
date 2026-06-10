@@ -50,28 +50,16 @@
    {{-- end of container --}}
     <div class="">
         @php
-            $image = [
-                'img/1st.png',
-                'img/2nd.png',
-                'img/3rd.png',
-            ];
-            $color = [
-                '#ebba64',
-                '#aaaaaa',
-                '#5d412d',
-            ];
-            $font = [
-                '80px',
-                '70px',
-                '60px',
-            ]
+            $image = ['img/1st.png', 'img/2nd.png', 'img/3rd.png', 'img/3rd.png'];
+            $color = ['#ebba64', '#aaaaaa', '#5d412d', '#5d412d'];
+            $font  = ['80px', '70px', '60px', '60px'];
         @endphp
-        @if (isset($position) && $position  && $position != null)
+        @if (isset($position) && $position)
             @php
-                $position = $position - 1;
-                $image = [$image[$position]];
-                $font = [$font[$position]];
-                $color = [$color[$position]];
+                $idx   = $position - 1;
+                $image = [$image[$idx]];
+                $font  = [$font[$idx]];
+                $color = [$color[$idx]];
             @endphp
         @endif
         @foreach ($participants as $index => $item)
@@ -79,23 +67,18 @@
                 <div class="col-md-2 d-flex align-items-center justify-content-center">
                     <img src="{{ $image[$index] }}" class="img-fluid" style="max-height: 120px;" alt="1st Place">
                 </div>
-                
                 <div class="col-12 col-md-10 d-flex align-items-center">
                     <div class="col-md-10 d-flex align-items-center">
-                    <div class="col-md-1 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                    #{{$item->participant_no}} 
-                </div>
-                <div class="col-md-10 fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                     <button type="button" class="btn show-poster fw-bold"
-                            data-bs-toggle="modal"
-                            data-bs-target="#fullscreenModal{{ $item->id }}"
-                            style="color: {{ $color[$index] }}; text-decoration: none; font-size: {{$font[$index]}};">
-                        <i>{{ $item->school }}</i>
-                    </button>
-                </div>
-                <div class="col fw-bold" style="font-size: {{$font[$index]}}; color:{{$color[$index]}};">
-                   {{bong_format($item->total_score)}}
-                </div>
+                        <div class="col-md-1 fw-bold" style="font-size: {{ $font[$index] }}; color: {{ $color[$index] }};">
+                            #{{ $item->participant_no }}
+                        </div>
+                        <div class="col-md-10 fw-bold" style="font-size: {{ $font[$index] }}; color: {{ $color[$index] }};">
+                            {{ $item->school }}
+                        </div>
+                        <div class="col fw-bold" style="font-size: {{ $font[$index] }}; color: {{ $color[$index] }};">
+                            {{ bong_format($item->total_score) }}
+                        </div>
+                    </div>
                 </div>
             </div>
         @endforeach
