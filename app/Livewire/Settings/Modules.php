@@ -4,6 +4,11 @@ namespace App\Livewire\Settings;
 
 use App\Models\Category;
 use App\Models\Setting;
+use App\Models\RefCriteria;
+use App\Models\RefParticipant;
+use App\Models\RefJudge;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -24,6 +29,9 @@ class Modules extends Component
         $is_active,
         $winners,
         $tabulation_mode = 'average';
+
+    # Score sheet PDF preview
+    public $base64pdf;
 
     public function rules()
     {
@@ -123,6 +131,35 @@ class Modules extends Component
     public function activateModule($id)
     {
         Category::where('id', $id)->update(['is_active' => 1]);
+    }
+
+    public function generateScoreSheet($id)
+    {
+        $module = Category::findOrFail($id);
+        $slug = $module->category;
+
+        $criterias    = RefCriteria::where('category', $slug)->get();
+        $participants = RefParticipant::category($slug)->orderBy('participant_no')->get();
+        $judges       = RefJudge::category($slug)->get();
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', false);
+
+        $html = view('generated_pdf.blank-scoresheet', [
+            'category'     => $module,
+            'categoryName' => $module->description,
+            'criterias'    => $criterias,
+            'participants' => $participants,
+            'judges'       => $judges,
+        ])->render();
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('letter', 'landscape');
+        $dompdf->render();
+
+        $this->base64pdf = base64_encode($dompdf->output());
+        $this->dispatch('openScoreSheetModal');
     }
 
     public function toggleLock($id)
