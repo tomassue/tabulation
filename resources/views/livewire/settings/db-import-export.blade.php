@@ -8,6 +8,22 @@
                     </div>
                     <div class="card-body p-4">
                         @include('layouts.message')
+                        <div class="mb-4">
+                            <label for="api_url" class="form-label fw-bold">API Endpoint URL</label>
+                            <div class="input-group">
+                                <input type="url" class="form-control @error('api_url') is-invalid @enderror" wire:model="api_url" id="api_url" placeholder="https://example.com/api">
+                                <button class="btn btn-primary" type="button" wire:click="saveApiUrl">
+                                    <span wire:loading.remove wire:target="saveApiUrl">Save</span>
+                                    <span wire:loading wire:target="saveApiUrl">
+                                        <span class="spinner-border spinner-border-sm"></span>
+                                    </span>
+                                </button>
+                            </div>
+                            @error('api_url')
+                                <span class="text-danger small">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <hr />
                         @if (!session('token'))
                             <form wire:submit.prevent="login">
                                 <div class="mb-4 text-center">
