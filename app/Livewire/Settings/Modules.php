@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Models\Category;
+use App\Models\Setting;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ class Modules extends Component
     use WithPagination;
     # Filter
     public $selectedStatus;
+    public $search;
 
     # Properties
     public $category_id;
@@ -36,7 +38,7 @@ class Modules extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'selectedStatus') {
+        if (in_array($propertyName, ['selectedStatus', 'search'])) {
             $this->resetPage();
         }
     }
@@ -65,6 +67,11 @@ class Modules extends Component
     {
         $modules = Category::when($this->selectedStatus !== '' && $this->selectedStatus !== null, function ($query) {
             $query->where('is_active', $this->selectedStatus);
+        })->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('category', 'like', '%' . $this->search . '%')
+                  ->orWhere('description', 'like', '%' . $this->search . '%');
+            });
         })
             ->orderBy('id', 'desc')->paginate(5);
 
@@ -116,5 +123,13 @@ class Modules extends Component
     public function activateModule($id)
     {
         Category::where('id', $id)->update(['is_active' => 1]);
+    }
+
+    public function toggleLock($id)
+    {
+        $category = Category::findOrFail($id);
+        $key = 'scoring_locked_' . $category->category;
+        $current = Setting::get($key, false);
+        Setting::set($key, !$current, 'Scoring lock for ' . $category->description);
     }
 }

@@ -32,6 +32,11 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        @if ($locked && auth()->user()->role != 'admin')
+                            <div class="alert alert-warning text-center fw-bold mb-3">
+                                <i class="bi bi-lock-fill me-1"></i> Scoring is locked. You can view results but cannot modify scores.
+                            </div>
+                        @endif
                         <div class="row d-flex justify-content-center my-3">
                             <div class="col-md-4 mb-3">
                                 <label for="">PARTICIPANT</label>
@@ -202,6 +207,7 @@
                                                                     @endphp
                                                                     <td class="text-center align-middle p-2">
                                                                         <div class="score-input-wrap position-relative">
+                                                                            @php $isDisabled = $locked && auth()->user()->role != 'admin'; @endphp
                                                                             <input type="number"
                                                                                 class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
                                                                                 wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
@@ -209,6 +215,7 @@
                                                                                 placeholder="—"
                                                                                 min="0"
                                                                                 max="{{ $criteria->perfect_score }}"
+                                                                                {{ $isDisabled ? 'disabled' : '' }}
                                                                                 oninput="
                                                                                     const max = {{ $criteria->perfect_score }};
                                                                                     const value = parseFloat(this.value) || 0;

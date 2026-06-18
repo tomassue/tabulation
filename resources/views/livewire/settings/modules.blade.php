@@ -10,6 +10,9 @@
                                     <h5 class="card-title">Add Module</h5>
                                     <div class="d-flex">
                                         <div class="mx-2">
+                                            <input type="search" wire:model.live="search" class="form-control" placeholder="Search...">
+                                        </div>
+                                        <div class="mx-2">
                                             <select name="selectedStatus" wire:model.live="selectedStatus" class="form-select" id="selectedStatus">
                                                 <option value="">--- Status (All) ---</option>
                                                 <option value="1">Active</option>
@@ -84,6 +87,10 @@
                                                                 </button>
                                                                 <button type="button" class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}" wire:click="{{ $item->is_active == 1 ? 'deactivateModule(' . $item->id . ')' : 'activateModule(' . $item->id . ')' }}">
                                                                     <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
+                                                                </button>
+                                                                @php $isLocked = \App\Models\Setting::get('scoring_locked_' . $item->category, false); @endphp
+                                                                <button type="button" class="btn {{ $isLocked ? 'btn-warning' : 'btn-outline-secondary' }}" wire:click="toggleLock({{ $item->id }})" title="{{ $isLocked ? 'Unlock Scoring' : 'Lock Scoring' }}">
+                                                                    <i class="bi {{ $isLocked ? 'bi-lock-fill' : 'bi-unlock' }}"></i>
                                                                 </button>
                                                             </div>
                                                         </td>

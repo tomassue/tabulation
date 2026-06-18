@@ -6,9 +6,19 @@
             <h5 class="mb-0 fw-bold">LED Display Control</h5>
             <small class="text-muted">Manually assign winners per placement, then choose what to show on the public screen.</small>
         </div>
-        <a href="{{ route('display_led') }}" target="_blank" class="btn btn-primary">
-            <i class="bi bi-display me-1"></i> Open LED Screen
-        </a>
+        <div class="d-flex gap-2">
+            <button class="btn btn-warning" wire:click="generateMcReport">
+                <div wire:loading.remove wire:target="generateMcReport">
+                    <i class="bi bi-file-earmark-text me-1"></i> MC Script
+                </div>
+                <div wire:loading wire:target="generateMcReport">
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                </div>
+            </button>
+            <a href="{{ route('display_led') }}" target="_blank" class="btn btn-primary">
+                <i class="bi bi-display me-1"></i> Open LED Screen
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
@@ -154,4 +164,32 @@
         </div>
 
     </div>
+
+    {{-- MC Script Report Modal --}}
+    <div class="modal fade" id="mcReportModal" tabindex="-1" data-bs-backdrop="static" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">MC Winners Script</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if ($base64pdf)
+                        <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600" frameborder="0"></iframe>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+@script
+    <script>
+        window.addEventListener('openMcReportModal', event => {
+            var modal = new bootstrap.Modal(document.getElementById('mcReportModal'));
+            modal.show();
+        });
+    </script>
+@endscript

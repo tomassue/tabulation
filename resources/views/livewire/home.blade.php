@@ -20,10 +20,16 @@
             {{-- Navigation Buttons --}}
             <div class="row g-3 justify-content-center">
                 @foreach ($events as $index => $item)
+                    @php $isLocked = \App\Models\Setting::get('scoring_locked_' . $item->category, false); @endphp
                     <div class="col-12 col-md-4">
                         <a href="{{ route('event', $item->category) }}" class="btn btn-{{ $colors[$index % count($colors)] }} w-100 py-3 fw-semibold shadow-sm d-flex justify-content-between align-items-center btn-auto-size">
 
-                            <span class="text-truncate">{{ $item->description }}</span>
+                            <span class="text-truncate">
+                                @if ($isLocked)
+                                    <i class="bi bi-lock-fill me-1"></i>
+                                @endif
+                                {{ $item->description }}
+                            </span>
 
                             {{-- Percentage Here Sir Bongs --}}
                             <span class="badge bg-light text-dark ms-2">

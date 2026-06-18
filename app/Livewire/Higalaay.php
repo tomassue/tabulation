@@ -44,7 +44,8 @@ class Higalaay extends Component
         $jud  = RefJudge::category($this->type)->get();
         $categoryName = Category::where('category', $this->type)->select('description', 'display_participant')->first();
         $this->calculateTotals();
-        return view('livewire.higalaay', compact('jud', 'judges', 'participants', 'criterias', 'categoryName'));
+        $locked = !empty(\App\Models\Setting::get('scoring_locked_' . $this->type));
+        return view('livewire.higalaay', compact('jud', 'judges', 'participants', 'criterias', 'categoryName', 'locked'));
     }
     public function updatedSearch()
     {
@@ -71,6 +72,9 @@ class Higalaay extends Component
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)
     {
+        if (Auth::user()->role != 'admin' && !empty(\App\Models\Setting::get('scoring_locked_' . $this->type))) {
+            return;
+        }
         $criteria = RefCriteria::find($criteria_id);
         if ($criteria && $score > $criteria->perfect_score) {
             $score = $criteria->perfect_score;
@@ -132,6 +136,9 @@ class Higalaay extends Component
     }
     public function saveDeduction($participant_id, $score)
     {
+        if (Auth::user()->role != 'admin' && !empty(\App\Models\Setting::get('scoring_locked_' . $this->type))) {
+            return;
+        }
         $deduction = HigalaayDeduction::where('category', $this->type)->where('participant_id', $participant_id)->first();
         if (!$deduction) {
             $deduction = new HigalaayDeduction();
@@ -185,6 +192,9 @@ class Higalaay extends Component
     }
     public function saveCustomDeductions()
     {
+        if (Auth::user()->role != 'admin' && !empty(\App\Models\Setting::get('scoring_locked_' . $this->type))) {
+            return;
+        }
         $this->validate([
             'refDeductions' => 'array',
             'remarks' => 'required',

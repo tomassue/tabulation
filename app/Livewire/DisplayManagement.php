@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\LedManagement;
 use App\Models\RefParticipant;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Livewire\Component;
 
 class DisplayManagement extends Component
@@ -12,6 +14,7 @@ class DisplayManagement extends Component
     public $category = '';
     public $show_first = false, $show_second = false, $show_third = false, $show_fourth = false, $show_all = false;
     public $first_id = '', $second_id = '', $third_id = '', $fourth_id = '';
+    public $base64pdf = '';
 
     public function mount()
     {
@@ -125,6 +128,33 @@ class DisplayManagement extends Component
         if (!$led) return;
         $led->update(['show_all' => 0, 'show_first' => 0, 'show_second' => 0, 'show_third' => 0, 'show_fourth' => 0]);
         $this->syncFlags($led->fresh());
+    }
+
+    public function generateMcReport()
+    {
+        $led = LedManagement::with(['firstParticipant', 'secondParticipant', 'thirdParticipant', 'fourthParticipant'])->first();
+        if (!$led) return;
+
+        $categoryDesc = Category::where('category', $led->category)->value('description') ?? $led->category;
+
+        $winners = collect([
+            ['rank' => 4, 'label' => '3RD RUNNER-UP', 'participant' => $led->fourthParticipant],
+            ['rank' => 3, 'label' => '2ND RUNNER-UP', 'participant' => $led->thirdParticipant],
+            ['rank' => 2, 'label' => '1ST RUNNER-UP', 'participant' => $led->secondParticipant],
+            ['rank' => 1, 'label' => 'GRAND CHAMPION', 'participant' => $led->firstParticipant],
+        ])->filter(fn($w) => $w['participant'] !== null);
+
+        $htmlContent = view('generated_pdf.mc-script', compact('categoryDesc', 'winners'))->render();
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', false);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($htmlContent);
+        $dompdf->setPaper('folio', 'portrait');
+        $dompdf->render();
+
+        $this->base64pdf = base64_encode($dompdf->output());
+        $this->dispatch('openMcReportModal');
     }
 
     private function syncFlags($led): void
