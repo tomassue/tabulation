@@ -439,10 +439,10 @@
 
             @php
                 $placementLabels = [
-                    1 => 'GRAND CHAMPION',
-                    2 => '1ST RUNNER-UP',
-                    3 => '2ND RUNNER-UP',
-                    4 => '3RD RUNNER-UP',
+                    1 => 'CHAMPION',
+                    2 => '2ND PLACE',
+                    3 => '3RD PLACE',
+                    4 => '4TH PLACE',
                 ];
             @endphp
 
@@ -452,7 +452,7 @@
 
                     {{-- Single winner reveal --}}
                     <div class="placement-badge placement-{{ $position }}">
-                        {{ $placementLabels[$position] ?? '3RD RUNNER-UP' }}
+                        {{ $placementLabels[$position] ?? '4TH PLACE' }}
                     </div>
                     <div class="winner-name">{!! $winners !!}</div>
                 @else
@@ -460,10 +460,10 @@
                     <div class="winners-list">
                         @php
                             $rankLabels = [
-                                1 => 'GRAND CHAMPION',
-                                2 => '1ST RUNNER-UP',
-                                3 => '2ND RUNNER-UP',
-                                4 => '3RD RUNNER-UP',
+                                1 => 'CHAMPION',
+                                2 => '2ND PLACE',
+                                3 => '3RD PLACE',
+                                4 => '4TH PLACE',
                             ];
                         @endphp
                         @foreach ($participants as $p)

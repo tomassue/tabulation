@@ -124,7 +124,7 @@
         <hr class="divider">
 
         <p style="font-size: 11pt; color: #555; margin-bottom: 25px; text-align: center;">
-            <em>Announce in order from bottom to top (3rd Runner-up first, Grand Champion last)</em>
+            <em>Announce in order from bottom to top (4th Place first, Champion last)</em>
         </p>
 
         @foreach ($winners as $w)

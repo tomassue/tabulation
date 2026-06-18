@@ -138,10 +138,10 @@ class DisplayManagement extends Component
         $categoryDesc = Category::where('category', $led->category)->value('description') ?? $led->category;
 
         $winners = collect([
-            ['rank' => 4, 'label' => '3RD RUNNER-UP', 'participant' => $led->fourthParticipant],
-            ['rank' => 3, 'label' => '2ND RUNNER-UP', 'participant' => $led->thirdParticipant],
-            ['rank' => 2, 'label' => '1ST RUNNER-UP', 'participant' => $led->secondParticipant],
-            ['rank' => 1, 'label' => 'GRAND CHAMPION', 'participant' => $led->firstParticipant],
+            ['rank' => 4, 'label' => '4TH PLACE', 'participant' => $led->fourthParticipant],
+            ['rank' => 3, 'label' => '3RD PLACE', 'participant' => $led->thirdParticipant],
+            ['rank' => 2, 'label' => '2ND PLACE', 'participant' => $led->secondParticipant],
+            ['rank' => 1, 'label' => 'CHAMPION', 'participant' => $led->firstParticipant],
         ])->filter(fn($w) => $w['participant'] !== null);
 
         $htmlContent = view('generated_pdf.mc-script', compact('categoryDesc', 'winners'))->render();

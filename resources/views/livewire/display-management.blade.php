@@ -56,7 +56,7 @@
                         <div class="row g-3">
 
                             @php
-                                $slots = [['key' => 'first_id', 'emoji' => '🥇', 'label' => 'Grand Champion', 'rel' => 'firstParticipant'], ['key' => 'second_id', 'emoji' => '🥈', 'label' => '1st Runner-up', 'rel' => 'secondParticipant'], ['key' => 'third_id', 'emoji' => '🥉', 'label' => '2nd Runner-up', 'rel' => 'thirdParticipant'], ['key' => 'fourth_id', 'emoji' => '🏅', 'label' => '3rd Runner-up', 'rel' => 'fourthParticipant']];
+                                $slots = [['key' => 'first_id', 'emoji' => '🥇', 'label' => 'Champion', 'rel' => 'firstParticipant'], ['key' => 'second_id', 'emoji' => '🥈', 'label' => '2nd Place', 'rel' => 'secondParticipant'], ['key' => 'third_id', 'emoji' => '🥉', 'label' => '3rd Place', 'rel' => 'thirdParticipant'], ['key' => 'fourth_id', 'emoji' => '🏅', 'label' => '4th Place', 'rel' => 'fourthParticipant']];
                             @endphp
 
                             @foreach ($slots as $slot)
@@ -115,10 +115,10 @@
                     @php
                         $displaySlots = [
                             ['emoji' => '🏆', 'label' => 'All Top 4', 'flag' => 'show_all', 'method' => 'changeAll', 'color' => 'success', 'participant' => null],
-                            ['emoji' => '🥇', 'label' => 'Grand Champion', 'flag' => 'show_first', 'method' => 'changeFirst', 'color' => 'warning', 'participant' => $led?->firstParticipant],
-                            ['emoji' => '🥈', 'label' => '1st Runner-up', 'flag' => 'show_second', 'method' => 'changeSecond', 'color' => 'secondary', 'participant' => $led?->secondParticipant],
-                            ['emoji' => '🥉', 'label' => '2nd Runner-up', 'flag' => 'show_third', 'method' => 'changeThird', 'color' => 'danger', 'participant' => $led?->thirdParticipant],
-                            ['emoji' => '🏅', 'label' => '3rd Runner-up', 'flag' => 'show_fourth', 'method' => 'changeFourth', 'color' => 'info', 'participant' => $led?->fourthParticipant],
+                            ['emoji' => '🥇', 'label' => 'Champion', 'flag' => 'show_first', 'method' => 'changeFirst', 'color' => 'warning', 'participant' => $led?->firstParticipant],
+                            ['emoji' => '🥈', 'label' => '2nd Place', 'flag' => 'show_second', 'method' => 'changeSecond', 'color' => 'secondary', 'participant' => $led?->secondParticipant],
+                            ['emoji' => '🥉', 'label' => '3rd Place', 'flag' => 'show_third', 'method' => 'changeThird', 'color' => 'danger', 'participant' => $led?->thirdParticipant],
+                            ['emoji' => '🏅', 'label' => '4th Place', 'flag' => 'show_fourth', 'method' => 'changeFourth', 'color' => 'info', 'participant' => $led?->fourthParticipant],
                         ];
                     @endphp
 
