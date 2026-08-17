@@ -17,7 +17,7 @@ class EventCriteriaByJudge extends Component
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
-        $judges = RefJudge::category($this->selectedCategory)->get();
+        $judges = RefJudge::active()->category($this->selectedCategory)->get();
         return view('livewire.reports.component.event-criteria-by-judge', compact('categories', 'judges'));
     }
     public function generateReport()

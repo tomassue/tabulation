@@ -18,10 +18,10 @@ class Poster extends Component
     public function render()
     {
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'poster')->get();
-        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->where('category', 'poster')->get();
+        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->active()->where('category', 'poster')->get();
         $criterias = RefCriteria::where('category', 'poster')->get();
         $part = RefParticipant::where('category', 'poster')->get();
-        $jud  = RefJudge::where('category', 'poster')->get();
+        $jud  = RefJudge::active()->where('category', 'poster')->get();
         return view('livewire.poster', compact('participants', 'judges', 'criterias', 'part', 'jud'));
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)

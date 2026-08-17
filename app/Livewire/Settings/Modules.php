@@ -140,7 +140,7 @@ class Modules extends Component
 
         $criterias    = RefCriteria::where('category', $slug)->get();
         $participants = RefParticipant::category($slug)->orderBy('participant_no')->get();
-        $judges       = RefJudge::category($slug)->get();
+        $judges       = RefJudge::active()->category($slug)->get();
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);

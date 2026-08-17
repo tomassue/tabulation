@@ -104,7 +104,7 @@ class RefParticipant extends Model
                 ->where('criteria_id', $criteria->id)
                 ->where('category', $category);
             if (Auth::user()->role == 'admin') {
-                $judges = RefJudge::category($category)->count();
+                $judges = RefJudge::active()->category($category)->count();
                 return $judges > 0 ? $relation->sum('score') / $judges : 0;
             }
             $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();
@@ -116,7 +116,7 @@ class RefParticipant extends Model
         $weighted = $allCriterias->whereNotNull('segment')->whereNotNull('segment_weight');
 
         if ($weighted->isNotEmpty()) {
-            $judgeCount = RefJudge::category($category)->count();
+            $judgeCount = RefJudge::active()->category($category)->count();
             if ($judgeCount == 0) return 0;
 
             // For non-admin, only use that judge's scores
@@ -153,7 +153,7 @@ class RefParticipant extends Model
         // Original unweighted average
         $relation = $this->hasMany(Higalaay::class, 'participant_id', 'id')->where('category', $category);
         if (Auth::user()->role == 'admin') {
-            $judges = RefJudge::category($category)->count();
+            $judges = RefJudge::active()->category($category)->count();
             return $judges > 0 ? ($relation->sum('score') / $judges) - $deduction : 0;
         }
         $judge = RefJudge::where('user_id', Auth::user()->id)->category($category)->first();

@@ -36,12 +36,12 @@ class Higalaay extends Component
         $criterias = RefCriteria::where('category', $this->type)->get();
 
         if (Auth::user()->role == 'admin') {
-            $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->category($this->type)->get();
+            $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->active()->category($this->type)->get();
         } else {
-            $judges = RefJudge::where('user_id', Auth::user()->id)->category($this->type)->get();
+            $judges = RefJudge::where('user_id', Auth::user()->id)->active()->category($this->type)->get();
         }
 
-        $jud  = RefJudge::category($this->type)->get();
+        $jud  = RefJudge::active()->category($this->type)->get();
         $categoryName = Category::where('category', $this->type)->select('description', 'display_participant')->first();
         $this->calculateTotals();
         $locked = !empty(\App\Models\Setting::get('scoring_locked_' . $this->type));

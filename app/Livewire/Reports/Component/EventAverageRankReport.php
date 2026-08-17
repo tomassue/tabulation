@@ -34,7 +34,7 @@ class EventAverageRankReport extends Component
         $category1 = Category::find($this->event1);
         $category2 = Category::find($this->event2);
         $participants = RefParticipant::category($category1->category)->get();
-        $judges =  RefJudge::category($category1->category)->get();
+        $judges =  RefJudge::active()->category($category1->category)->get();
 
         $grands = $this->caculateRankings($participants, $category1, $category2);
 

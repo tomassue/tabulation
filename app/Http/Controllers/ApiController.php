@@ -118,7 +118,7 @@ class ApiController extends Controller
     public function getReference()
     {
         $criteria = DB::table('ref_criterias')->get();
-        $judges = DB::table('ref_judges')->get();
+        $judges = DB::table('ref_judges')->where('is_active', 1)->get();
         $participants = DB::table('ref_participants')->get();
         $deductions = DB::table('ref_deductions')->get();
         $categories = DB::table('categories')->get();
