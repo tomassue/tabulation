@@ -167,9 +167,9 @@ class RefParticipant extends Model
         }
         return $relation->where('category', $category)->where('judge_id', $judge_id)->sum('score');
     }
-    public function getRankingsByJudge($judge_id, $category, $participant_id)
+    public function getRankingsByJudge($judge_id, $category, $participant_id, $applyJudgeDeduction = false)
     {
-        $service = new ReportService($category, null, $judge_id);
+        $service = new ReportService($category, null, $judge_id, $applyJudgeDeduction);
         $participants = $service->generateTopParticipants();
         return $participants->where('id', $participant_id)->first()?->current_rank;
     }

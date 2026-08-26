@@ -211,9 +211,6 @@
                         </th>
                     @endforeach
                     @if ($showDeduction == true)
-                        <th width="5%" rowspan="2" style="font-size: 8pt;color: rgb(11, 11, 224);">
-                            @if ($isWeighted) WTD @else AVE @endif SCORE
-                        </th>
                         <th width="5%" rowspan="2" style="font-size: 8pt;color: red;">DEMIRIT</th>
                     @endif
                     <th width="5%" rowspan="2" style="font-size: 9pt;">TOTAL RANK</th>
@@ -238,7 +235,6 @@
                             <td class="text-center" style="font-weight: bold">{{ $item['judge_scores'][$judge->user_id] != 0 ? bong_ordinal($item['judge_scores'][$judge->user_id]) : '-' }}</td>
                         @endforeach
                         @if ($showDeduction == true)
-                            <td class="text-center" style="font-weight: bold;color: rgb(11, 11, 224);">{{ bong_format($item['totalScore']) }}</td>
                             <td class="text-center" style="font-weight: bold;{{ $item['deduction'] == 0 ? '' : 'color: red;' }}">{{ $item['deduction'] == 0 ? '-' : $item['deduction'] }}</td>
                         @endif
                         <td class="text-center" style="font-size: 12pt;">{{ $item['grand'] }}</td>
@@ -248,7 +244,7 @@
                     @php
                         $count = $judges->count() * 2 + 4;
                         if ($showDeduction == true) {
-                            $count += 2;
+                            $count += 1;
                         }
                     @endphp
                     <tr>
