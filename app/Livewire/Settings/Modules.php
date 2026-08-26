@@ -3,6 +3,12 @@
 namespace App\Livewire\Settings;
 
 use App\Models\Category;
+use App\Models\Setting;
+use App\Models\RefCriteria;
+use App\Models\RefParticipant;
+use App\Models\RefJudge;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -13,6 +19,7 @@ class Modules extends Component
     use WithPagination;
     # Filter
     public $selectedStatus;
+    public $search;
 
     # Properties
     public $category_id;
@@ -22,6 +29,9 @@ class Modules extends Component
         $is_active,
         $winners,
         $tabulation_mode = 'average';
+
+    # Score sheet PDF preview
+    public $base64pdf;
 
     public function rules()
     {
@@ -36,7 +46,7 @@ class Modules extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'selectedStatus') {
+        if (in_array($propertyName, ['selectedStatus', 'search'])) {
             $this->resetPage();
         }
     }
@@ -65,6 +75,11 @@ class Modules extends Component
     {
         $modules = Category::when($this->selectedStatus !== '' && $this->selectedStatus !== null, function ($query) {
             $query->where('is_active', $this->selectedStatus);
+        })->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('category', 'like', '%' . $this->search . '%')
+                  ->orWhere('description', 'like', '%' . $this->search . '%');
+            });
         })
             ->orderBy('id', 'desc')->paginate(5);
 
@@ -116,5 +131,42 @@ class Modules extends Component
     public function activateModule($id)
     {
         Category::where('id', $id)->update(['is_active' => 1]);
+    }
+
+    public function generateScoreSheet($id)
+    {
+        $module = Category::findOrFail($id);
+        $slug = $module->category;
+
+        $criterias    = RefCriteria::where('category', $slug)->get();
+        $participants = RefParticipant::category($slug)->orderBy('participant_no')->get();
+        $judges       = RefJudge::active()->category($slug)->get();
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', false);
+
+        $html = view('generated_pdf.blank-scoresheet', [
+            'category'     => $module,
+            'categoryName' => $module->description,
+            'criterias'    => $criterias,
+            'participants' => $participants,
+            'judges'       => $judges,
+        ])->render();
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('letter', 'landscape');
+        $dompdf->render();
+
+        $this->base64pdf = base64_encode($dompdf->output());
+        $this->dispatch('openScoreSheetModal');
+    }
+
+    public function toggleLock($id)
+    {
+        $category = Category::findOrFail($id);
+        $key = 'scoring_locked_' . $category->category;
+        $current = Setting::get($key, false);
+        Setting::set($key, !$current, 'Scoring lock for ' . $category->description);
     }
 }

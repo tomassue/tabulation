@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Log;
 use App\Models\TechnicalScore;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
@@ -117,7 +118,7 @@ class ApiController extends Controller
     public function getReference()
     {
         $criteria = DB::table('ref_criterias')->get();
-        $judges = DB::table('ref_judges')->get();
+        $judges = DB::table('ref_judges')->where('is_active', 1)->get();
         $participants = DB::table('ref_participants')->get();
         $deductions = DB::table('ref_deductions')->get();
         $categories = DB::table('categories')->get();
@@ -126,6 +127,20 @@ class ApiController extends Controller
         $technical_judge_assignments = DB::table('technical_judge_assignments')->get();
         $technical_sub_criterias = DB::table('technical_sub_criterias')->get();
         $users = DB::table('users')->where('role', '<>', 'admin')->get();
+        $settings = DB::table('settings')->get();
+
+        $logoKeys = ['report_logo_left_1', 'report_logo_left_2', 'report_logo_right', 'report_logo_right_2', 'report_watermark', 'report_footer'];
+        $logos = [];
+        foreach ($logoKeys as $key) {
+            $filename = $settings->firstWhere('name', $key)?->value;
+            if ($filename && Storage::disk('public')->exists('report-header/' . $filename)) {
+                $logos[] = [
+                    'filename' => $filename,
+                    'content' => base64_encode(Storage::disk('public')->get('report-header/' . $filename)),
+                ];
+            }
+        }
+
         return response()->json([
             "criteria" => $criteria,
             "judges" => $judges,
@@ -136,7 +151,9 @@ class ApiController extends Controller
             "technical_deductions" => $technical_deductions,
             "technical_judge_assignments" => $technical_judge_assignments,
             "technical_sub_criterias" => $technical_sub_criterias,
-            "users" => $users
+            "users" => $users,
+            "settings" => $settings,
+            "logos" => $logos,
         ]);
     }
     public function downloadDatabase()

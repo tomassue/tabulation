@@ -32,6 +32,11 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        @if ($locked && auth()->user()->role != 'admin')
+                            <div class="alert alert-warning text-center fw-bold mb-3">
+                                <i class="bi bi-lock-fill me-1"></i> Scoring is locked. You can view results but cannot modify scores.
+                            </div>
+                        @endif
                         <div class="row d-flex justify-content-center my-3">
                             <div class="col-md-4 mb-3">
                                 <label for="">PARTICIPANT</label>
@@ -107,7 +112,9 @@
                         {{-- Participant scoring cards --}}
                         <div class="scoring-cards">
                             @foreach ($participants as $participant)
-                                <div class="card mb-3 shadow-sm border-0 participant-card">
+                                <div class="card mb-3 shadow-sm border-0 participant-card"
+                                    x-data="{ revealed: true }"
+                                    :class="{ 'scores-hidden': !revealed }">
 
                                     {{-- Card header: participant identity + totals --}}
                                     <div class="card-header d-flex align-items-center justify-content-between py-2 px-3 bg-white border-bottom">
@@ -118,8 +125,16 @@
                                             @endif
                                         </div>
                                         <div class="d-flex align-items-center gap-3">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                @click="revealed = !revealed"
+                                                :title="revealed ? 'Hide scores' : 'Show scores'">
+                                                <i class="bi" :class="revealed ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                            </button>
                                             @if (auth()->user()->role == 'admin')
-                                                <span class="text-success fw-bold fs-5">{{ bong_format($participant->averageHigalaay($type)) }}</span>
+                                                <span class="total-mask-wrap position-relative">
+                                                    <span class="text-success fw-bold fs-5" x-show="revealed">{{ bong_format($participant->averageHigalaay($type)) }}</span>
+                                                    <span class="text-success fw-bold fs-5 total-mask" x-show="!revealed" aria-hidden="true">••••</span>
+                                                </span>
                                                 @php $deduction = \App\Models\HigalaayDeduction::where('participant_id', $participant->id)->where('category', $type)->first(); @endphp
                                                 <div class="d-flex align-items-center gap-1">
                                                     <small class="text-muted me-1">Deduction</small>
@@ -129,7 +144,10 @@
                                                     </div>
                                                 </div>
                                             @else
-                                                <span class="text-success fw-bold fs-5">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</span>
+                                                <span class="total-mask-wrap position-relative">
+                                                    <span class="text-success fw-bold fs-5" x-show="revealed">{{ bong_format($participant->getHigalaayScoreByJudge(auth()->user()->judge?->id, $type)) }}</span>
+                                                    <span class="text-success fw-bold fs-5 total-mask" x-show="!revealed" aria-hidden="true">••••</span>
+                                                </span>
                                             @endif
                                         </div>
                                     </div>
@@ -188,22 +206,29 @@
                                                                         $score = \App\Models\Higalaay::where('participant_id', $participant->id)->where('category', $type)->where('criteria_id', $criteria->id)->where('judge_id', $judge->id)->first();
                                                                     @endphp
                                                                     <td class="text-center align-middle p-2">
-                                                                        <input type="number"
-                                                                            class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
-                                                                            wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
-                                                                            value="{{ $score ? $score->score : '' }}"
-                                                                            placeholder="—"
-                                                                            min="0"
-                                                                            max="{{ $criteria->perfect_score }}"
-                                                                            oninput="
-                                                                                const max = {{ $criteria->perfect_score }};
-                                                                                const value = parseFloat(this.value) || 0;
-                                                                                const correctedValue = value > max || value < 0 ? max : value;
-                                                                                if (value !== correctedValue) {
-                                                                                    this.value = correctedValue;
-                                                                                    this.dispatchEvent(new Event('change'));
-                                                                                }
-                                                                            " />
+                                                                        <div class="score-input-wrap position-relative">
+                                                                            @php $isDisabled = $locked && auth()->user()->role != 'admin'; @endphp
+                                                                            <input type="number"
+                                                                                class="form-control form-control-lg text-center fw-bold score-input {{ $score ? 'scored' : '' }}"
+                                                                                wire:change="saveScore({{ $participant->id }},{{ $criteria->id }},{{ $judge->id }},$event.target.value)"
+                                                                                value="{{ $score ? $score->score : '' }}"
+                                                                                placeholder="—"
+                                                                                min="0"
+                                                                                max="{{ $criteria->perfect_score }}"
+                                                                                {{ $isDisabled ? 'disabled' : '' }}
+                                                                                oninput="
+                                                                                    const max = {{ $criteria->perfect_score }};
+                                                                                    const value = parseFloat(this.value) || 0;
+                                                                                    const correctedValue = value > max || value < 0 ? max : value;
+                                                                                    if (value !== correctedValue) {
+                                                                                        this.value = correctedValue;
+                                                                                        this.dispatchEvent(new Event('change'));
+                                                                                    }
+                                                                                " />
+                                                                            @if ($score)
+                                                                                <div class="score-mask" x-show="!revealed" aria-hidden="true">••••</div>
+                                                                            @endif
+                                                                        </div>
                                                                     </td>
                                                                 @endforeach
                                                             </tr>
@@ -356,6 +381,34 @@
             position: sticky;
             top: 0;
             z-index: 5;
+        }
+
+        /* Score masking */
+        .score-input-wrap {
+            display: inline-block;
+        }
+        .score-mask {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            letter-spacing: .15rem;
+            color: #155724;
+            background: #f0fff4;       /* match .score-input.scored background so it reads as a filled cell */
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            pointer-events: none;       /* clicks pass through to the input so the judge can still focus/edit */
+            user-select: none;
+        }
+        /* When card is hidden, blank the real digits as a fallback (covers focus state) */
+        .scores-hidden .score-input {
+            color: transparent;
+            text-shadow: none;
+        }
+        .scores-hidden .score-input:focus {
+            color: inherit;            /* reveal real value only while actively editing */
         }
     </style>
 </section>

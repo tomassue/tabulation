@@ -79,8 +79,8 @@ class DashboardController extends Controller
             ->orderBy('final_score', 'DESC')
             ->limit(3)
             ->get();
-        //COMPLETION 
-        $judges = RefJudge::all();
+        //COMPLETION
+        $judges = RefJudge::active()->get();
 
         return view('dashboard', compact('quizProgress', 'oralProgress', 'posterProgress', 'judges', 'topPoster', 'topQuiz', 'topOral'));
     }

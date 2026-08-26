@@ -44,7 +44,7 @@ class ReportGenerator extends Component
         $category2 = Category::where('category', $this->selectedCategory2)->first();
 
         $participants = RefParticipant::category($this->selectedCategory)->get();
-        $judges =  RefJudge::category($this->selectedCategory)->get();
+        $judges =  RefJudge::active()->category($this->selectedCategory)->get();
 
         $criteria1 = RefCriteria::find($this->selectedCriteria);
         $criteria2 = RefCriteria::find($this->selectedCriteria2);

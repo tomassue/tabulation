@@ -17,6 +17,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        <div class="mx-2">
+                                            <select name="selectedStatus" wire:model.live="selectedStatus" class="form-select" id="selectedStatus">
+                                                <option value="">--- Status (All) ---</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
                                         <button type="button" class="btn btn-primary" wire:click="addJudge">
                                             <div wire:loading.remove wire:target="addJudge">
                                                 <i class="bi bi-plus-circle"></i>
@@ -39,7 +46,8 @@
                                                     <th scope="col" style="width:12%">Judge No.</th>
                                                     <th scope="col">Judge Name</th>
                                                     <th scope="col">Events</th>
-                                                    <th scope="col" style="width:10%" class="text-center">Actions</th>
+                                                    <th scope="col" style="width:10%" class="text-center">Status</th>
+                                                    <th scope="col" style="width:14%" class="text-center">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -58,6 +66,21 @@
                                                             @endforeach
                                                         </td>
                                                         <td class="text-center">
+                                                            <span class="badge {{ $item->is_active ? 'text-bg-success' : 'text-bg-danger' }}">
+                                                                {{ $item->is_active ? 'Active' : 'Inactive' }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button wire:key="toggle-{{ $item->id }}" wire:target="toggleStatus({{ $item->id }})" wire:loading.attr="disabled" wire:click="toggleStatus({{ $item->id }})" class="btn btn-sm {{ $item->is_active ? 'btn-warning' : 'btn-success' }}" title="{{ $item->is_active ? 'Deactivate' : 'Activate' }}">
+                                                                <div wire:loading.remove wire:target="toggleStatus({{ $item->id }})">
+                                                                    <i class="bi {{ $item->is_active ? 'bi-toggle-on' : 'bi-toggle-off' }}"></i>
+                                                                </div>
+                                                                <div wire:loading wire:target="toggleStatus({{ $item->id }})">
+                                                                    <div class="spinner-border spinner-border-sm" role="status">
+                                                                        <span class="visually-hidden">Loading...</span>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
                                                             <button wire:key="edit-{{ $item->id }}" wire:target="editJudge({{ $item->id }})" wire:loading.attr="disabled" class="btn btn-sm btn-primary" wire:click="editJudge({{ $item->id }})">
                                                                 <div wire:loading.remove wire:target="editJudge({{ $item->id }})">
                                                                     <i class="bi bi-pencil-square"></i>
@@ -82,7 +105,7 @@
                                                     </tr>
                                                 @empty
                                                     <tr class="text-center">
-                                                        <td colspan="5" class="text-muted py-3">-- NO DATA --</td>
+                                                        <td colspan="6" class="text-muted py-3">-- NO DATA --</td>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
@@ -129,6 +152,16 @@
                                     </label>
                                 </div>
                             @endforeach
+                        </div>
+                        <div class="mb-3">
+                            <label for="is_active" class="form-label">Status</label>
+                            <select wire:model="is_active" id="is_active" class="form-select">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                            @error('is_active')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">

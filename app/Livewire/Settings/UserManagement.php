@@ -14,6 +14,7 @@ class UserManagement extends Component
 
     # Filter
     public $selectedStatus;
+    public $search;
     public $editMode;
 
     #Properties
@@ -39,7 +40,7 @@ class UserManagement extends Component
 
     public function updated($propertyName)
     {
-        if ($propertyName == 'selectedStatus') {
+        if (in_array($propertyName, ['selectedStatus', 'search'])) {
             $this->resetPage();
         }
         if ($propertyName == 'name') {
@@ -104,6 +105,11 @@ class UserManagement extends Component
     {
         $user = User::when($this->selectedStatus !== '' && $this->selectedStatus !== null, function ($query) {
             $query->where('is_active', $this->selectedStatus);
+        })->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
         })
             ->paginate(10);
 

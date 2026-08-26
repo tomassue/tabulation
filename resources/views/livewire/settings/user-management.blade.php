@@ -11,6 +11,9 @@
                                         <h5 class="card-title">Add User</h5>
                                         <div class="d-flex">
                                             <div class="mx-2">
+                                                <input type="search" wire:model.live="search" class="form-control" placeholder="Search...">
+                                            </div>
+                                            <div class="mx-2">
                                                 <select name="selectedStatus" wire:model.live="selectedStatus" class="form-select" id="selectedStatus">
                                                     <option value="">--- Status (All) ---</option>
                                                     <option value="1">Active</option>

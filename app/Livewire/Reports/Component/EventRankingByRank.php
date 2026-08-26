@@ -27,13 +27,15 @@ class EventRankingByRank extends Component
 
         $category = Category::where('category', $this->selectedCategory)->first();
         $participants = RefParticipant::category($this->selectedCategory)->get();
-        $judges =  RefJudge::category($this->selectedCategory)->get();
+        $judges =  RefJudge::active()->category($this->selectedCategory)->get();
         $criterias = RefCriteria::category($this->selectedCategory)->get();
         $percentage = $this->percentage;
         $isWeighted = $criterias->whereNotNull('segment')->whereNotNull('segment_weight')->isNotEmpty();
 
-        $grands = $this->calculateRankings($participants, $judges, $category, $criterias, $isWeighted);
-        $showDeduction = $this->showDeduction;
+        // Normalize: the form select binds "0"/"1" strings, which are both truthy as-is.
+        $showDeduction = filter_var($this->showDeduction, FILTER_VALIDATE_BOOLEAN);
+
+        $grands = $this->calculateRankings($participants, $judges, $category, $criterias, $isWeighted, $showDeduction);
 
         $options = new Options();
         $options->set('isRemoteEnabled', false);
@@ -61,10 +63,11 @@ class EventRankingByRank extends Component
         $this->dispatch('openRankingByRankModal');
     }
 
-    private function calculateRankings($participants, $judges, $category, $criterias, $isWeighted)
+    private function calculateRankings($participants, $judges, $category, $criterias, $isWeighted, $showDeduction = false)
     {
         $grands = [];
         $segmentedCriterias = $isWeighted ? $criterias->groupBy('segment') : collect();
+        $judgeCount = $judges->count();
 
         foreach ($participants as $item) {
             $part = [
@@ -76,10 +79,17 @@ class EventRankingByRank extends Component
                 'grand'          => 0,
             ];
 
+            // The deduction is split evenly across the panel and taken off each
+            // judge's score. Rounded to 4dp to match ReportService's SQL, so the
+            // printed score and the rank it produced never disagree.
+            $part['share'] = ($showDeduction && $judgeCount > 0 && $part['deduction'] != 0)
+                ? round($part['deduction'] / $judgeCount, 4)
+                : 0;
+
             $totalRankScore = 0;
             $totalScore     = 0;
             foreach ($judges as $judge) {
-                $ranked = $item->getRankingsByJudge($judge->user_id, $category->category, $item->id);
+                $ranked = $item->getRankingsByJudge($judge->user_id, $category->category, $item->id, $showDeduction);
 
                 if ($isWeighted) {
                     $weightedScore = 0;
@@ -98,6 +108,13 @@ class EventRankingByRank extends Component
                     $subtotal = $item->getHigalaayScoreByJudge($judge->id, $category->category);
                 }
 
+                // Take the panel share off this judge's score. Skipped when the
+                // judge gave no score at all, so an unscored cell stays 0 rather
+                // than rendering as negative.
+                if ($part['share'] != 0 && $subtotal != 0) {
+                    $subtotal = round($subtotal - $part['share'], 4);
+                }
+
                 $part['judge_scores'][$judge->user_id] = $ranked ?: 0;
                 $part['subtotals'][$judge->user_id]    = $subtotal;
 
@@ -105,7 +122,14 @@ class EventRankingByRank extends Component
                 if ($subtotal) $totalScore += $subtotal;
             }
             $part['totalScore'] = $judges->count() > 0 ? $totalScore / $judges->count() : 0;
-            $part['grand']      = $totalRankScore;
+
+            // TOTAL RANK is a plain sum of the per-judge rank positions. The
+            // demerit is NOT applied here — it is already accounted for by the
+            // per-judge share taken off each judge's score above, which moves the
+            // individual ranks that feed this sum. Adding it again would penalize
+            // the same participant twice.
+            $part['grand'] = $totalRankScore;
+
             $grands[] = $part;
         }
 

@@ -43,7 +43,7 @@ class EventReportBySegment extends Component
 
         $category     = Category::where('category', $this->selectedCategory)->first();
         $participants = RefParticipant::category($this->selectedCategory)->get();
-        $judges       = RefJudge::category($this->selectedCategory)->get();
+        $judges       = RefJudge::active()->category($this->selectedCategory)->get();
         $segCriterias = RefCriteria::category($this->selectedCategory)
             ->where('segment', $this->selectedSegment)
             ->get();

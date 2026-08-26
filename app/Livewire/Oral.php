@@ -19,10 +19,10 @@ class Oral extends Component
     public function render()
     {
         $participants = RefParticipant::where('participant_no', 'like', '%' . $this->search . '%')->where('category', 'oral')->get();
-        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->where('category', 'oral')->get();
+        $judges = RefJudge::where('id', 'like', '%' . $this->judge_id . '%')->active()->where('category', 'oral')->get();
         $criterias = RefCriteria::where('category', 'oral')->get();
         $part = RefParticipant::where('category', 'oral')->get();
-        $jud  = RefJudge::where('category', 'oral')->get();
+        $jud  = RefJudge::active()->where('category', 'oral')->get();
         return view('livewire.oral', compact('participants', 'judges', 'criterias', 'part', 'jud'));
     }
     public function saveScore($participant_id, $criteria_id, $judge_id, $score)

@@ -12,6 +12,7 @@ use App\Models\TechnicalScore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -19,6 +20,19 @@ class DBImportExport extends Component
 {
     use WithFileUploads;
     public $category_name, $judge_id, $excel_file, $count, $email, $password;
+    public $api_url = 'https://services.cagayandeoro.gov.ph:8087/tabulation/api/tab-v1';
+
+    public function mount()
+    {
+        $this->api_url = \App\Models\Setting::get('api_url', $this->api_url);
+    }
+
+    public function saveApiUrl()
+    {
+        $this->validate(['api_url' => 'required|url']);
+        \App\Models\Setting::set('api_url', rtrim($this->api_url, '/'), 'API endpoint URL');
+        session()->flash('status', 'API URL saved successfully.');
+    }
     public function render()
     {
         $categories = Category::where('is_active', 1)->get();
@@ -52,7 +66,7 @@ class DBImportExport extends Component
             'email' => 'required',
             'password' => 'required',
         ]);
-        $login = Http::post(config('settings.api_url') . '/login', $data);
+        $login = Http::post($this->api_url . '/login', $data);
         if ($login->failed()) {
             // Handle login failure
             return session()->flash('error', $login->json()['message']);
@@ -74,7 +88,7 @@ class DBImportExport extends Component
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'X-Custom-Header' => 'MyValue',
-        ])->withToken($token)->get(config('settings.api_url') . '/get-reference');
+        ])->withToken($token)->get($this->api_url . '/get-reference');
 
         if ($response->successful()) {
             $message = '';
@@ -129,6 +143,25 @@ class DBImportExport extends Component
                 $result = DB::table('users')->insertOrIgnore($users);
                 $message .= 'Users: ' . $result . '<br>';
             }
+            if (isset($body['settings'])) {
+                $settingsCount = 0;
+                foreach ($body['settings'] as $setting) {
+                    \App\Models\Setting::updateOrCreate(
+                        ['name' => $setting['name']],
+                        ['value' => $setting['value'], 'description' => $setting['description'] ?? null]
+                    );
+                    $settingsCount++;
+                }
+                $message .= 'Settings: ' . $settingsCount . '<br>';
+            }
+            if (isset($body['logos'])) {
+                $logosCount = 0;
+                foreach ($body['logos'] as $logo) {
+                    Storage::disk('public')->put('report-header/' . $logo['filename'], base64_decode($logo['content']));
+                    $logosCount++;
+                }
+                $message .= 'Logos: ' . $logosCount . '<br>';
+            }
             return session()->flash('status', $message);
             // Request was successful (2xx status code)
         } elseif ($response->clientError()) {
@@ -152,7 +185,7 @@ class DBImportExport extends Component
             'Accept' => 'application/json',
             'X-Custom-Header' => 'MyValue',
         ])->withToken($token)->post(
-            config('settings.api_url') . '/upload-database',
+            $this->api_url . '/upload-database',
             [
                 'higalaay' => $data,
                 'deductions' => $deductions,
@@ -178,7 +211,7 @@ class DBImportExport extends Component
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'X-Custom-Header' => 'MyValue',
-        ])->withToken($token)->get(config('settings.api_url') . '/download-database');
+        ])->withToken($token)->get($this->api_url . '/download-database');
         if ($response->successful()) {
             $body = $response->json();
             if (isset($body['higalaays'])) {

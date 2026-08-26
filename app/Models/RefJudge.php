@@ -11,6 +11,7 @@ class RefJudge extends Model
         'judge',
         'nickname',
         'user_id',
+        'is_active',
     ];
     protected $casts = [
         'category' => 'array', // Casts the 'details' column to a PHP array
@@ -18,6 +19,10 @@ class RefJudge extends Model
     public function scopeCategory($query, $category)
     {
         return $query->whereJsonContains('ref_judges.category', $category);
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('ref_judges.is_active', 1);
     }
     public function getPercent()
     {

@@ -10,6 +10,9 @@
                                     <h5 class="card-title">Add Module</h5>
                                     <div class="d-flex">
                                         <div class="mx-2">
+                                            <input type="search" wire:model.live="search" class="form-control" placeholder="Search...">
+                                        </div>
+                                        <div class="mx-2">
                                             <select name="selectedStatus" wire:model.live="selectedStatus" class="form-select" id="selectedStatus">
                                                 <option value="">--- Status (All) ---</option>
                                                 <option value="1">Active</option>
@@ -84,6 +87,20 @@
                                                                 </button>
                                                                 <button type="button" class="btn {{ $item->is_active == 1 ? 'btn-danger' : 'btn-success' }}" wire:click="{{ $item->is_active == 1 ? 'deactivateModule(' . $item->id . ')' : 'activateModule(' . $item->id . ')' }}">
                                                                     <i class="bi {{ $item->is_active == 1 ? 'bi-trash' : 'bi bi-arrow-counterclockwise' }} "></i>
+                                                                </button>
+                                                                @php $isLocked = \App\Models\Setting::get('scoring_locked_' . $item->category, false); @endphp
+                                                                <button type="button" class="btn {{ $isLocked ? 'btn-warning' : 'btn-outline-secondary' }}" wire:click="toggleLock({{ $item->id }})" title="{{ $isLocked ? 'Unlock Scoring' : 'Lock Scoring' }}">
+                                                                    <i class="bi {{ $isLocked ? 'bi-lock-fill' : 'bi-unlock' }}"></i>
+                                                                </button>
+                                                                <button wire:key="generate-{{ $item->id }}" type="button" class="btn btn-outline-primary" wire:click="generateScoreSheet({{ $item->id }})" title="Generate blank score sheet">
+                                                                    <div wire:loading.remove wire:target="generateScoreSheet({{ $item->id }})">
+                                                                        <i class="bi bi-file-earmark-pdf"></i>
+                                                                    </div>
+                                                                    <div wire:loading wire:target="generateScoreSheet({{ $item->id }})">
+                                                                        <span class="spinner-border spinner-border-sm" role="status">
+                                                                            <span class="visually-hidden">Loading...</span>
+                                                                        </span>
+                                                                    </div>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -172,6 +189,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Score Sheet PDF Modal -->
+    <div class="modal fade" id="scoreSheetModal" tabindex="-1" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Blank Score Sheet</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if ($base64pdf)
+                        <iframe src="data:application/pdf;base64,{{ $base64pdf }}" width="100%" height="600" type="application/pdf" frameborder="0"></iframe>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @script
     <script>
@@ -183,6 +217,11 @@
         window.addEventListener('hideModal', event => {
             var myModal = new bootstrap.Modal(document.getElementById('criteriaModal'));
             myModal.hide();
+        });
+
+        window.addEventListener('openScoreSheetModal', event => {
+            var scoreSheetModal = new bootstrap.Modal(document.getElementById('scoreSheetModal'));
+            scoreSheetModal.show();
         });
     </script>
 @endscript

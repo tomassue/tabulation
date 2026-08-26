@@ -37,7 +37,7 @@ class EventReportByCriteria extends Component
 
         $category     = Category::where('category', $this->selectedCategory)->first();
         $participants = RefParticipant::category($this->selectedCategory)->get();
-        $judges       = RefJudge::category($this->selectedCategory)->get();
+        $judges       = RefJudge::active()->category($this->selectedCategory)->get();
         $criteria     = RefCriteria::find($this->selectedCriteria);
 
         $scoringType = $this->scoringType;

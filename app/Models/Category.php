@@ -28,7 +28,7 @@ class Category extends Model
         $rawSql = $this->hasMany(Higalaay::class, 'category', 'category');
 
         if (Auth::user()->role == 'admin') {
-            $judges = RefJudge::category($this->category)->count();
+            $judges = RefJudge::active()->category($this->category)->count();
         } else {
             $judges = 1;
             $judge_id = RefJudge::where('user_id', Auth::user()->id)->category($this->category)->first();
