@@ -10,13 +10,33 @@
                     <div class="col-lg-5 col-md-8">
 
                         <!-- Logo -->
+                        @php
+                            // Dynamic logos come from the same settings the PDF report header uses
+                            // (Settings > Report Header). Each falls back to the bundled image
+                            // when no logo has been uploaded yet.
+                            $loginLogos = [
+                                ['key' => 'report_logo_left_1',  'fallback' => 'img/seallogo.png', 'height' => 70],
+                                ['key' => 'report_logo_left_2',  'fallback' => 'img/risebig.png',  'height' => 50],
+                                ['key' => 'report_logo_right',   'fallback' => 'img/logo1.png',    'height' => 50],
+                                ['key' => 'report_logo_right_2', 'fallback' => null,               'height' => 50],
+                            ];
+                        @endphp
                         <div class="text-center mb-4">
                             <a href="#" class="d-inline-flex align-items-center gap-2">
-                                <img src="{{ asset('img/seallogo.png') }}" alt="Logo" style="height: 70px;">
-                                <img src="{{ asset('img/risebig.png') }}" alt="Logo" style="height: 50px;">
-                                <img src="{{ asset('img/logo1.png') }}" alt="Logo" style="height: 50px;">
-                                {{-- <img src="{{ asset('img/tourismlogo.png') }}" alt="Logo" style="height: 50px;"> --}}
-                                <img src="{{ asset('img/ictlogo.png') }}" alt="Logo" style="height: 50px;">
+                                @foreach ($loginLogos as $logo)
+                                    @php
+                                        $file = \App\Models\Setting::get($logo['key']);
+                                        $src  = $file
+                                            ? asset('storage/report-header/' . $file)
+                                            : ($logo['fallback'] ? asset($logo['fallback']) : null);
+                                    @endphp
+                                    @if ($src)
+                                        <img src="{{ $src }}" alt="Logo" style="height: {{ $logo['height'] }}px;">
+                                    @endif
+                                @endforeach
+
+                                {{-- System developer logo — always shown, not configurable --}}
+                                <img src="{{ asset('img/ictlogo.png') }}" alt="ICT Logo" style="height: 50px;">
 
                                 <!-- <h4 class="fw-bold mb-0 text-primary">Tabulation System</h4> -->
                             </a>
